@@ -1,0 +1,58 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.content-wrapper {
+  background: transparent;
+  width: 100%;
+  max-width: 600px;
+  padding: 15px;
+}
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  position: relative;
+}
+.card-img-top {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-bottom-left-radius: 50% 20%;
+  border-bottom-right-radius: 50% 20%;
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%; /* Ajustado para mover el texto hacia abajo */
+  left: 0;
+  right: 0;
+  transform: translateY(150%); /* Ajusta el centro vertical del contenido */
+  color: #1f2d3d;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.btn-custom {
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  transition: background 0.3s ease;
+  margin-top: 20px;
+}
+.btn-custom:hover {
+  background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+}
+
+.h2{
+font-size: 2em
+}

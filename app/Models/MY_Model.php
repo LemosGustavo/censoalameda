@@ -167,7 +167,7 @@ class MY_Model extends Model {
 			if ($trans_enabled) {
 				$this->db->transStart();
 			}
-			
+
 			$builder->where($this->id_name, $options[$this->id_name]);
 			if ($builder->delete()) {
 				$this->_set_msg('Registro de ' . $this->msg_name . ' eliminado');
@@ -536,7 +536,7 @@ class MY_Model extends Model {
 		if ($queryCountAllResults === 0) {
 			return FALSE;
 		}
-		
+
 		return $result;
 	}
 

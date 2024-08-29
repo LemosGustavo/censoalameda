@@ -21,31 +21,20 @@ class MY_Controller extends BaseController {
                 return redirect()->to(current_url())->setStatusCode(302);
             }
         }
-        
+
         $this->nav_route = 'esc';
     }
 
 
-    // function load_template($view = '', $view_data = NULL, $data = array()) {
-
-    //     if (!auth()->loggedIn()) {
-    //         return redirect()->to(base_url('/login'));
-    //     } else if (session()->get('token')) {
-    //         return redirect()->to(base_url('/login_2'));
-    //     } else if ($this->detect_reset() == True) {
-    //         return redirect()->to(base_url('/password_change'));
-    //     } else {
-
-    //         $router = \Config\Services::router();
-    //         $view_data['controlador'] = $router->controllerName();
-    //         $view_data['metodo'] = $router->methodName();
-    //         $data['header'] = array('templates/templates_header', $view_data);
-    //         $data['sidebar'] = array('templates/templates_side', array('permisos' => load_permissions_nav($this->rol, $this->nav_route, $this->kpi_dashboard, $this->minuta, $this->sla_dashboard, $this->agent)));
-    //         $data['content'] = array($view, $view_data);
-    //         $data['footer'] = array('templates/templates_footer', $view_data);
-    //         echo view('templates/templates_general', $data);
-    //     }
-    // }
+    function load_template($view = '', $view_data = NULL, $data = array()) {
+        $router = \Config\Services::router();
+        $view_data['controlador'] = $router->controllerName();
+        $view_data['metodo'] = $router->methodName();
+        // $data['header'] = array('templates/templates_header', $view_data);
+        $data['content'] = array($view, $view_data);
+        $data['footer'] = array('templates/templates_footer', $view_data);
+        echo view('templates/templates_general', $data);
+    }
 
     protected function set_filtro_datos_listar($post_name, $all_string, $column_name, $user_data, &$where_array) {
         if (!empty($_POST[$post_name]) && $this->input->post($post_name) != $all_string) {
@@ -506,6 +495,5 @@ class MY_Controller extends BaseController {
         $field['disabled'] = TRUE;
         return $field;
     }
-    
 }
 /* End of file MY_Controller.php */
