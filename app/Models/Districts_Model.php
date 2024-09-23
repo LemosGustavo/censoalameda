@@ -22,6 +22,6 @@ class Districts_Model extends MY_Model {
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
+    // protected $protectFields    = true;
     protected $allowedFields    = ['name', 'api_districts_id', 'api_states_id'];
 }

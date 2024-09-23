@@ -13,26 +13,26 @@ class Members_Model extends MY_Model {
         $this->id_name = 'id';
         $this->columnas = array('id', 'name', 'lastname', 'birthdate', 'age', 'gender_id', 'civil_state_id', 'path_photo', 'job_id', 'localities_id', 'contact_id', 'gronwup_id', 'interestarea_id', 'needs_id', 'boss_family');
         $this->fields = array(
-            'name' => array('label' => 'Nombre', 'placeholder' => 'Ingresar Nombre', 'maxlength' => '50', 'required' => TRUE),
-            'lastname' => array('label' => 'Apellido', 'placeholder' => 'Ingresar Apellido', 'maxlength' => '50', 'required' => TRUE),
-            'birthdate' => array('label' => 'Fecha de Nacimiento', 'type' => 'date', 'placeholder' => 'Ingresar Fecha de Nacimiento', 'datetimepicker' => '', 'required' => TRUE),
-            'path_photo' => array('label' => 'Foto', 'type' => 'file', 'placeholder' => 'Ingresar Foto', 'required' => FALSE),
-            'boss_family' => array('label' => 'Jefe de Familia', 'type' => 'checkbox', 'placeholder' => 'Jefe de Familia', 'required' => TRUE),
-            'gender' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'gender_id', 'required' => TRUE,),
-            'civil_state' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'civil_state_id', 'required' => TRUE,),
-            'job' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'job_id', 'required' => TRUE,),
-            'localities' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'localities_id', 'required' => TRUE,),
-            'contact' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'contact_id', 'required' => TRUE,),
-            'gronwup' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'gronwup_id', 'required' => TRUE,),
-            'interestarea' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'interestarea_id', 'required' => TRUE,),
-            'needs' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'needs_id', 'required' => TRUE,),
+            'name' => array('label' => 'Nombre', 'placeholder' => 'Nombre', 'maxlength' => '50', 'required' => TRUE),
+            'lastname' => array('label' => 'Apellido', 'placeholder' => 'Apellido', 'maxlength' => '50', 'required' => TRUE),
+            'birthdate' => array('label' => 'Fecha de Nacimiento', 'type' => 'date', 'placeholder' => 'Fecha de Nacimiento', 'datetimepicker' => '', 'required' => TRUE),
+            // 'path_photo' => array('label' => 'Foto', 'type' => 'file', 'placeholder' => 'Foto', 'required' => FALSE),
+            // 'boss_family' => array('label' => 'Jefe de Familia', 'type' => 'checkbox', 'placeholder' => 'Jefe de Familia', 'required' => TRUE),
+            'gender_drop' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'gender_id', 'required' => TRUE,),
+            'civil_state_drop' => array('label' => 'Estado Civil','input_type' => 'combo', 'id_name' => 'civil_state_id', 'required' => TRUE,),
+            // 'job' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'job_id', 'required' => TRUE,),
+            // 'localities' => array('label' => 'Localidad','input_type' => 'combo', 'id_name' => 'localities_id'),
+            // 'contact' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'contact_id', 'required' => TRUE,),
+            // 'gronwup' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'gronwup_id', 'required' => TRUE,),
+            // 'interestarea' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'interestarea_id', 'required' => TRUE,),
+            // 'needs' => array('label' => 'Género','input_type' => 'combo', 'id_name' => 'needs_id', 'required' => TRUE,),
             
         );
         $this->requeridos = array();
         $this->default_join = array(
-            array('gender', 'gender.id = members.gender_id', '', array('gender.name as gender')),
-            array('civil_state', 'civil_state.id = members.civil_state_id', '', array('civil_state.name as civil_state')),
-            array('localities', 'localities.id = members.localities_id', '', array('localities.name as localities')),
+            array('gender', 'gender.id = members.gender_id', '', array('gender.name as gender_drop')),
+            array('civil_state', 'civil_state.id = members.civil_state_id', '', array('civil_state.name as civil_state_drop')),
+            // array('localities', 'localities.id = members.localities_id', '', array('localities.name as localities')),
         );
     }
 

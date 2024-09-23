@@ -21,6 +21,7 @@
     <script src="<?= base_url("/assets/frames/plugins/moment/moment.min.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/moment/locale/es-mx.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js") ?>"></script>
+    <script src="<?= base_url("/assets/frames/plugins/select2/js/select2.min.js") ?>"></script>
     
     <!-- dropzonejs -->
     <link rel="stylesheet" href="<?= base_url('/assets/frames/plugins/dropzone/min/dropzone.min.css') ?>">
@@ -42,7 +43,8 @@
     <script src="<?= base_url("assets/frames/plugins/bs-stepper/js/bs-stepper.min.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/bootstrap/js/bootstrap.bundle.min.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/dist/js/adminlte.js") ?>"></script>
-    <!-- dropzonejs -->
+    <script src="<?= base_url("/assets/customize/js/censo.js") ?>"></script>
+    
     <script src="<?= base_url('/assets/frames/plugins/dropzone/min/dropzone.min.js') ?>"></script>
 
 </body>
