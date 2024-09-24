@@ -1,43 +1,33 @@
 <style>
-    /* Estilos personalizados del Stepper */
-    .bs-stepper-circle {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: radial-gradient(circle, #ffffff, #d1d8e0);
-        box-shadow: inset -3px -3px 15px rgba(255, 255, 255, 0.9),
-            inset 3px 3px 8px rgba(0, 0, 0, 0.1),
-            6px 6px 20px rgba(0, 0, 0, 0.3);
+    .content-wrapper {
+        background-image: url('/assets/img/fondo.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 24px;
-        color: rgba(0, 0, 0, 0.5);
-        font-weight: bold;
-    }
-
-    .step.active .bs-stepper-circle {
-        background: radial-gradient(circle, #f0f0f0, #a4b0be);
-        color: #333;
-    }
-
-    .bs-stepper-header .line {
-        display: none;
     }
 
     .card {
-        width: 80%;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        width: 100%;
         max-width: 1200px;
         margin: 20px auto;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     .card-body {
+        flex-grow: 1;
         padding: 20px;
-    }
-
-    .bs-stepper-content {
-        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .select2-container .select2-dropdown {
@@ -54,106 +44,109 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-default">
-                        <div class="card-header">
-                            <h3 class="card-title">CENSO ALAMEDA</h3>
+                        <div class="card-header text-center">
+                            <div style="width: 100%; height: 300px; background-image: url('/assets/img/logo_b.jpg'); background-size: cover; background-position: center;"></div>
+
                         </div>
                         <div class="card-body p-0">
-                            <div class="bs-stepper">
-                                <div class="bs-stepper-header" role="tablist">
-                                    <div class="step" data-target="#logins-part">
-                                        <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger">
-                                            <span class="bs-stepper-circle">1</span>
-                                        </button>
+                            <!-- Removido el Stepper, solo dejar el contenido necesario -->
+                            <div class="callout callout-info">
+                                <h5>Datos Personales</h5>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['name']['label']; ?>
+                                        <?php echo $fields['name']['form']; ?>
                                     </div>
-                                    <div class="line"></div>
-                                    <div class="step" data-target="#information-part">
-                                        <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
-                                            <span class="bs-stepper-circle">2</span>
-                                        </button>
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['lastname']['label']; ?>
+                                        <?php echo $fields['lastname']['form']; ?>
                                     </div>
                                 </div>
-                                <div class="bs-stepper-content">
-                                    <div id="logins-part" class="content" role="tabpanel" aria-labelledby="logins-part-trigger">
-                                        <div class="callout callout-info">
-                                            <h5>Datos Personales</h5>
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <?php echo $fields['name']['label']; ?>
-                                                    <?php echo $fields['name']['form']; ?>
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <?php echo $fields['lastname']['label']; ?>
-                                                    <?php echo $fields['lastname']['form']; ?>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <?php echo $fields['birthdate']['label']; ?>
-                                                    <?php echo $fields['birthdate']['form']; ?>
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <?php echo $fields['gender_drop']['label']; ?>
-                                                    <?php echo $fields['gender_drop']['form']; ?>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <?php echo $fields['civil_state_drop']['label']; ?>
-                                                    <?php echo $fields['civil_state_drop']['form']; ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="callout callout-warning">
-                                            <h5>Residencia</h5>
-                                            <div class="row">
-                                                <!-- Dropdown País -->
-                                                <div class="col-md-6 col-lg-6">
-                                                    <div class="form-group">
-                                                        <label for="country">País</label>
-                                                        <select id="country" class="form-control">
-                                                            <option value="">Seleccione un país</option>
-                                                            <?php foreach ($countries as $country): ?>
-                                                                <option value="<?= $country->id; ?>"><?= $country->name; ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Dropdown Provincia -->
-                                                <div id="state-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
-                                                    <label for="state">Provincia</label>
-                                                    <select id="state" class="form-control" disabled>
-                                                        <option value="">Seleccione una provincia</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <!-- Dropdown Departamento -->
-                                                <div id="district-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
-                                                    <label for="district">Departamento</label>
-                                                    <select id="district" class="form-control" disabled>
-                                                        <option value="">Seleccione un departamento</option>
-                                                    </select>
-                                                </div>
-
-                                                <!-- Dropdown Localidad -->
-                                                <div id="locality-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
-                                                    <label for="locality">Localidad</label>
-                                                    <select id="locality" class="form-control" disabled>
-                                                        <option value="">Seleccione una localidad</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button class="btn btn-secondary align-items-md-end" onclick="stepper.next()">Siguiente</button>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['birthdate']['label']; ?>
+                                        <?php echo $fields['birthdate']['form']; ?>
                                     </div>
-                                    <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
-                                        <button class="btn btn-primary" onclick="stepper.previous()">Anterior</button>
-                                        <button type="submit" class="btn btn-primary">Enviar</button>
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['gender_drop']['label']; ?>
+                                        <?php echo $fields['gender_drop']['form']; ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['civil_state_drop']['label']; ?>
+                                        <?php echo $fields['civil_state_drop']['form']; ?>
                                     </div>
                                 </div>
                             </div>
+                            <div class="callout callout-grey">
+                                <h5>Contacto</h5>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields_contact['email']['label']; ?>
+                                        <?php echo $fields_contact['email']['form']; ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields_contact['phone']['label']; ?>
+                                        <?php echo $fields_contact['phone']['form']; ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields_contact['social_media_drop']['label']; ?>
+                                        <?php echo $fields_contact['social_media_drop']['form']; ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields_contact['other_socialmedia']['label']; ?>
+                                        <?php echo $fields_contact['other_socialmedia']['form']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="callout callout-warning">
+                                <h5>Residencia</h5>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label for="country">País</label>
+                                            <select id="country" class="form-control">
+                                                <option value="">Seleccione un país</option>
+                                                <?php foreach ($countries as $country): ?>
+                                                    <option value="<?= $country->id; ?>"><?= $country->name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="state-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
+                                        <label for="state">Provincia</label>
+                                        <select id="state" class="form-control" disabled>
+                                            <option value="">Seleccione una provincia</option>
+                                        </select>
+                                    </div>
+                                    <div id="district-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
+                                        <label for="district">Departamento</label>
+                                        <select id="district" class="form-control" disabled>
+                                            <option value="">Seleccione un departamento</option>
+                                        </select>
+                                    </div>
+                                    <div id="locality-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
+                                        <label for="locality">Localidad</label>
+                                        <select id="locality" class="form-control" disabled>
+                                            <option value="">Seleccione una localidad</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['address']['label']; ?>
+                                        <?php echo $fields['address']['form']; ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['address_number']['label']; ?>
+                                        <?php echo $fields['address_number']['form']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
                         </div>
                     </div>
                 </div>
@@ -161,6 +154,7 @@
         </div>
     </div>
 </div>
+
 
 <script {csp-script-nonce}>
     $(document).ready(function() {
@@ -178,11 +172,23 @@
             });
         }
 
+        function initializeSelect2Multiple(selector, placeholder) {
+            $(selector).select2({
+                placeholder: placeholder,
+                dropdownAutoWidth: true,
+                dropdownParent: $(selector).parent(),
+                multiple: true,
+                allowClear: true,
+                tags: true // Permite la entrada de nuevas opciones
+            });
+        }
+
         // Inicializar Select2 en cada uno de los dropdowns
         initializeSelect2('#country', 'Seleccione un país');
         initializeSelect2('#state', 'Seleccione una provincia');
         initializeSelect2('#district', 'Seleccione un departamento');
         initializeSelect2('#locality', 'Seleccione una localidad');
+        initializeSelect2Multiple('#social_media_drop', 'Seleccione Redes Sociales');
 
         // Ocultar dropdowns hasta que se seleccione "Argentina"
         $('#country').change(function() {
@@ -257,9 +263,5 @@
                 $('#locality').prop('disabled', true).html('<option value="">Seleccione una localidad</option>');
             }
         });
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        window.stepper = new Stepper(document.querySelector('.bs-stepper'))
     });
 </script>
