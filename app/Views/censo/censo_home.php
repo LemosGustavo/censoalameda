@@ -50,7 +50,7 @@
                         </div>
                         <div class="card-body p-0">
                             <!-- Removido el Stepper, solo dejar el contenido necesario -->
-                            <div class="callout callout-info">
+                            <div class="callout callout-personal">
                                 <h5>Datos Personales</h5>
                                 <div class="row">
                                     <div class="form-group col-md-6">
@@ -77,9 +77,13 @@
                                         <?php echo $fields['civil_state_drop']['label']; ?>
                                         <?php echo $fields['civil_state_drop']['form']; ?>
                                     </div>
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields['dni']['label']; ?>
+                                        <?php echo $fields['dni']['form']; ?>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="callout callout-grey">
+                            <div class="callout callout-contact">
                                 <h5>Contacto</h5>
                                 <div class="row">
                                     <div class="form-group col-md-6">
@@ -102,7 +106,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="callout callout-warning">
+                            <div class="callout callout-house">
                                 <h5>Residencia</h5>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6">
@@ -145,6 +149,42 @@
                                         <?php echo $fields['address_number']['form']; ?>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="callout callout-vocation">
+                                <h5>Vocación</h5>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields_vocation['name_profession']['label']; ?>
+                                        <?php echo $fields_vocation['name_profession']['form']; ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <?php echo $fields_vocation['artistic_skills']['label']; ?>
+                                        <?php echo $fields_vocation['artistic_skills']['form']; ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>¿Sirves como voluntario en la iglesia?</label>
+                                    <div class="icheck-success d-inline">
+                                        <input type="radio" id="voluntario_si" name="voluntario" value="si" onclick="toggle_dropdowns()">
+                                        <label for="voluntario_si">SI</label>
+                                    </div>
+                                    <div class="icheck-carrot d-inline ml-4">
+                                        <input type="radio" id="voluntario_no" name="voluntario" value="no" onclick="toggle_dropdowns()">
+                                        <label for="voluntario_no">NO</label>
+                                    </div>
+                                </div>
+                                <!-- Dropdown for "SI" -->
+                                <div id="dropdown_si" class="form-group" style="display: none;">
+                                    <?php echo $fields_vocation['voluntary_yes_drop']['label']; ?>
+                                    <?php echo $fields_vocation['voluntary_yes_drop']['form']; ?>
+                                </div>
+
+                                <!-- Question and Dropdown for "NO" -->
+                                <div id="dropdown_no" class="form-group" style="display: none;">
+                                    <?php echo $fields_vocation['voluntary_no_drop']['label']; ?>
+                                    <?php echo $fields_vocation['voluntary_no_drop']['form']; ?>
+                                </div>
+
                             </div>
                             <button type="submit" class="btn btn-primary">Enviar</button>
                         </div>
@@ -189,6 +229,8 @@
         initializeSelect2('#district', 'Seleccione un departamento');
         initializeSelect2('#locality', 'Seleccione una localidad');
         initializeSelect2Multiple('#social_media_drop', 'Seleccione Redes Sociales');
+        initializeSelect2Multiple('#voluntary_yes_drop', 'Seleccione área de servicio');
+        initializeSelect2Multiple('#voluntary_no_drop', 'Seleccione área de servicio');
 
         // Ocultar dropdowns hasta que se seleccione "Argentina"
         $('#country').change(function() {
@@ -264,4 +306,22 @@
             }
         });
     });
+
+    function toggle_dropdowns() {
+        // Obtener el valor del radio seleccionado
+        var voluntario = $('input[name="voluntario"]:checked').val();
+
+        // Mostrar dropdown correspondiente si se selecciona "SI"
+        if (voluntario === "si") {
+            $('#dropdown_si').show();
+            $('#dropdown_no_question').hide();
+            $('#dropdown_no').hide();
+        }
+        // Mostrar dropdown y pregunta si se selecciona "NO"
+        else if (voluntario === "no") {
+            $('#dropdown_si').hide();
+            $('#dropdown_no_question').show();
+            $('#dropdown_no').show();
+        }
+    }
 </script>

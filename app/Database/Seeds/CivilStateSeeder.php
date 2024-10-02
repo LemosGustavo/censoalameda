@@ -4,10 +4,8 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class CivilStateSeeder extends Seeder
-{
-    public function run()
-    {
+class CivilStateSeeder extends Seeder {
+    public function run() {
         $data = [
             ['name' => 'Soltero/a', 'audi_user' => 1, 'audi_date' => date('Y-m-d H:i:s'), 'audi_action' => 'I'],
             ['name' => 'Casado/a', 'audi_user' => 1, 'audi_date' => date('Y-m-d H:i:s'), 'audi_action' => 'I'],

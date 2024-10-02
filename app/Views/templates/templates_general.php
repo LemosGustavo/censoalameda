@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/bs-stepper/css/bs-stepper.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/dropzone/min/dropzone.min.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/icheck-bootstrap/icheck-bootstrap.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("/assets/frames/dist/css/adminlte.min.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("/assets/customize/css/censo.css") ?>">
     <link rel="stylesheet" type="text/css" href="<?= base_url("/assets/frames/plugins/datatables-buttons/css/buttons.bootstrap4.min.css") ?>" />
 
     <script src="<?= base_url('/assets/frames/plugins/jquery/jquery.min.js') ?>"></script>

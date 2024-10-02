@@ -4,10 +4,8 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class MakeTableJobs extends Migration
-{
-    public function up()
-    {
+class MakeTableJob extends Migration {
+    public function up() {
         $this->forge->addField([
             'id' => [
                 'type' => 'INT',
@@ -15,19 +13,14 @@ class MakeTableJobs extends Migration
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
-            'profession' => [
+            'name_profession' => [
                 'type' => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '250',
                 'null' => true,
             ],
-            'last_job' => [
+            'artistic_skills' => [
                 'type' => 'VARCHAR',
-                'constraint' => '100',
-                'null' => true,
-            ],
-            'artistic_skill' => [
-                'type' => 'VARCHAR',
-                'constraint' => '500',
+                'constraint' => '250',
                 'null' => true,
             ],
             'audi_user' => [
@@ -40,17 +33,16 @@ class MakeTableJobs extends Migration
                 'null' => true,
             ],
             'audi_action' => [
-                'type'       => 'ENUM',
+                'type' => 'ENUM',
                 'constraint' => ['I', 'U', 'D'],
                 'null' => true,
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('jobs');
+        $this->forge->createTable('job');
     }
 
-    public function down()
-    {
-        $this->forge->dropTable('jobs');
+    public function down() {
+        $this->forge->dropTable('job');
     }
 }

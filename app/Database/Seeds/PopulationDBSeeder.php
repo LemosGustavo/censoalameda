@@ -13,5 +13,6 @@ class PopulationDBSeeder extends Seeder {
         $this->call('CivilStateSeeder');
         $this->call('GenderSeeder');
         $this->call('SocialMediaSeeder');
+        $this->call('VoluntarySeeder');
     }
 }
