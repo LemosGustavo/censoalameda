@@ -31,11 +31,16 @@ class MakeTableMembersFamily extends Migration {
                 'unsigned' => true,
                 'null' => true,
             ],
+            'family_age' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+                'null' => true,
+            ],
             'lives' => [
                 'type' => 'TINYINT',
                 'constraint' => '1',
                 'null' => true,
-                'default' => 0, // Indica que no está sirviendo por defecto
             ],
             'audi_user' => [
                 'type' => 'INT',
