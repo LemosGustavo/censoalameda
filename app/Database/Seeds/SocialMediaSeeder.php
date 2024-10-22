@@ -4,10 +4,8 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class SocialMediaSeeder extends Seeder
-{
-    public function run()
-    {
+class SocialMediaSeeder extends Seeder {
+    public function run() {
         $data = [
             ['name' => 'YouVersion', 'audi_user' => 1, 'audi_date' => date('Y-m-d H:i:s'), 'audi_action' => 'I'],
             ['name' => 'Snapchat', 'audi_user' => 1, 'audi_date' => date('Y-m-d H:i:s'), 'audi_action' => 'I'],

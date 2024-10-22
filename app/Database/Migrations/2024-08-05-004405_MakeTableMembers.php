@@ -84,6 +84,11 @@ class MakeTableMembers extends Migration {
                 'constraint' => 1,
                 'null' => true,
             ],
+            'quantity_sons' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+            ],
             'audi_user' => [
                 'type' => 'INT',
                 'constraint' => 11,
