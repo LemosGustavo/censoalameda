@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class MakeTableFamily extends Migration {
+class MakeTableEnjoys extends Migration {
     public function up() {
         $this->forge->addField([
             'id' => [
@@ -38,11 +38,11 @@ class MakeTableFamily extends Migration {
         $this->forge->addKey('id', true);
 
         // Crear tabla
-        $this->forge->createTable('family');
+        $this->forge->createTable('enjoys');
     }
 
     public function down() {
         // Eliminar tabla
-        $this->forge->dropTable('family');
+        $this->forge->dropTable('enjoys');
     }
 }

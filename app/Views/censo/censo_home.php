@@ -248,7 +248,18 @@
 
         $('#birthdate').datetimepicker({
             maxDate: new Date(),
-            format: 'L'
+            format: 'L',
+            icons: {
+                time: 'far fa-clock',
+                date: 'far fa-calendar-alt',
+                up: 'fas fa-arrow-up',
+                down: 'fas fa-arrow-down',
+                previous: 'fas fa-chevron-left',
+                next: 'fas fa-chevron-right',
+                today: 'fas fa-calendar-check',
+                clear: 'far fa-trash-alt',
+                close: 'far fa-times-circle'
+            }
         });
         // Inicialización de Select2 en todos los dropdowns
         function initializeSelect2(selector, placeholder) {

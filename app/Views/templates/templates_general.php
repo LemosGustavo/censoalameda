@@ -16,14 +16,14 @@
     <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/dropzone/min/dropzone.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/icheck-bootstrap/icheck-bootstrap.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("/assets/frames/dist/css/adminlte.min.css") ?>">
-    <link rel="stylesheet" href="<?= base_url("/assets/customize/css/censo.css") ?>">
     <link rel="stylesheet" type="text/css" href="<?= base_url("/assets/frames/plugins/datatables-buttons/css/buttons.bootstrap4.min.css") ?>" />
-
+    
     <script src="<?= base_url('/assets/frames/plugins/jquery/jquery.min.js') ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/moment/moment.min.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/moment/locale/es-mx.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/select2/js/select2.min.js") ?>"></script>
+    <link rel="stylesheet" href="<?= base_url("/assets/customize/css/censo.css") ?>">
     
     <!-- dropzonejs -->
     <link rel="stylesheet" href="<?= base_url('/assets/frames/plugins/dropzone/min/dropzone.min.css') ?>">

@@ -171,3 +171,236 @@
   background-color: #f8d7da; /* Rojo claro */
   border-color: #dc3545; /* Borde rojo */
 }
+
+/* Personalización del panel del datetimepicker */
+.datetimepicker-widget {
+  border-radius: 15px; /* Bordes redondeados */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra suave */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #ddd; /* Borde ligero */
+}
+
+/* Estilo para los encabezados de los días */
+.datetimepicker-widget .datepicker .datepicker-days th {
+  background-color: #a5d6a7; /* Fondo amigable para los encabezados */
+  color: #fff; /* Texto blanco */
+  padding: 10px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 15px 15px 0 0; /* Bordes redondeados en la parte superior */
+}
+
+/* Estilo para los días del calendario */
+.datetimepicker-widget .day {
+  border-radius: 50%; /* Forma circular para los días */
+  padding: 10px; /* Espaciado interno */
+  transition: background-color 0.3s;
+}
+
+/* Día activo */
+.datetimepicker-widget .day.active {
+  background-color: #a5d6a7; /* Color de fondo para el día activo */
+  color: #fff; /* Texto blanco */
+}
+
+/* Día con hover */
+.datetimepicker-widget .day:hover {
+  background-color: #e0e0e0; /* Fondo más oscuro al pasar el mouse */
+}
+
+/* Estilo para los botones de navegación */
+.datetimepicker-widget .prev,
+.datetimepicker-widget .next,
+.datetimepicker-widget .datepicker-switch {
+  color: #555; /* Color más amigable */
+  font-weight: bold;
+}
+
+/* Estilo para los meses y años */
+.datetimepicker-widget .datepicker .datepicker-months th,
+.datetimepicker-widget .datepicker .datepicker-years th {
+  background-color: #a5d6a7; /* Fondo amigable para los encabezados */
+  color: #fff; /* Texto blanco */
+}
+
+/* Cambia el estilo de los botones de navegación */
+.datetimepicker-widget .prev:hover,
+.datetimepicker-widget .next:hover,
+.datetimepicker-widget .datepicker-switch:hover {
+  background-color: #e0e0e0; /* Fondo más oscuro al pasar el mouse */
+  border-radius: 10px; /* Redondear botones de navegación */
+}
+
+/* Estilo para el input de fecha */
+.input-group.date input {
+  border-radius: 30px; /* Redondeado para el input */
+  padding: 12px 20px; /* Espaciado interno */
+  background-color: #f9f9f9; /* Fondo suave */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border: 1px solid #ddd; /* Borde ligero */
+}
+
+/* Estilo para el icono del datetimepicker */
+.input-group.date .input-group-text {
+  border-radius: 0 30px 30px 0; /* Alineación circular */
+  background-color: #a5d6a7; /* Fondo del icono */
+  color: #fff; /* Texto blanco */
+  border: none; /* Sin borde */
+}
+
+/* Estilizado adicional para los campos de texto como "Nombre" */
+input[type="text"] {
+  border-radius: 30px; /* Bordes redondeados, similar a otros campos */
+  padding: 12px 20px; /* Espaciado interno para mayor consistencia */
+  background-color: #f9f9f9; /* Fondo claro, igual que otros campos de entrada */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border: 1px solid #ddd; /* Borde ligero */
+  font-size: 16px; /* Tamaño de fuente legible */
+  transition: all 0.3s ease; /* Efectos de transición suave */
+}
+
+/* Efecto al pasar el mouse */
+input[type="text"]:hover {
+  background-color: #f1f1f1; /* Fondo ligeramente más oscuro al pasar el mouse */
+}
+
+/* Estilizado cuando el campo está enfocado */
+input[type="text"]:focus {
+  border-color: #a5d6a7; /* Borde verde suave al enfocar */
+  box-shadow: 0 6px 12px rgba(0, 175, 0, 0.25); /* Sombra suave */
+  background-color: #fff; /* Fondo blanco al enfocar */
+  outline: none; /* Eliminar borde por defecto */
+}
+
+/* Estilizado del placeholder amigable */
+input[type="text"]::placeholder {
+  color: #999;
+  font-style: italic; /* Placeholder en cursiva para un aspecto más amigable */
+}
+
+
+
+
+
+
+/* Estilo para campos de número */
+input[type="number"] {
+  border-radius: 30px; /* Bordes redondeados */
+  padding: 12px 20px; /* Espaciado interno */
+  background-color: #f9f9f9; /* Fondo claro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border: 1px solid #ddd; /* Borde ligero */
+  font-size: 16px; /* Tamaño de fuente legible */
+  transition: all 0.3s ease; /* Efectos de transición suave */
+}
+
+/* Efecto al pasar el mouse */
+input[type="number"]:hover {
+  background-color: #f1f1f1; /* Fondo ligeramente más oscuro */
+}
+
+/* Estilizado cuando el campo está enfocado */
+input[type="number"]:focus {
+  border-color: #a5d6a7; /* Borde verde suave */
+  box-shadow: 0 6px 12px rgba(0, 175, 0, 0.25); /* Sombra suave */
+  background-color: #fff; /* Fondo blanco al enfocar */
+  outline: none; /* Eliminar el borde por defecto */
+}
+
+/* Placeholder amigable */
+input[type="number"]::placeholder {
+  color: #999;
+  font-style: italic; /* Placeholder en cursiva */
+}
+
+
+
+
+
+/* Sobreescribe estilos de form-control cuando se usa con selectize */
+.selectize.form-control {
+  border-radius: 30px !important; /* Bordes redondeados */
+  background-color: #f9f9f9 !important; /* Fondo claro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra suave */
+  border: 1px solid #ddd !important; /* Borde ligero */
+  
+}
+
+/* Input de selectize dentro de form-control */
+.selectize-input.form-control {
+  border: none !important;
+  border-radius: 30px !important; /* Bordes redondeados */
+  background-color: #f9f9f9 !important; /* Fondo claro */
+  padding: 12px 20px !important; /* Espaciado interno */
+  font-size: 12px !important; /* Tamaño de texto */
+}
+
+/* Placeholder de selectize dentro de form-control */
+.selectize-input.form-control input {
+  color: #999 !important;
+  font-style: italic !important;
+}
+
+/* Dropdown de selectize cuando form-control está presente */
+.selectize-dropdown.form-control {
+  border-radius: 15px !important; /* Bordes redondeados */
+  background-color: #ffffff !important; /* Fondo blanco */
+  border: 1px solid #ddd !important; /* Borde ligero */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important; /* Sombra suave */
+}
+
+/* Opciones dentro del dropdown de form-control */
+.selectize-dropdown.form-control .option {
+  padding: 10px !important; /* Espaciado interno */
+  font-size: 16px !important; /* Tamaño de texto */
+  border-bottom: 1px solid #f1f1f1 !important; /* Separador */
+}
+
+/* Opción seleccionada dentro de form-control */
+.selectize-dropdown.form-control .option.selected {
+  background-color: #a5d6a7 !important; /* Fondo verde claro */
+  color: white !important; /* Texto blanco */
+}
+
+/* Hover sobre las opciones en form-control */
+.selectize-dropdown.form-control .option:hover {
+  background-color: #f1f1f1 !important; /* Fondo al pasar el mouse */
+}
+
+/* .form-control {
+  border-radius: 30px !important;
+} */
+
+.select2-container--default .select2-selection--single {
+  border-radius: 30px !important; /* Ajusta el valor según tus necesidades */
+  border: 1px solid #ced4da; /* Si quieres modificar el borde */
+}
+
+.select2-container--default .select2-dropdown {
+  border-radius: 15px !important; /* Bordes redondeados para el dropdown */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Añadir una sombra suave */
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+  border-radius: 30px !important;
+  border: 1px solid #ced4da;
+}
+
+
+/* Estilo para los select múltiples */
+.select2-container--default .select2-selection--multiple {
+  border-radius: 30px !important; /* Ajusta el valor */
+  border: 1px solid #ced4da;
+}
+
+/* Estilo para las etiquetas dentro del select múltiple */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  border-radius: 15px !important;
+  background-color: #f0f0f0; /* Fondo amigable */
+  color: #333; /* Color del texto */
+}
+
+/* Modificar el dropdown */
+.select2-container--default .select2-dropdown {
+  border-radius: 15px !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
