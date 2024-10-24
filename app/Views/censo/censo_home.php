@@ -233,6 +233,73 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="callout callout-cristians">
+                                <h5>Crecimiento Cristiano</h5>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label>¿De qué manera vivís la celebración cada fin de semana?</label>
+                                        <div class="icheck-success d-inline">
+                                            <input type="radio" id="presencial" name="celebracion" value="presencial">
+                                            <label for="presencial">Presencial</label>
+                                        </div>
+                                        <div class="icheck-carrot d-inline ml-4">
+                                            <input type="radio" id="virtual" name="celebracion" value="virtual">
+                                            <label for="virtual">Virtual</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <?php echo $fields_cristians['experiences_drop']['label']; ?>
+                                        <?php echo $fields_cristians['experiences_drop']['form']; ?>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <?php echo $fields_cristians['services_drop']['label']; ?>
+                                        <?php echo $fields_cristians['services_drop']['form']; ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label>¿Asistes a un Grupo Pequeño?</label>
+                                        <div class="icheck-success d-inline">
+                                            <input type="radio" id="grupo_peque_si_radio" name="grupo" value="si" onclick="toggle_group()">
+                                            <label for="grupo_peque_si_radio">SI</label>
+                                        </div>
+                                        <div class="icheck-carrot d-inline ml-4">
+                                            <input type="radio" id="grupo_peque_no_radio" name="grupo" value="no" onclick="toggle_group()">
+                                            <label for="grupo_peque_no_radio">NO</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dropdown for "SI" -->
+                                    <div id="grupo_peque_si_div" class="form-group col-md-6" style="display: none;">
+                                        <div id="little_group_input"></div>
+                                    </div>
+                                    <!-- Dropdown for "NO" -->
+                                    <div id="grupo_peque_no_div" class="form-group col-md-6" style="display: none;">
+                                        <label>¿Te gustaría participar?</label>
+                                        <div class="icheck-success d-inline">
+                                            <input type="radio" id="grupo_peque_no_si" name="grupo_peque_no_check" value="si">
+                                            <label for="grupo_peque_no_si">SI</label>
+                                        </div>
+                                        <div class="icheck-carrot d-inline ml-4">
+                                            <input type="radio" id="grupo_peque_no_no" name="grupo_peque_no_check" value="no">
+                                            <label for="grupo_peque_no_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <?php echo $fields_cristians['interests_drop']['label']; ?>
+                                        <?php echo $fields_cristians['interests_drop']['form']; ?>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <?php echo $fields_cristians['needs_drop']['label']; ?>
+                                        <?php echo $fields_cristians['needs_drop']['form']; ?>
+                                    </div>
+                                </div>
+
+                            </div>
                             <button type="submit" class="btn btn-primary">Enviar</button>
                         </div>
                     </div>
@@ -290,6 +357,10 @@
         initializeSelect2Multiple('#voluntary_yes_drop', 'Seleccione área de servicio');
         initializeSelect2Multiple('#voluntary_no_drop', 'Seleccione área de servicio');
         initializeSelect2Multiple('#family_drop', 'Seleccione familiar');
+        initializeSelect2Multiple('#experiences_drop', 'Seleccione experiencia');
+        initializeSelect2Multiple('#services_drop', 'Seleccione servicio');
+        initializeSelect2Multiple('#interests_drop', 'Seleccione interés');
+        initializeSelect2Multiple('#needs_drop', 'Seleccione necesidad');
 
         // Ocultar dropdowns hasta que se seleccione "Argentina"
         $('#country').change(function() {
@@ -416,6 +487,45 @@
             $('#quantity_sons').val(''); // Borrar el valor del campo quantity_sons
             $('#children_inputs').empty(); // Limpiar los inputs generados
         }
+    }
+
+    function toggle_group() {
+        // Obtener el valor del radio seleccionado
+        var grupo_peque = $('input[name="grupo"]:checked').val();
+        console.log(grupo_peque);
+
+        // Mostrar dropdown correspondiente si se selecciona "SI"
+        if (grupo_peque === "si") {
+            $('#grupo_peque_si_div').show();
+            $('#grupo_peque_no_div').hide();
+            generateGroupInputs();
+        }
+        // Ocultar dropdown y borrar el contenido si se selecciona "NO"
+        else if (grupo_peque === "no") {
+            $('#grupo_peque_si_div').hide();
+            $('#grupo_peque_no_div').show();
+            $('#little_group_input').empty(); // Limpiar los inputs generados
+        }
+    }
+
+    function generateGroupInputs() {
+        const container = $('#little_group_input');
+        container.empty(); // Clear previous inputs
+
+        const childDiv = $(`
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <label for="name_guia">Nombre completo de Guía/s</label>
+                            <input type="text" class="form-control" id="name_guia" name="name_guia" >
+                        </div>
+                        <div class="col-md-6">
+                            <label for="name_group">Nombre Grupo (opcional)</label>
+                            <input type="text" class="form-control" id="name_group" name="name_group">                            
+                        </div>
+                    </div>
+                `);
+        container.append(childDiv);
+
     }
 
     function generateChildInputs() {

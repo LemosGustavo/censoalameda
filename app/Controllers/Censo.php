@@ -41,6 +41,8 @@ class Censo extends MY_Controller {
         $contact_class = new stdClass();
         $vocation_class = new stdClass();
         $family_class = new stdClass();
+        $cristians_class = new stdClass();
+
         $contact_class->fields = array(
             'email' => array('label' => 'Email', 'type' => 'email', 'placeholder' => 'Ingresar correo electrónico', 'maxlength' => '50', 'required' => TRUE),
             'phone' => array('label' => 'Teléfono', 'type' => 'text', 'placeholder' => 'Ingresar teléfono', 'maxlength' => '50', 'required' => TRUE),
@@ -58,6 +60,13 @@ class Censo extends MY_Controller {
         $family_class->fields = array(
             'quantity_sons' => array('label' => '¿Cuántos hijos tienes?', 'type' => 'number', 'placeholder' => 'Número de hijos'),
             'family_drop' => array('label' => '¿Con quién vives?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'family_id'),
+        );
+
+        $cristians_class->fields = array(
+            'experiences_drop' => array('label' => 'Elige las experiencias completadas', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'experiences_id'),
+            'services_drop' => array('label' => '¿Has utilizado alguno de estos servicios', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'services_id',),
+            'interests_drop' => array('label' => '¿Cuáles son tus áreas de interés?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'interests_id',),
+            'needs_drop' => array('label' => '¿Cuáles son tus necesidades?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'needs_id',),
         );
 
         $array_civil_state = $this->get_array('Civil_state_Model', 'name', 'id', ['orderBy' => 'id'], array('' => '-- Seleccionar Estado Civil --'));
@@ -78,6 +87,18 @@ class Censo extends MY_Controller {
         $array_family_drop = $this->get_array('Family_Model', 'name', 'id', ['orderBy' => 'id']);
         $family_class->fields['family_drop']['array'] = $array_family_drop;
 
+        $array_experiences_drop = $this->get_array('Experiences_Model', 'name', 'id', ['orderBy' => 'name']);
+        $cristians_class->fields['experiences_drop']['array'] = $array_experiences_drop;
+
+        $array_services_drop = $this->get_array('Services_Model', 'name', 'id', ['orderBy' => 'name']);
+        $cristians_class->fields['services_drop']['array'] = $array_services_drop;
+
+        $array_interests_drop = $this->get_array('Interests_Model', 'name', 'id', ['orderBy' => 'name']);
+        $cristians_class->fields['interests_drop']['array'] = $array_interests_drop;
+
+        $array_needs_drop = $this->get_array('Needs_Model', 'name', 'id', ['orderBy' => 'name']);
+        $cristians_class->fields['needs_drop']['array'] = $array_needs_drop;
+
 
         // lm($members_model->fields);
         $country_model = new Countries_Model();
@@ -86,6 +107,7 @@ class Censo extends MY_Controller {
         $data['fields_contact'] = $this->build_fields($contact_class->fields);
         $data['fields_vocation'] = $this->build_fields($vocation_class->fields);
         $data['fields_family'] = $this->build_fields($family_class->fields);
+        $data['fields_cristians'] = $this->build_fields($cristians_class->fields);
         $data['title'] = "Ingresar Usuario";
         // $data['txt_btn'] = "create";
 

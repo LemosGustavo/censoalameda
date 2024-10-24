@@ -395,8 +395,9 @@ input[type="number"]::placeholder {
 /* Estilo para las etiquetas dentro del select múltiple */
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
   border-radius: 15px !important;
-  background-color: #f0f0f0; /* Fondo amigable */
-  color: #333; /* Color del texto */
+  background-color: #0000ff; /* Fondo amigable */
+ /* background-color: #f0f0f0; /* Fondo amigable */
+  color: #f0f0f0; /* Color del texto */
 }
 
 /* Modificar el dropdown */
