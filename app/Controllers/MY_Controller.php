@@ -14,7 +14,7 @@ class MY_Controller extends BaseController {
         header('Server: ');
         if (ENVIRONMENT !== 'development') {
             $_SERVER['HTTPS'] = 'off';
-            if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+            if ($_SERVER["HTTP_X_FORWARDED_PROTO"] === 'https') {
                 $_SERVER['HTTPS'] = 'on';
             }
             if ($_SERVER['HTTPS'] != 'on') {
