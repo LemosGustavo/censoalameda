@@ -11,7 +11,7 @@ class Members_Model extends MY_Model {
         $this->class_name = 'Members_Model';
         $this->msg_name = 'Miembro';
         $this->id_name = 'id';
-        $this->columnas = array('id', 'name', 'lastname', 'birthdate', 'age', 'gender_id', 'civil_state_id', 'path_photo', 'job_id', 'localities_id', 'contact_id', 'gronwup_id', 'interestarea_id', 'needs_id', 'boss_family');
+        $this->columnas = array('id', 'name', 'lastname', 'birthdate', 'dni', 'age', 'address', 'address_number', 'gender_id', 'civil_state_id', 'path_photo', 'job_id', 'localities_id', 'contact_id', 'gronwup_id', 'interestarea_id', 'needs_id', 'boss_family');
         $this->fields = array(
             'name' => array('label' => 'Nombre', 'placeholder' => 'Nombre', 'maxlength' => '50', 'required' => TRUE),
             'lastname' => array('label' => 'Apellido', 'placeholder' => 'Apellido', 'maxlength' => '50', 'required' => TRUE),

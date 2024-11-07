@@ -203,9 +203,9 @@ class MY_Controller extends BaseController {
                     $field['type'] = 'text';
                     break;
                 case 'email':
-                    $field['pattern'] = "(?!(^[.-].*|[^@]*[.-]@|.*\.{2,}.*)|^.{254}.)([a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@)(?!-.*|.*-\.)([a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,15}";
+                    $field['pattern'] = "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z]{2,}$";
                     $field['title'] = 'Debe ingresar un email válido';
-                    $field['type'] = 'text';
+                    $field['type'] = 'email';
                     break;
                 case 'integer':
                     $field['pattern'] = '^(0|[1-9][0-9]*)$';

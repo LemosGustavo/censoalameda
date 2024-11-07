@@ -38,6 +38,8 @@
     }
 </style>
 
+<?= form_open(base_url('censo/ajax_save'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off')); ?>
+<?// php= csrf_field(); ?>
 <div class="content-wrapper d-flex align-items-center justify-content-center">
     <div class="card">
         <div class="card-body">
@@ -45,8 +47,8 @@
                 <div class="col-md-12">
                     <div class="card card-default">
                         <div class="card-header text-center">
-                            <div style="width: 100%; height: 300px; background-image: url('/assets/img/logo_b.jpg'); background-size: cover; background-position: center;"></div>
-
+                            <div style="width: 100%; height: 300px; background-image: url('/assets/img/logo_b.jpg'); background-size: cover; background-position: center;">
+                            </div>
                         </div>
                         <div class="card-body p-0">
                             <!-- Removido el Stepper, solo dejar el contenido necesario -->
@@ -300,7 +302,7 @@
                                 </div>
 
                             </div>
-                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            <?php echo form_submit(array('class' => 'btn btn-primary', 'title' => 'Enviar', 'form' => 'form_censo'), 'Enviar') ?>
                         </div>
                     </div>
                 </div>
@@ -308,10 +310,58 @@
         </div>
     </div>
 </div>
+<?= form_close(); ?>
 
 
 <script {csp-script-nonce}>
+    $(function() {
+        // Establecer el mensaje personalizado al campo requerido que no es válido
+        $('[required]').on('invalid', function() {
+            this.setCustomValidity('Por favor, completa este campo');
+        });
+
+        // Limpiar el mensaje de error personalizado cuando el usuario empieza a escribir
+        $('[required]').on('input', function() {
+            this.setCustomValidity('');
+        });
+
+        // Manejar el evento submit del formulario
+        $('#form_censo').on('submit', function(event) {
+            let isValid = true;
+
+            // Comprobar si hay campos requeridos no completados
+            $('[required]').each(function() {
+                if (!this.checkValidity()) {
+                    isValid = false;
+                    this.setCustomValidity('Completa el campo'); // Mensaje personalizado
+                    $(this).addClass('is-invalid'); // Añadir clase de error (opcional)
+                } else {
+                    $(this).removeClass('is-invalid'); // Remover clase de error
+                }
+            });
+
+            // Si el formulario no es válido, prevenir el envío
+            if (!isValid) {
+                event.preventDefault(); // Prevenir el envío del formulario
+            }
+        });
+    });
+
+
+
     $(document).ready(function() {
+
+        // $('#form_censo').on('submit', function(e) {
+        //     e.preventDefault(); // Previene el envío por defecto
+        //     // Aquí se puede agregar la lógica de validación si es necesario
+        //     if ($(this).data('bs.validator').isValid()) {
+        //         // Si es válido, se envía el formulario
+        //         this.submit();
+        //     } else {
+        //         // Manejar errores de validación
+        //         alert('Por favor, completa los campos requeridos.');
+        //     }
+        // });
 
         $('#birthdate').datetimepicker({
             maxDate: new Date(),
@@ -453,6 +503,26 @@
                 toggle_sons(); // Llama a la función para ocultar los campos de hijos
             }
         });
+
+        // // Añadir el tooltip a cada campo `required`
+        // $('input[required], select[required], textarea[required]').each(function() {
+        //     const $input = $(this);
+
+        //     // Añadir tooltip con icono de información dentro
+        //     $input.attr('data-toggle', 'tooltip')
+        //         .attr('data-placement', 'top')
+        //         .attr('title', '<i class="fas fa-info-circle"></i> Completa este campo')
+        //         .tooltip({
+        //             html: true, // Permitir HTML dentro del tooltip
+        //             trigger: 'focus' // Mostrar tooltip al enfocar el campo
+        //         })
+        //         .on('focus', function() {
+        //             $(this).tooltip('show'); // Mostrar tooltip al enfocar
+        //         })
+        //         .on('blur', function() {
+        //             $(this).tooltip('hide'); // Ocultar tooltip al perder el foco
+        //         });
+        // });
     });
 
     function toggle_dropdowns() {

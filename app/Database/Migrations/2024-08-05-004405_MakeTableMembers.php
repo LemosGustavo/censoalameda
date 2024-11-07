@@ -27,13 +27,26 @@ class MakeTableMembers extends Migration {
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-
             'age' => [
                 'type' => 'INT',
                 'constraint' => 11,
                 'null' => true,
             ],
-
+            'dni' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+            ],
+            'address' => [
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'null' => true,
+            ],
+            'address_number' => [
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'null' => true,
+            ],
             'gender_id' => [
                 'type' => 'INT',
                 'constraint' => 11,
@@ -60,21 +73,6 @@ class MakeTableMembers extends Migration {
                 'null' => true,
             ],
             'contact_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
-            'gronwup_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
-            'interestarea_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
-            'needs_id' => [
                 'type' => 'INT',
                 'constraint' => 11,
                 'null' => true,

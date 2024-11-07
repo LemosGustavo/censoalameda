@@ -3,7 +3,8 @@
 namespace App\Controllers;
 
 use stdClass;
-use App\Models\Gender_Model;
+use CodeIgniter\Model;
+use App\Models\Job_Model;
 use App\Models\Contact_Model;
 use App\Models\Members_Model;
 use App\Models\Countries_Model;
@@ -33,11 +34,7 @@ class Censo extends MY_Controller {
     }
 
     private function censo_home() {
-        helper('form');
-        $validation = \Config\Services::validation();
         $members_model = new Members_Model();
-
-        helper('form');
         $contact_class = new stdClass();
         $vocation_class = new stdClass();
         $family_class = new stdClass();
@@ -100,7 +97,6 @@ class Censo extends MY_Controller {
         $cristians_class->fields['needs_drop']['array'] = $array_needs_drop;
 
 
-        // lm($members_model->fields);
         $country_model = new Countries_Model();
         $data['countries'] = $country_model->findAll();
         $data['fields'] = $this->build_fields($members_model->fields);
@@ -109,9 +105,80 @@ class Censo extends MY_Controller {
         $data['fields_family'] = $this->build_fields($family_class->fields);
         $data['fields_cristians'] = $this->build_fields($cristians_class->fields);
         $data['title'] = "Ingresar Usuario";
-        // $data['txt_btn'] = "create";
 
-        // $data = [];
         return $data;
+    }
+
+    public function ajax_save() {
+
+        lm($_POST);
+        $job_model = new Job_Model();
+        $contact_model = new Contact_Model();
+        $members_model = new Members_Model();
+        $validation = \Config\Services::validation();
+
+        $validation->setRules(
+            array(
+                "name" => "Required",
+                "lastname" => "Required",
+            ),
+            array(
+                "name" => array(
+                    "Required" => "El nombre es requerido"
+                ),
+                "lastname" => array(
+                    "Required" => "El apellido es requerido"
+                ),
+            )
+        );
+
+        if (isset($_POST) && !empty($_POST)) {
+            $trans_ok = TRUE;
+            $errors = '';
+            if (!$validation->withRequest($this->request)->run()) {
+                $errors = flashData($validation->getErrors());
+                $trans_ok = FALSE;
+            } else {
+
+                $trans_ok &= $job_model->create(array(
+                    'name_profession' => $this->request->getPost('name_profession'),
+                    'artistic_skills' => $this->request->getPost('artistic_skills'),
+                ), FALSE);
+
+                $trans_ok &= $members_model->create(array(
+                    'name' => $this->request->getPost('name'),
+                    'lastname' => $this->request->getPost('lastname'),
+                    'birthdate' => $this->get_date_sql($this->request->getPost('birthdate')),
+                    'age' => $this->request->getPost('age'),
+                    'address' => $this->request->getPost('address'),
+                    'address_number' => $this->request->getPost('address_number'),
+                    'gender_id' => $this->request->getPost('gender_drop'),
+                    'civil_state_id' => $this->request->getPost('civil_state_drop'),
+                    // 'path_photo' => $this->request->getPost('path_photo'),
+                    'job_id' => $this->request->getPost('job_id'),
+                    'localities_id' => $this->request->getPost('localities_id'),
+                    'contact_id' => $this->request->getPost('contact_id'),
+                    'boss_family' => $this->request->getPost('boss_family'),
+                ), FALSE);
+
+
+                $trans_ok &= $members_model->create(array(
+                    'name' => $this->request->getPost('name'),
+                    'lastname' => $this->request->getPost('lastname'),
+
+                ), FALSE);
+            }
+
+            if ($this->db->transStatus() && $trans_ok) {
+                $this->db->transCommit();
+                session()->setFlashdata('message', $members_model->get_msg());
+                return redirect()->to(base_url('/management/company#company_assign'));
+            } else {
+                $this->db->transRollback();
+                $errors .= $members_model->get_error();
+                session()->setFlashdata('error', $errors);
+                return redirect()->to(base_url('/management/company#company_assign'));
+            }
+        }
     }
 }

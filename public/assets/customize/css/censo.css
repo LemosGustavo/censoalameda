@@ -247,43 +247,10 @@
   border: none; /* Sin borde */
 }
 
-/* Estilizado adicional para los campos de texto como "Nombre" */
+/* Estilos comunes para input de tipo number, email y text */
+input[type="number"],
+input[type="email"],
 input[type="text"] {
-  border-radius: 30px; /* Bordes redondeados, similar a otros campos */
-  padding: 12px 20px; /* Espaciado interno para mayor consistencia */
-  background-color: #f9f9f9; /* Fondo claro, igual que otros campos de entrada */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  border: 1px solid #ddd; /* Borde ligero */
-  font-size: 16px; /* Tamaño de fuente legible */
-  transition: all 0.3s ease; /* Efectos de transición suave */
-}
-
-/* Efecto al pasar el mouse */
-input[type="text"]:hover {
-  background-color: #f1f1f1; /* Fondo ligeramente más oscuro al pasar el mouse */
-}
-
-/* Estilizado cuando el campo está enfocado */
-input[type="text"]:focus {
-  border-color: #a5d6a7; /* Borde verde suave al enfocar */
-  box-shadow: 0 6px 12px rgba(0, 175, 0, 0.25); /* Sombra suave */
-  background-color: #fff; /* Fondo blanco al enfocar */
-  outline: none; /* Eliminar borde por defecto */
-}
-
-/* Estilizado del placeholder amigable */
-input[type="text"]::placeholder {
-  color: #999;
-  font-style: italic; /* Placeholder en cursiva para un aspecto más amigable */
-}
-
-
-
-
-
-
-/* Estilo para campos de número */
-input[type="number"] {
   border-radius: 30px; /* Bordes redondeados */
   padding: 12px 20px; /* Espaciado interno */
   background-color: #f9f9f9; /* Fondo claro */
@@ -294,12 +261,16 @@ input[type="number"] {
 }
 
 /* Efecto al pasar el mouse */
-input[type="number"]:hover {
+input[type="number"]:hover,
+input[type="email"]:hover,
+input[type="text"]:hover {
   background-color: #f1f1f1; /* Fondo ligeramente más oscuro */
 }
 
 /* Estilizado cuando el campo está enfocado */
-input[type="number"]:focus {
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="text"]:focus {
   border-color: #a5d6a7; /* Borde verde suave */
   box-shadow: 0 6px 12px rgba(0, 175, 0, 0.25); /* Sombra suave */
   background-color: #fff; /* Fondo blanco al enfocar */
@@ -307,14 +278,12 @@ input[type="number"]:focus {
 }
 
 /* Placeholder amigable */
-input[type="number"]::placeholder {
+input[type="number"]::placeholder,
+input[type="email"]::placeholder,
+input[type="text"]::placeholder {
   color: #999;
   font-style: italic; /* Placeholder en cursiva */
 }
-
-
-
-
 
 /* Sobreescribe estilos de form-control cuando se usa con selectize */
 .selectize.form-control {
@@ -322,7 +291,6 @@ input[type="number"]::placeholder {
   background-color: #f9f9f9 !important; /* Fondo claro */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra suave */
   border: 1px solid #ddd !important; /* Borde ligero */
-  
 }
 
 /* Input de selectize dentro de form-control */
@@ -385,7 +353,6 @@ input[type="number"]::placeholder {
   border: 1px solid #ced4da;
 }
 
-
 /* Estilo para los select múltiples */
 .select2-container--default .select2-selection--multiple {
   border-radius: 30px !important; /* Ajusta el valor */
@@ -393,10 +360,12 @@ input[type="number"]::placeholder {
 }
 
 /* Estilo para las etiquetas dentro del select múltiple */
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
+.select2-container--default
+  .select2-selection--multiple
+  .select2-selection__choice {
   border-radius: 15px !important;
   background-color: #0000ff; /* Fondo amigable */
- /* background-color: #f0f0f0; /* Fondo amigable */
+  /* background-color: #f0f0f0; /* Fondo amigable */
   color: #f0f0f0; /* Color del texto */
 }
 
@@ -405,3 +374,46 @@ input[type="number"]::placeholder {
   border-radius: 15px !important;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
+
+/* Personalización del tooltip
+.tooltip-inner {
+  background-color: #fff; /* Fondo blanco */
+/* color: #333; Texto oscuro para mejor contraste */
+/* font-size: 0.875rem; */
+/* padding: 10px 15px; Mayor padding para un mejor espaciado */
+/* border-radius: 6px; Bordes más redondeados */
+/* border: 1px solid #343a40; Contorno negro */
+/* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); Sombra suave para profundidad */
+/* transition: opacity 0.2s ease-in-out; Transición suave */
+/* display: flex; */
+/* align-items: center; */
+/* } */
+
+/* .tooltip-inner i { */
+/* margin-right: 8px; Espacio entre el ícono y el texto */
+/* background-color: #ffc107; Fondo amarillo para el ícono */
+/* color: #fff; Color del ícono blanco */
+/* padding: 5px; Padding para el ícono */
+/* border-radius: 4px; Bordes redondeados para el ícono */
+/* font-size: 1.1rem; Tamaño del ícono */
+/* width: 24px; Ancho fijo para el ícono */
+/* height: 24px; Alto fijo para el ícono */
+/* display: flex; Flex para centrar el ícono */
+/* align-items: center; Centrar verticalmente */
+/* justify-content: center; Centrar horizontalmente */
+/* } */
+
+/* .tooltip.bs-tooltip-top .arrow::before { */
+/* border-top-color: #fff; Color de la flecha blanca */
+/* border-width: 5px; Grosor de la flecha */
+/* } */
+
+/* .tooltip { */
+/* opacity: 0; Comenzar oculto para la transición */
+/* pointer-events: none; Desactivar eventos mientras está oculto */
+/* } */
+
+/* .tooltip.show { */
+/* opacity: 1; Mostrar tooltip con opacidad */
+/* pointer-events: auto; Activar eventos cuando está visible */
+/* } */
