@@ -39,7 +39,8 @@
 </style>
 
 <?= form_open(base_url('censo/ajax_save'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off')); ?>
-<?// php= csrf_field(); ?>
+<? // php= csrf_field(); 
+?>
 <div class="content-wrapper d-flex align-items-center justify-content-center">
     <div class="card">
         <div class="card-body">
@@ -142,13 +143,9 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-12">
                                         <?php echo $fields['address']['label']; ?>
                                         <?php echo $fields['address']['form']; ?>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <?php echo $fields['address_number']['label']; ?>
-                                        <?php echo $fields['address_number']['form']; ?>
                                     </div>
                                 </div>
                             </div>
@@ -196,7 +193,24 @@
                                         <?php echo $fields_family['family_drop']['form']; ?>
                                     </div>
                                 </div>
+
+                                <!-- JEFE DE HOGAR -->
                                 <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label>¿Eres jefe/a de hogar?</label>
+                                        <div class="icheck-success d-inline">
+                                            <input type="radio" id="jefe_si" name="jefe" value="si" onclick="toggle_hijos()">
+                                            <label for="jefe_si">SI</label>
+                                        </div>
+                                        <div class="icheck-carrot d-inline ml-4">
+                                            <input type="radio" id="jefe_no" name="jefe" value="no" onclick="toggle_hijos()">
+                                            <label for="jefe_no">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- HIJOS (se muestra solo si jefe de hogar es SI) -->
+                                <div id="hijos_section" class="row" style="display: none;">
                                     <div class="form-group col-md-3">
                                         <label>¿Tienes hijos?</label>
                                         <div class="icheck-success d-inline">
@@ -208,30 +222,18 @@
                                             <label for="hijo_no">NO</label>
                                         </div>
                                     </div>
-                                    <!-- Dropdown for "SI" -->
-                                    <div id="hijo_drop_si" class="form-group col-md-6" style="display: none;">
+
+                                    <!-- SI tiene hijos -->
+                                    <div id="hijo_drop_si" class="form-group col-md-12" style="display: none;">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
                                                 <?php echo $fields_family['quantity_sons']['label']; ?>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-2">
                                                 <?php echo $fields_family['quantity_sons']['form']; ?>
                                             </div>
                                         </div>
                                         <div id="children_inputs"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label>¿Eres jefe/a de hogar?</label>
-                                        <div class="icheck-success d-inline">
-                                            <input type="radio" id="jefe_si" name="jefe" value="si">
-                                            <label for="jefe_si">SI</label>
-                                        </div>
-                                        <div class="icheck-carrot d-inline ml-4">
-                                            <input type="radio" id="jefe_no" name="jefe" value="no">
-                                            <label for="jefe_no">NO</label>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +241,7 @@
                                 <h5>Crecimiento Cristiano</h5>
                                 <div class="row">
                                     <div class="form-group col-md-12">
-                                        <label>¿De qué manera vivís la celebración cada fin de semana?</label>
+                                        <label>¿De qué manera vivís mayormente la celebración durante cada fin de semana?</label>
                                         <div class="icheck-success d-inline">
                                             <input type="radio" id="presencial" name="celebracion" value="presencial">
                                             <label for="presencial">Presencial</label>
@@ -298,6 +300,10 @@
                                     <div class="form-group col-md-12">
                                         <?php echo $fields_cristians['needs_drop']['label']; ?>
                                         <?php echo $fields_cristians['needs_drop']['form']; ?>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <?php echo $fields_cristians['lifestage_drop']['label']; ?>
+                                        <?php echo $fields_cristians['lifestage_drop']['form']; ?>
                                     </div>
                                 </div>
 
@@ -411,6 +417,7 @@
         initializeSelect2Multiple('#services_drop', 'Seleccione servicio');
         initializeSelect2Multiple('#interests_drop', 'Seleccione interés');
         initializeSelect2Multiple('#needs_drop', 'Seleccione necesidad');
+        initializeSelect2Multiple('#lifestage_drop', 'Seleccione etapa de vida');
 
         // Ocultar dropdowns hasta que se seleccione "Argentina"
         $('#country').change(function() {
@@ -491,18 +498,18 @@
         });
 
         // Evento para manejar el cambio en family_drop
-        $('#family_drop').on('change', function() {
-            var selectedValues = $(this).find('option:selected').text();
-            console.log(selectedValues);
-            // Verifica si "Hijo/s" está seleccionado
-            if (selectedValues && selectedValues.includes('Hijo/s')) {
-                $('#hijo_si').prop('checked', true); // Marca el radio de "Sí"
-                toggle_sons(); // Llama a la función para mostrar los campos de hijos
-            } else {
-                $('#hijo_no').prop('checked', true); // Marca el radio de "No"
-                toggle_sons(); // Llama a la función para ocultar los campos de hijos
-            }
-        });
+        // $('#family_drop').on('change', function() {
+        //     var selectedValues = $(this).find('option:selected').text();
+        //     console.log(selectedValues);
+        //     // Verifica si "Hijo/s" está seleccionado
+        //     if (selectedValues && selectedValues.includes('Hijo/s')) {
+        //         $('#hijo_si').prop('checked', true); // Marca el radio de "Sí"
+        //         toggle_sons(); // Llama a la función para mostrar los campos de hijos
+        //     } else {
+        //         $('#hijo_no').prop('checked', true); // Marca el radio de "No"
+        //         toggle_sons(); // Llama a la función para ocultar los campos de hijos
+        //     }
+        // });
 
         // // Añadir el tooltip a cada campo `required`
         // $('input[required], select[required], textarea[required]').each(function() {
@@ -543,19 +550,30 @@
         }
     }
 
+    function toggle_hijos() {
+        var jefe = $('input[name="jefe"]:checked').val();
+
+        if (jefe === "si") {
+            $('#hijos_section').show();
+        } else {
+            // Ocultar todo y resetear valores si pone NO
+            $('#hijos_section').hide();
+            $('input[name="hijo"]').prop('checked', false);
+            $('#hijo_drop_si').hide();
+            $('#quantity_sons').val('');
+            $('#children_inputs').empty();
+        }
+    }
+
     function toggle_sons() {
-        // Obtener el valor del radio seleccionado
         var hijo = $('input[name="hijo"]:checked').val();
 
-        // Mostrar dropdown correspondiente si se selecciona "SI"
         if (hijo === "si") {
             $('#hijo_drop_si').show();
-        }
-        // Ocultar dropdown y borrar el contenido si se selecciona "NO"
-        else if (hijo === "no") {
+        } else if (hijo === "no") {
             $('#hijo_drop_si').hide();
-            $('#quantity_sons').val(''); // Borrar el valor del campo quantity_sons
-            $('#children_inputs').empty(); // Limpiar los inputs generados
+            $('#quantity_sons').val('');
+            $('#children_inputs').empty();
         }
     }
 
@@ -601,25 +619,41 @@
     function generateChildInputs() {
         const container = $('#children_inputs');
         const numChildren = parseInt($('#quantity_sons').val());
-        container.empty(); // Clear previous inputs
+        container.empty(); // Limpiar inputs anteriores
 
         if (numChildren > 0 && numChildren <= 12) {
             for (let i = 1; i <= numChildren; i++) {
                 const childDiv = $(`
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <label for="age_${i}">Edad Hijo ${i}</label>
+                <div class="border p-2 mb-3 rounded bg-light">
+                    <h6 class="mb-2">Hijo ${i}</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="name_${i}">Nombre</label>
+                            <input type="text" class="form-control" id="name_${i}" name="name_${i}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="surname_${i}">Apellido</label>
+                            <input type="text" class="form-control" id="surname_${i}" name="surname_${i}">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="age_${i}">Edad</label>
                             <input type="number" class="form-control" id="age_${i}" name="age_${i}" min="0">
                         </div>
-                        <div class="col-md-6">
-                            <label for="church_${i}">Asiste iglesia Hijo ${i}</label>
+                        <div class="col-md-2">
+                            <label for="church_${i}">Asiste iglesia</label>
                             <select class="form-control" id="church_${i}" name="church_${i}">
+                                <option value="">Seleccione</option>
                                 <option value="si">Sí</option>
                                 <option value="no">No</option>
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <label for="dni_${i}">DNI</label>
+                            <input type="text" class="form-control" id="dni_${i}" name="dni_${i}" maxlength="15">
+                        </div>
                     </div>
-                `);
+                </div>
+            `);
                 container.append(childDiv);
             }
         }

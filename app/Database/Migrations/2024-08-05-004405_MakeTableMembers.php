@@ -39,12 +39,7 @@ class MakeTableMembers extends Migration {
             ],
             'address' => [
                 'type' => 'VARCHAR',
-                'constraint' => '100',
-                'null' => true,
-            ],
-            'address_number' => [
-                'type' => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => '500',
                 'null' => true,
             ],
             'gender_id' => [

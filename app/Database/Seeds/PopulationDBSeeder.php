@@ -20,5 +20,6 @@ class PopulationDBSeeder extends Seeder {
         $this->call('InterestsSeeder');
         $this->call('NeedsSeeder');
         $this->call('ServicesSeeder');
+        $this->call('LifeStageSeeder');
     }
 }

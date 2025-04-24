@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use DateTime;
+use Exception;
 
 class MY_Controller extends BaseController {
     public $sin_rol = FALSE;
@@ -33,21 +34,24 @@ class MY_Controller extends BaseController {
         // $data['header'] = array('templates/templates_header', $view_data);
         $data['content'] = array($view, $view_data);
         $data['footer'] = array('templates/templates_footer', $view_data);
-        echo view('templates/templates_general', $data);
+        return view('templates/templates_general', $data);
     }
 
     protected function set_filtro_datos_listar($post_name, $all_string, $column_name, $user_data, &$where_array) {
-        if (!empty($_POST[$post_name]) && $this->input->post($post_name) != $all_string) {
+        $request = service('request');
+        $session = session();
+        
+        if (!empty($_POST[$post_name]) && $request->getPost($post_name) != $all_string) {
             $where['column'] = $column_name;
-            $where['value'] = $this->input->post($post_name);
+            $where['value'] = $request->getPost($post_name);
             $where_array[] = $where;
-            $this->session->set_userdata($user_data, $this->input->post($post_name));
-        } elseif (empty($_POST[$post_name]) && $this->session->userdata($user_data) !== FALSE) {
+            $session->set($user_data, $request->getPost($post_name));
+        } elseif (empty($_POST[$post_name]) && $session->get($user_data) !== FALSE) {
             $where['column'] = $column_name;
-            $where['value'] = $this->session->userdata($user_data);
+            $where['value'] = $session->get($user_data);
             $where_array[] = $where;
         } else {
-            $this->session->unset_userdata($user_data);
+            $session->remove($user_data);
         }
     }
 
@@ -156,7 +160,11 @@ class MY_Controller extends BaseController {
             $rules = 'trim';
         }
 
-        $this->form_validation->setRules($name, $label, trim($rules, '|'));
+        $validation = \Config\Services::validation();
+        $validation->setRules([$name => [
+            'label' => $label,
+            'rules' => trim($rules, '|')
+        ]]);
     }
 
     public function add_combo_validation_rules($field_opts) {
@@ -483,7 +491,7 @@ class MY_Controller extends BaseController {
     protected function modal_error($error_msg = '', $error_title = 'Error general') {
         $data['error_msg'] = $error_msg;
         $data['error_title'] = $error_title;
-        $this->load->view('errors/html/error_modal', $data);
+        return view('errors/html/error_modal', $data);
     }
 
     protected function readonly($field) {
