@@ -3,8 +3,6 @@
 namespace App\Controllers;
 
 use stdClass;
-use App\Models\Job_Model;
-use App\Models\Contact_Model;
 use App\Models\Members_Model;
 use App\Models\Countries_Model;
 
@@ -13,6 +11,7 @@ class Censo extends MY_Controller {
     function __construct() {
         parent::__construct();
         $this->db = \Config\Database::connect();
+        helper('date');
     }
 
     public function dashboard(String $dashboard = "home", String $view = '') {
@@ -27,7 +26,7 @@ class Censo extends MY_Controller {
                 $data = $this->censo_home();
                 break;
             default:
-                $view = '';
+                throw new \CodeIgniter\Exceptions\PageNotFoundException($dashboard);
                 break;
         }
         return $this->load_template($view, $data);
@@ -115,73 +114,212 @@ class Censo extends MY_Controller {
 
     public function ajax_save() {
 
-        lm($_POST);
-        $job_model = new Job_Model();
-        $contact_model = new Contact_Model();
+        // lm($_POST);
+        // exit();
         $members_model = new Members_Model();
         $validation = \Config\Services::validation();
 
-        $validation->setRules(
-            array(
-                "name" => "Required",
-                "lastname" => "Required",
-            ),
-            array(
-                "name" => array(
-                    "Required" => "El nombre es requerido"
-                ),
-                "lastname" => array(
-                    "Required" => "El apellido es requerido"
-                ),
-            )
-        );
+        $validation->setRules([
+            "name" => "required|min_length[3]|max_length[50]",
+            "lastname" => "required|min_length[3]|max_length[50]",
+            "birthdate" => "required|valid_date",
+            "gender_drop" => "required|numeric",
+            "civil_state_drop" => "required|numeric",
+            "dni_document" => "required|numeric|min_length[7]|max_length[8]",
+            // "phone" => "required|min_length[8]|max_length[20]",
+            // "address" => "required|min_length[5]|max_length[100]",
+            // "email" => "required|valid_email|max_length[100]",
+            "country" => "required|numeric",
+            "state" => "required|numeric",
+            "district" => "required|numeric",
+            "locality" => "required|numeric",
+            "name_profession" => "required|min_length[3]|max_length[100]",
+            "artistic_skills" => "max_length[150]",
+            "quantity_sons" => "numeric",
+            "name_guia" => "permit_empty|min_length[3]|max_length[100]",
+            "name_group" => "permit_empty|min_length[3]|max_length[100]"
+        ], [
+            "name" => [
+                "required" => "El nombre es requerido",
+                "min_length" => "El nombre debe tener al menos 3 caracteres",
+                "max_length" => "El nombre no puede exceder los 50 caracteres"
+            ],
+            "lastname" => [
+                "required" => "El apellido es requerido",
+                "min_length" => "El apellido debe tener al menos 3 caracteres",
+                "max_length" => "El apellido no puede exceder los 50 caracteres"
+            ],
+            "birthdate" => [
+                "required" => "La fecha de nacimiento es requerida",
+                "valid_date" => "La fecha de nacimiento no es válida"
+            ],
+            "gender_drop" => [
+                "required" => "El género es requerido",
+                "numeric" => "El género seleccionado no es válido"
+            ],
+            "civil_state_drop" => [
+                "required" => "El estado civil es requerido",
+                "numeric" => "El estado civil seleccionado no es válido"
+            ],
+            "dni_document" => [
+                "required" => "El DNI es requerido",
+                "numeric" => "El DNI debe contener solo números",
+                "min_length" => "El DNI debe tener al menos 7 dígitos",
+                "max_length" => "El DNI no puede exceder los 8 dígitos"
+            ],
+            "phone" => [
+                "required" => "El teléfono es requerido",
+                "min_length" => "El teléfono debe tener al menos 8 dígitos",
+                "max_length" => "El teléfono no puede exceder los 20 caracteres"
+            ],
+            "address" => [
+                "required" => "La dirección es requerida",
+                "min_length" => "La dirección debe tener al menos 5 caracteres",
+                "max_length" => "La dirección no puede exceder los 100 caracteres"
+            ],
+            // "email" => [
+            //     "required" => "El email es requerido",
+            //     "valid_email" => "El email no es válido",
+            //     "max_length" => "El email no puede exceder los 100 caracteres"
+            // ],
+            "country" => [
+                "required" => "El país es requerido",
+                "numeric" => "El país seleccionado no es válido"
+            ],
+            "state" => [
+                "required" => "La provincia es requerida",
+                "numeric" => "La provincia seleccionada no es válida"
+            ],
+            "district" => [
+                "required" => "El departamento es requerido",
+                "numeric" => "El departamento seleccionado no es válido"
+            ],
+            "locality" => [
+                "required" => "La localidad es requerida",
+                "numeric" => "La localidad seleccionada no es válida"
+            ],
+            "name_profession" => [
+                "required" => "La profesión es requerida",
+                "min_length" => "La profesión debe tener al menos 3 caracteres",
+                "max_length" => "La profesión no puede exceder los 100 caracteres"
+            ]
+        ]);
 
-        if (isset($_POST) && !empty($_POST)) {
-            $trans_ok = TRUE;
-            $errors = '';
-            if (!$validation->withRequest($this->request)->run()) {
-                $errors = flashData($validation->getErrors());
-                $trans_ok = FALSE;
-            } else {
+        if (!$validation->withRequest($this->request)->run()) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'errors' => $validation->getErrors()
+            ]);
+        }
 
-                $trans_ok &= $job_model->create(array(
-                    'name_profession' => $this->request->getPost('name_profession'),
-                    'artistic_skills' => $this->request->getPost('artistic_skills'),
-                ), FALSE);
+        $this->db->transStart();
 
-                $trans_ok &= $members_model->create(array(
-                    'name' => $this->request->getPost('name'),
-                    'lastname' => $this->request->getPost('lastname'),
-                    'birthdate' => $this->get_date_sql($this->request->getPost('birthdate')),
-                    'age' => $this->request->getPost('age'),
-                    'address' => $this->request->getPost('address'),
-                    'address_number' => $this->request->getPost('address_number'),
-                    'gender_id' => $this->request->getPost('gender_drop'),
-                    'civil_state_id' => $this->request->getPost('civil_state_drop'),
-                    // 'path_photo' => $this->request->getPost('path_photo'),
-                    'job_id' => $this->request->getPost('job_id'),
-                    'localities_id' => $this->request->getPost('localities_id'),
-                    'contact_id' => $this->request->getPost('contact_id'),
-                    'boss_family' => $this->request->getPost('boss_family'),
-                ), FALSE);
+        try {
+            // Convertir fecha de nacimiento y calcular edad
+            $birthdate = $this->get_date_sql($this->request->getPost('birthdate'));
 
-                $trans_ok &= $members_model->create(array(
-                    'name' => $this->request->getPost('name'),
-                    'lastname' => $this->request->getPost('lastname'),
+            // Guardar miembro
+            $member_data = [
+                'name' => $this->request->getPost('name'),
+                'lastname' => $this->request->getPost('lastname'),
+                'birthdate' => $birthdate,
+                'dni_document' => $this->request->getPost('dni_document'),
+                'address' => $this->request->getPost('address'),
+                'email' => $this->request->getPost('email'),
+                'phone' => $this->request->getPost('phone'),
+                'gender_id' => $this->request->getPost('gender_drop'),
+                'civil_state_id' => $this->request->getPost('civil_state_drop'),
+                'path_photo' => $this->request->getPost('path_photo'),
+                'localities_id' => $this->request->getPost('locality'),
+                'name_profession' => $this->request->getPost('name_profession'),
+                'artistic_skills' => $this->request->getPost('artistic_skills'),
+                'boss_family' => ($this->request->getPost('jefe') === 'si') ? 1 : 0,
+                'quantity_sons' => $this->request->getPost('quantity_sons'),
+                'celebracion' => $this->request->getPost('celebracion'),
+                'name_guia' => $this->request->getPost('name_guia'),
+                'name_group' => $this->request->getPost('name_group'),
+                'audi_user' => session()->get('id'),
+                'audi_date' => date('Y-m-d H:i:s'),
+                'audi_action' => 'I'
+            ];
+            $member_id = $members_model->insert($member_data);
 
-                ), FALSE);
+            $relations = [
+                'App\Models\Members_social_media_Model' => 'social_media_drop',
+                'App\Models\Members_experiences_Model' => 'experiences_drop',
+                'App\Models\Members_services_Model' => 'services_drop',
+                'App\Models\Members_interests_Model' => 'interests_drop',
+                'App\Models\Members_needs_Model' => 'needs_drop',
+                'App\Models\Members_life_stages_Model' => 'lifestage_drop',
+                'App\Models\Members_voluntary_Model' => 'voluntary_no_drop',
+                // 'App\Models\Members_enjoys_Model' => 'voluntary_no_drop',
+                'App\Models\Members_family_Model' => 'family_drop',
+            ];
+
+
+            foreach ($relations as $model_name => $post_field) {
+                // lm($relations);
+                // lm($model_name);
+                // lm($post_field);
+                if ($items = $this->request->getPost($post_field)) {
+                    $model = new $model_name();
+                    $foreign_key = $model->getForeignKey();
+
+                    // Si es la tabla de redes sociales y hay un valor en other_socialmedia
+                    if ($model_name === 'App\Models\Members_social_media_Model' && $this->request->getPost('other_socialmedia')) {
+                        // Primero insertamos la red social personalizada
+                        $model->insert([
+                            'members_id' => $member_id,
+                            'other_socialmedia' => $this->request->getPost('other_socialmedia')
+                        ]);
+                    }
+
+                    // Luego insertamos las redes sociales seleccionadas
+                    foreach ($items as $item_id) {
+                        $model->insert([
+                            'members_id' => $member_id,
+                            $foreign_key => $item_id
+                        ]);
+                    }
+                }
             }
 
-            if ($this->db->transStatus() && $trans_ok) {
-                $this->db->transCommit();
-                session()->setFlashdata('message', $members_model->get_msg());
-                return redirect()->to(base_url('/management/company#company_assign'));
-            } else {
-                $this->db->transRollback();
-                $errors .= $members_model->get_error();
-                session()->setFlashdata('error', $errors);
-                return redirect()->to(base_url('/management/company#company_assign'));
+            // // Guardar información de hijos como miembros
+            // if ($this->request->getPost('hijo') === 'si') {
+            //     $i = 1;
+            //     while ($this->request->getPost('name_' . $i)) {
+            //         $son_data = [
+            //             'name' => $this->request->getPost('name_' . $i),
+            //             'lastname' => $this->request->getPost('surname_' . $i),
+            //             'dni' => $this->request->getPost('dni_' . $i),
+            //             'is_son' => 1,
+            //             'parent_id' => $member_id,
+            //             'audi_user' => session()->get('id'),
+            //             'audi_date' => date('Y-m-d H:i:s'),
+            //             'audi_action' => 'I'
+            //         ];
+            //         $members_model->insert($son_data);
+            //         $i++;
+            //     }
+            // }
+
+            $this->db->transComplete();
+
+            if ($this->db->transStatus() === FALSE) {
+                throw new \Exception('Error al guardar los datos');
             }
+
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Datos guardados correctamente',
+                'member_id' => $member_id
+            ]);
+        } catch (\Exception $e) {
+            $this->db->transRollback();
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Error al guardar los datos: ' . $e->getMessage()
+            ]);
         }
     }
 }

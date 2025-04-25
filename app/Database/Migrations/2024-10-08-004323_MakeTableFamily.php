@@ -9,13 +9,17 @@ class MakeTableFamily extends Migration {
         $this->forge->addField([
             'id' => [
                 'type' => 'INT',
-                'constraint' => 11,
                 'unsigned' => true,
-                'auto_increment' => true,
+                'auto_increment' => true
             ],
             'name' => [
                 'type' => 'VARCHAR',
-                'constraint' => '100',
+                'constraint' => 50,
+                'null' => false,
+            ],
+            'description' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
                 'null' => true,
             ],
             'audi_user' => [

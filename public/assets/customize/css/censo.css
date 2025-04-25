@@ -417,3 +417,63 @@ input[type="text"]::placeholder {
 /* opacity: 1; Mostrar tooltip con opacidad */
 /* pointer-events: auto; Activar eventos cuando está visible */
 /* } */
+
+/* Estilos para el componente de foto */
+.custom-file-input {
+    cursor: pointer;
+}
+
+.custom-file-label {
+    border-radius: 30px 0 0 30px !important;
+    background-color: #f9f9f9 !important;
+    border: 1px solid #ddd !important;
+    padding: 12px 20px !important;
+    height: auto !important;
+    line-height: 1.2 !important;
+}
+
+.custom-file-label::after {
+    display: none;
+}
+
+#camera_button {
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#camera_button:hover {
+    background-color: #8bc34a !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#photo_preview {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.input-group .custom-file {
+    overflow: hidden;
+}
+
+/* Ajuste para el mensaje de error de SweetAlert2 */
+.swal2-popup {
+    border-radius: 15px !important;
+    background-color: #ffffff !important;
+}
+
+.swal2-title {
+    color: #333333 !important;
+}
+
+.swal2-content {
+    color: #666666 !important;
+}
+
+.swal2-confirm {
+    background-color: #a5d6a7 !important;
+    border-radius: 30px !important;
+    padding: 12px 24px !important;
+}

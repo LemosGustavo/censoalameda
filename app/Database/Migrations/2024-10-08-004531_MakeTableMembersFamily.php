@@ -9,38 +9,23 @@ class MakeTableMembersFamily extends Migration {
         $this->forge->addField([
             'id' => [
                 'type' => 'INT',
-                'constraint' => 11,
                 'unsigned' => true,
-                'auto_increment' => true,
+                'auto_increment' => true
             ],
             'members_id' => [
                 'type' => 'INT',
-                'constraint' => 11,
                 'unsigned' => true,
-                'null' => true,
+                'null' => false,
             ],
-            'pariente_id' => [
+            'related_member_id' => [
                 'type' => 'INT',
-                'constraint' => 11,
                 'unsigned' => true,
-                'null' => true,
+                'null' => false,
             ],
             'family_id' => [
                 'type' => 'INT',
-                'constraint' => 11,
                 'unsigned' => true,
-                'null' => true,
-            ],
-            'family_age' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'unsigned' => true,
-                'null' => true,
-            ],
-            'lives' => [
-                'type' => 'TINYINT',
-                'constraint' => '1',
-                'null' => true,
+                'null' => false,
             ],
             'audi_user' => [
                 'type' => 'INT',
@@ -58,8 +43,6 @@ class MakeTableMembersFamily extends Migration {
             ],
         ]);
 
-
-        // Clave primaria
         $this->forge->addKey('id', true);
 
         // Crear tabla

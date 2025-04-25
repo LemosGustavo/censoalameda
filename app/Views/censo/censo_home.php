@@ -38,7 +38,7 @@
     }
 </style>
 
-<?= form_open(base_url('censo/ajax_save'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off')); ?>
+<?= form_open_multipart(base_url('censo/ajax_save'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off')); ?>
 <? // php= csrf_field(); 
 ?>
 <div class="content-wrapper d-flex align-items-center justify-content-center">
@@ -52,9 +52,50 @@
                             </div>
                         </div>
                         <div class="card-body p-0">
-                            <!-- Removido el Stepper, solo dejar el contenido necesario -->
                             <div class="callout callout-personal">
                                 <h5>Datos Personales</h5>
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="profile_photo">Foto de Perfil</label>
+                                            <div class="input-group">
+                                                <div class="custom-file" style="border-radius: 30px 0 0 30px; overflow: hidden;">
+                                                    <input type="file"
+                                                        class="custom-file-input"
+                                                        id="profile_photo"
+                                                        name="profile_photo"
+                                                        accept="image/*"
+                                                        capture="user">
+                                                    <label class="custom-file-label" for="profile_photo">Elegir foto</label>
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <button type="button"
+                                                        class="btn"
+                                                        id="camera_button"
+                                                        onclick="openCamera()"
+                                                        style="border-radius: 0 30px 30px 0;
+                                                                   background-color: #a5d6a7;
+                                                                   color: #fff;
+                                                                   border: none;">
+                                                        <i class="fas fa-camera"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <small class="form-text text-muted mt-2">
+                                                <i class="fas fa-info-circle"></i> En dispositivos móviles, puedes usar la cámara o seleccionar una imagen
+                                            </small>
+                                            <div class="mt-3 text-center">
+                                                <img id="photo_preview"
+                                                    src="#"
+                                                    alt="Vista previa"
+                                                    style="max-width: 200px; 
+                                                            max-height: 200px; 
+                                                            display: none;"
+                                                    class="img-thumbnail rounded">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <?php echo $fields['name']['label']; ?>
@@ -81,8 +122,8 @@
                                         <?php echo $fields['civil_state_drop']['form']; ?>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <?php echo $fields['dni']['label']; ?>
-                                        <?php echo $fields['dni']['form']; ?>
+                                        <?php echo $fields['dni_document']['label']; ?>
+                                        <?php echo $fields['dni_document']['form']; ?>
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +156,7 @@
                                     <div class="col-md-6 col-lg-6">
                                         <div class="form-group">
                                             <label for="country">País</label>
-                                            <select id="country" class="form-control">
+                                            <select id="country" name="country" class="form-control">
                                                 <option value="">Seleccione un país</option>
                                                 <?php foreach ($countries as $country): ?>
                                                     <option value="<?= $country->id; ?>"><?= $country->name; ?></option>
@@ -125,19 +166,19 @@
                                     </div>
                                     <div id="state-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
                                         <label for="state">Provincia</label>
-                                        <select id="state" class="form-control" disabled>
+                                        <select id="state" name="state" class="form-control" disabled>
                                             <option value="">Seleccione una provincia</option>
                                         </select>
                                     </div>
                                     <div id="district-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
                                         <label for="district">Departamento</label>
-                                        <select id="district" class="form-control" disabled>
+                                        <select id="district" name="district" class="form-control" disabled>
                                             <option value="">Seleccione un departamento</option>
                                         </select>
                                     </div>
                                     <div id="locality-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
                                         <label for="locality">Localidad</label>
-                                        <select id="locality" class="form-control" disabled>
+                                        <select id="locality" name="locality" class="form-control" disabled>
                                             <option value="">Seleccione una localidad</option>
                                         </select>
                                     </div>
@@ -318,6 +359,8 @@
 </div>
 <?= form_close(); ?>
 
+<!-- Agregar justo antes del script con {csp-script-nonce} -->
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 
 <script {csp-script-nonce}>
     $(function() {
@@ -530,6 +573,22 @@
         //             $(this).tooltip('hide'); // Ocultar tooltip al perder el foco
         //         });
         // });
+
+        // Detectar si es un dispositivo móvil
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        // Mostrar/ocultar el botón de cámara según el dispositivo
+        if (!isMobile) {
+            $('#camera_button').hide();
+        }
+
+        // Mejorar la gestión de la cámara en móviles
+        if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+            $('#camera_button').prop('disabled', false);
+        } else {
+            $('#camera_button').prop('disabled', true);
+            $('#camera_button').attr('title', 'Cámara no disponible');
+        }
     });
 
     function toggle_dropdowns() {
@@ -636,8 +695,8 @@
                             <input type="text" class="form-control" id="surname_${i}" name="surname_${i}">
                         </div>
                         <div class="col-md-2">
-                            <label for="age_${i}">Edad</label>
-                            <input type="number" class="form-control" id="age_${i}" name="age_${i}" min="0">
+                            <label for="birthdate_${i}">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="birthdate_${i}" name="birthdate_${i}">
                         </div>
                         <div class="col-md-2">
                             <label for="church_${i}">Asiste iglesia</label>
@@ -658,4 +717,113 @@
             }
         }
     }
+
+    // Inicializar el plugin bs-custom-file-input
+    $(document).ready(function() {
+        bsCustomFileInput.init();
+
+        // Previsualización de la imagen
+        $("#profile_photo").change(function() {
+            const file = this.files[0];
+            const fileReader = new FileReader();
+            const preview = $("#photo_preview");
+
+            // Validar el tipo de archivo
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (file && validImageTypes.includes(file.type)) {
+                fileReader.onload = function(e) {
+                    preview.attr('src', e.target.result);
+                    preview.show();
+                };
+                fileReader.readAsDataURL(file);
+            } else {
+                // Si no es una imagen válida
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Archivo no válido',
+                    text: 'Por favor, selecciona una imagen (JPG, PNG o GIF)',
+                });
+                this.value = ''; // Limpiar el input
+                preview.hide();
+            }
+
+            // Validar tamaño (máximo 5MB)
+            const maxSize = 5 * 1024 * 1024; // 5MB en bytes
+            if (file && file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Archivo muy grande',
+                    text: 'La imagen debe ser menor a 5MB',
+                });
+                this.value = ''; // Limpiar el input
+                preview.hide();
+            }
+        });
+    });
+
+    // Función para abrir la cámara
+    function openCamera() {
+        // Crear un input file temporal
+        const cameraInput = document.createElement('input');
+        cameraInput.type = 'file';
+        cameraInput.accept = 'image/*';
+        cameraInput.capture = 'user';
+
+        // Manejar el cambio cuando se toma una foto
+        cameraInput.onchange = function(e) {
+            const file = e.target.files[0];
+            handleImageFile(file);
+        };
+
+        // Simular clic en el input
+        cameraInput.click();
+    }
+
+    // Función para manejar el archivo de imagen
+    function handleImageFile(file) {
+        const preview = $("#photo_preview");
+        const fileReader = new FileReader();
+
+        // Validar el tipo de archivo
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (file && validImageTypes.includes(file.type)) {
+            // Validar tamaño
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Archivo muy grande',
+                    text: 'La imagen debe ser menor a 5MB',
+                    confirmButtonText: 'Entendido'
+                });
+                return;
+            }
+
+            // Mostrar la imagen
+            fileReader.onload = function(e) {
+                preview.attr('src', e.target.result);
+                preview.show();
+
+                // Actualizar el input file original
+                $("#profile_photo").prop('files', new FileList([file]));
+                $(".custom-file-label").text(file.name);
+            };
+            fileReader.readAsDataURL(file);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo no válido',
+                text: 'Por favor, selecciona una imagen (JPG, PNG o GIF)',
+                confirmButtonText: 'Entendido'
+            });
+        }
+    }
+
+    // Actualizar el manejador del input file existente
+    $("#profile_photo").change(function() {
+        const file = this.files[0];
+        if (file) {
+            handleImageFile(file);
+        }
+    });
 </script>
