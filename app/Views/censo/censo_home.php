@@ -38,7 +38,7 @@
     }
 </style>
 
-<?= form_open_multipart(base_url('censo/ajax_save'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off')); ?>
+<?= form_open_multipart(base_url('censo/preview'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off')); ?>
 <? // php= csrf_field(); 
 ?>
 <div class="content-wrapper d-flex align-items-center justify-content-center">
