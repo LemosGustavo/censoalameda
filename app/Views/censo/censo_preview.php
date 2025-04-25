@@ -1,0 +1,168 @@
+<?php
+$data = session()->get('censo_preview_data');
+?>
+
+<div class="content-wrapper d-flex align-items-center justify-content-center">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-default">
+                        <div class="card-header text-center">
+                            <h3>Revisión de Datos</h3>
+                            <p>Por favor, verifica que los datos ingresados sean correctos antes de confirmar.</p>
+                        </div>
+                        <div class="card-body">
+                            <!-- Datos Personales -->
+                            <div class="callout callout-personal">
+                                <h5>Datos Personales</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Nombre:</strong> <?= $data['name'] ?></p>
+                                        <p><strong>Apellido:</strong> <?= $data['lastname'] ?></p>
+                                        <p><strong>Fecha de Nacimiento:</strong> <?= $data['birthdate'] ?></p>
+                                        <p><strong>Género:</strong> <?= $data['gender'] ?></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Estado Civil:</strong> <?= $data['civil_state'] ?></p>
+                                        <p><strong>DNI:</strong> <?= $data['dni_document'] ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contacto -->
+                            <div class="callout callout-contact">
+                                <h5>Contacto</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Email:</strong> <?= $data['email'] ?></p>
+                                        <p><strong>Teléfono:</strong> <?= $data['phone'] ?></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Redes Sociales:</strong></p>
+                                        <ul>
+                                            <?php foreach ($data['social_media'] as $social): ?>
+                                                <li><?= $social ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Residencia -->
+                            <div class="callout callout-house">
+                                <h5>Residencia</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><strong>País:</strong> <?= $data['country'] ?></p>
+                                        <p><strong>Provincia:</strong> <?= $data['state'] ?></p>
+                                        <p><strong>Departamento:</strong> <?= $data['district'] ?></p>
+                                        <p><strong>Localidad:</strong> <?= $data['locality'] ?></p>
+                                        <p><strong>Dirección:</strong> <?= $data['address'] ?></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Vocación -->
+                            <div class="callout callout-vocation">
+                                <h5>Vocación</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><strong>Profesión:</strong> <?= $data['name_profession'] ?></p>
+                                        <p><strong>Habilidades Artísticas:</strong> <?= $data['artistic_skills'] ?></p>
+                                        <p><strong>¿Es Voluntario?:</strong> <?= $data['voluntario'] === 'si' ? 'Sí' : 'No' ?></p>
+                                        <?php if ($data['voluntario'] === 'si'): ?>
+                                            <p><strong>Áreas de Servicio:</strong> <?= implode(', ', $data['voluntary_areas']) ?></p>
+                                        <?php else: ?>
+                                            <p><strong>Áreas de Interés:</strong> <?= implode(', ', $data['voluntary_areas']) ?></p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Familia -->
+                            <div class="callout callout-family">
+                                <h5>Familia</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><strong>Con quién vive:</strong></p>
+                                        <ul>
+                                            <?php foreach ($data['family'] as $member): ?>
+                                                <li><?= $member ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <?php if (!empty($data['children'])): ?>
+                                            <p><strong>Hijos:</strong> <?= count($data['children']) ?></p>
+                                            <ul>
+                                                <?php foreach ($data['children'] as $child): ?>
+                                                    <li>
+                                                        <?= $child['name'] ?> <?= $child['lastname'] ?>
+                                                        (DNI: <?= $child['dni'] ?>,
+                                                        Fecha Nacimiento: <?= $child['birthdate'] ?>,
+                                                        Asiste a la iglesia: <?= $child['church'] ? 'Sí' : 'No' ?>)
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Crecimiento Cristiano -->
+                            <div class="callout callout-cristians">
+                                <h5>Crecimiento Cristiano</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><strong>Experiencias:</strong></p>
+                                        <ul>
+                                            <?php foreach ($data['experiences'] as $exp): ?>
+                                                <li><?= $exp ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <p><strong>Servicios:</strong></p>
+                                        <ul>
+                                            <?php foreach ($data['services'] as $service): ?>
+                                                <li><?= $service ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <p><strong>Intereses:</strong></p>
+                                        <ul>
+                                            <?php foreach ($data['interests'] as $interest): ?>
+                                                <li><?= $interest ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <p><strong>Necesidades:</strong></p>
+                                        <ul>
+                                            <?php foreach ($data['needs'] as $need): ?>
+                                                <li><?= $need ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        <p><strong>Etapa de Vida:</strong>
+                                        <ul>
+                                            <?php foreach ($data['life_stage'] as $life_stage): ?>
+                                                <li><?= $life_stage ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <a href="<?= base_url('') ?>" class="btn btn-secondary btn-block">Volver a Editar</a>
+                                </div>
+                                <div class="col-md-6">
+                                    <form action="<?= base_url('censo/confirm_save') ?>" method="post">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-primary btn-block">Confirmar y Guardar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
