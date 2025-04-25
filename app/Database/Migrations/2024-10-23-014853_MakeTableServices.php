@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class MakeTableJob extends Migration {
+class MakeTableServices extends Migration {
     public function up() {
         $this->forge->addField([
             'id' => [
@@ -13,14 +13,9 @@ class MakeTableJob extends Migration {
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
-            'name_profession' => [
+            'name' => [
                 'type' => 'VARCHAR',
-                'constraint' => '250',
-                'null' => true,
-            ],
-            'artistic_skills' => [
-                'type' => 'VARCHAR',
-                'constraint' => '250',
+                'constraint' => '100',
                 'null' => true,
             ],
             'audi_user' => [
@@ -38,11 +33,16 @@ class MakeTableJob extends Migration {
                 'null' => true,
             ],
         ]);
+
+        // Clave primaria
         $this->forge->addKey('id', true);
-        $this->forge->createTable('job');
+
+        // Crear tabla
+        $this->forge->createTable('services');
     }
 
     public function down() {
-        $this->forge->dropTable('job');
+        // Eliminar tabla
+        $this->forge->dropTable('services');
     }
 }

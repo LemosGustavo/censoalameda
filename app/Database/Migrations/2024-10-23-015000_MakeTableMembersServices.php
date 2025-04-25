@@ -4,10 +4,8 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class MakeTableContact extends Migration
-{
-    public function up()
-    {
+class MakeTableMembersServices extends Migration {
+    public function up() {
         $this->forge->addField([
             'id' => [
                 'type' => 'INT',
@@ -15,14 +13,16 @@ class MakeTableContact extends Migration
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
-            'email' => [
-                'type' => 'VARCHAR',
-                'constraint' => '100',
+            'members_id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
                 'null' => true,
             ],
-            'phone' => [
-                'type' => 'VARCHAR',
-                'constraint' => '100',
+            'services_id' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
                 'null' => true,
             ],
             'audi_user' => [
@@ -35,17 +35,22 @@ class MakeTableContact extends Migration
                 'null' => true,
             ],
             'audi_action' => [
-                'type'       => 'ENUM',
+                'type' => 'ENUM',
                 'constraint' => ['I', 'U', 'D'],
                 'null' => true,
             ],
         ]);
+
+
+        // Clave primaria
         $this->forge->addKey('id', true);
-        $this->forge->createTable('contact');
+
+        // Crear tabla
+        $this->forge->createTable('members_services');
     }
 
-    public function down()
-    {
-        $this->forge->dropTable('contact');
+    public function down() {
+         // Eliminar tabla
+         $this->forge->dropTable('members_services');
     }
 }

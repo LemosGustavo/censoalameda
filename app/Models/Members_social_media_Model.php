@@ -24,4 +24,8 @@ class Members_social_media_Model extends MY_Model {
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ['members_id', 'social_media_id', 'other_socialmedia'];
+
+    public function getForeignKey() {
+        return 'social_media_id';
+    }
 }

@@ -9,84 +9,81 @@ class MakeTableMembers extends Migration {
         $this->forge->addField([
             'id' => [
                 'type' => 'INT',
-                'constraint' => 11,
                 'unsigned' => true,
-                'auto_increment' => true,
+                'auto_increment' => true
             ],
             'name' => [
                 'type' => 'VARCHAR',
-                'constraint' => '100',
-                'null' => true,
+                'constraint' => 100,
+                'null' => false,
             ],
             'lastname' => [
                 'type' => 'VARCHAR',
-                'constraint' => '100',
-                'null' => true,
+                'constraint' => 100,
+                'null' => false,
             ],
             'birthdate' => [
-                'type' => 'DATETIME',
+                'type' => 'DATE',
+                'null' => false,
+            ],
+            'dni_document' => [
+                'type' => 'VARCHAR',
+                'constraint' => 20,
+                'null' => false,
+                'unique' => true,
+            ],
+            'address' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => false,
+            ],
+            'email' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
                 'null' => true,
             ],
-
-            'age' => [
-                'type' => 'INT',
-                'constraint' => 11,
+            'phone' => [
+                'type' => 'VARCHAR',
+                'constraint' => 50,
                 'null' => true,
             ],
-
             'gender_id' => [
                 'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
+                'unsigned' => true,
+                'null' => false,
             ],
             'civil_state_id' => [
                 'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
+                'unsigned' => true,
+                'null' => false,
             ],
             'path_photo' => [
                 'type' => 'VARCHAR',
-                'constraint' => '550',
+                'constraint' => 255,
                 'null' => true,
             ],
-            'job_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
+            'name_profession' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'artistic_skills' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
                 'null' => true,
             ],
             'localities_id' => [
                 'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
-            'contact_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
-            'gronwup_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
-            'interestarea_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'null' => true,
-            ],
-            'needs_id' => [
-                'type' => 'INT',
-                'constraint' => 11,
+                'unsigned' => true,
                 'null' => true,
             ],
             'boss_family' => [
-                'type' => 'TINYINT',
-                'constraint' => 1,
-                'null' => true,
+                'type' => 'BOOLEAN',
+                'default' => false,
             ],
             'quantity_sons' => [
                 'type' => 'INT',
-                'constraint' => 11,
+                'constraint' => 2,
                 'null' => true,
             ],
             'audi_user' => [
@@ -99,11 +96,12 @@ class MakeTableMembers extends Migration {
                 'null' => true,
             ],
             'audi_action' => [
-                'type'       => 'ENUM',
+                'type' => 'ENUM',
                 'constraint' => ['I', 'U', 'D'],
                 'null' => true,
             ],
         ]);
+
         $this->forge->addKey('id', true);
         $this->forge->createTable('members');
     }

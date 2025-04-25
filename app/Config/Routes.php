@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Censo::dashboard');
+$routes->post('censo/ajax_save', 'Censo::ajax_save');
 
 $routes->group('location', function($routes) {
     $routes->get('get_states_by_country/(:segment)', 'Location::get_states_by_country/$1');

@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class MakeTableMembersFamily extends Migration {
+class MakeTableLifeStages extends Migration {
     public function up() {
         $this->forge->addField([
             'id' => [
@@ -12,20 +12,14 @@ class MakeTableMembersFamily extends Migration {
                 'unsigned' => true,
                 'auto_increment' => true
             ],
-            'members_id' => [
-                'type' => 'INT',
-                'unsigned' => true,
-                'null' => false,
+            'name' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255
             ],
-            'related_member_id' => [
-                'type' => 'INT',
-                'unsigned' => true,
-                'null' => false,
-            ],
-            'family_id' => [
-                'type' => 'INT',
-                'unsigned' => true,
-                'null' => false,
+            'slug' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'unique' => true
             ],
             'audi_user' => [
                 'type' => 'INT',
@@ -42,16 +36,11 @@ class MakeTableMembersFamily extends Migration {
                 'null' => true,
             ],
         ]);
-
         $this->forge->addKey('id', true);
-
-        // Crear tabla
-        $this->forge->createTable('members_family');
+        $this->forge->createTable('life_stages');
     }
 
     public function down() {
-
-        // Eliminar tabla
-        $this->forge->dropTable('members_family');
+        $this->forge->dropTable('life_stages');
     }
 }
