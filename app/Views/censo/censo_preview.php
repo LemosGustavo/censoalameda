@@ -1,5 +1,6 @@
 <?php
 $data = session()->get('censo_preview_data');
+log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?? 'no definido'));
 ?>
 
 <div class="content-wrapper d-flex align-items-center justify-content-center">
@@ -18,6 +19,14 @@ $data = session()->get('censo_preview_data');
                                 <h5>Datos Personales</h5>
                                 <div class="row">
                                     <div class="col-md-6">
+                                        <?php if (!empty($data['path_photo'])): ?>
+                                            <div class="text-center mb-3">
+                                                <img src="<?= site_url('image/serve/' . $data['path_photo']) ?>" 
+                                                     alt="Foto de perfil" 
+                                                     class="img-thumbnail rounded"
+                                                     style="max-width: 200px; max-height: 200px;">
+                                            </div>
+                                        <?php endif; ?>
                                         <p><strong>Nombre:</strong> <?= $data['name'] ?></p>
                                         <p><strong>Apellido:</strong> <?= $data['lastname'] ?></p>
                                         <p><strong>Fecha de Nacimiento:</strong> <?= $data['birthdate'] ?></p>

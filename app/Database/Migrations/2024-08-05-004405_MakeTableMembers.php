@@ -86,6 +86,31 @@ class MakeTableMembers extends Migration {
                 'constraint' => 2,
                 'null' => true,
             ],
+            'celebracion' => [
+                'type' => 'ENUM',
+                'constraint' => ['presencial', 'virtual'],
+                'null' => true,
+            ],
+            'name_guia' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'name_group' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'grupo' => [
+                'type' => 'ENUM',
+                'constraint' => ['si', 'no'],
+                'null' => true,
+            ],
+            'participate_gp' => [
+                'type' => 'ENUM',
+                'constraint' => ['si', 'no'],
+                'null' => true,
+            ],
             'audi_user' => [
                 'type' => 'INT',
                 'constraint' => 11,

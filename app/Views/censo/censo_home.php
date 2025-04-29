@@ -38,7 +38,7 @@
     }
 </style>
 
-<?= form_open_multipart(base_url('censo/preview'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off')); ?>
+<?= form_open_multipart(base_url('censo/preview'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off', 'enctype' => 'multipart/form-data')); ?>
 <? // php= csrf_field(); 
 ?>
 <div class="content-wrapper d-flex align-items-center justify-content-center">
@@ -324,11 +324,11 @@
                                     <div id="grupo_peque_no_div" class="form-group col-md-6" style="display: none;">
                                         <label>¿Te gustaría participar?</label>
                                         <div class="icheck-success d-inline">
-                                            <input type="radio" id="grupo_peque_no_si" name="grupo_peque_no_check" value="si">
+                                            <input type="radio" id="grupo_peque_no_si" name="participate_gp" value="si">
                                             <label for="grupo_peque_no_si">SI</label>
                                         </div>
                                         <div class="icheck-carrot d-inline ml-4">
-                                            <input type="radio" id="grupo_peque_no_no" name="grupo_peque_no_check" value="no">
+                                            <input type="radio" id="grupo_peque_no_no" name="participate_gp" value="no">
                                             <label for="grupo_peque_no_no">NO</label>
                                         </div>
                                     </div>
@@ -699,6 +699,10 @@
                             <input type="date" class="form-control" id="birthdate_${i}" name="birthdate_${i}">
                         </div>
                         <div class="col-md-2">
+                            <label for="dni_${i}">DNI</label>
+                            <input type="text" class="form-control" id="dni_${i}" name="dni_${i}" maxlength="15">
+                        </div>
+                        <div class="col-md-2">
                             <label for="church_${i}">Asiste iglesia</label>
                             <select class="form-control" id="church_${i}" name="church_${i}">
                                 <option value="">Seleccione</option>
@@ -707,8 +711,12 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label for="dni_${i}">DNI</label>
-                            <input type="text" class="form-control" id="dni_${i}" name="dni_${i}" maxlength="15">
+                            <label for="coexists_${i}">Convive</label>
+                            <select class="form-control" id="coexists_${i}" name="coexists_${i}">
+                                <option value="">Seleccione</option>
+                                <option value="si">Sí</option>
+                                <option value="no">No</option>
+                            </select>
                         </div>
                     </div>
                 </div>

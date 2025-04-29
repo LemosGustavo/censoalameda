@@ -434,6 +434,8 @@ class Censo extends MY_Controller {
                 'boss_family' => ($data['jefe'] === 'si') ? 1 : 0,
                 'quantity_sons' => $data['quantity_sons'],
                 'celebracion' => $data['celebracion'],
+                'grupo' => $data['grupo'],
+                'participate_gp' => $data['participate_gp'],
                 'name_guia' => $data['name_guia'],
                 'name_group' => $data['name_group'],
                 'audi_user' => session()->get('id'),
@@ -447,7 +449,7 @@ class Censo extends MY_Controller {
 
             // Guardar hijos como miembros relacionados
             if (isset($data['children']) && !empty($data['children'])) {
-                foreach ($data['children'] as $child) {
+                foreach ($data['children'] as $index => $child) {
                     // Crear miembro para el hijo
                     $child_data = [
                         'name' => $child['name'],
@@ -466,6 +468,8 @@ class Censo extends MY_Controller {
                         'members_id' => $member_id,
                         'related_member_id' => $child_id,
                         'family_id' => 7, // ID de "Hijo/s" en la tabla family
+                        'asist_church' => $child['church'] ? 'si' : 'no',
+                        'coexists' => $this->request->getPost("coexists_" . ($index + 1)) ?? 'no'
                     ];
                     $members_family_model->insert($family_relation);
                 }
@@ -545,8 +549,20 @@ class Censo extends MY_Controller {
     private function prepare_preview_data() {
         $request = service('request');
         $data = [];
-        // lm($request->getPost());
+        lm($request->getPost());
         try {
+            // Manejar la subida de la foto
+            $file = $request->getFile('profile_photo');
+            $path_photo = '';
+            
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(APPPATH . 'Uploads', $newName);
+                $path_photo = $newName;
+                log_message('info', 'Ruta de la imagen: ' . $path_photo);
+                log_message('info', 'Ruta completa del archivo: ' . APPPATH . 'Uploads/' . $newName);
+            }
+
             // Datos personales
             $data['name'] = $request->getPost('name') ?? '';
             $data['lastname'] = $request->getPost('lastname') ?? '';
@@ -554,6 +570,7 @@ class Censo extends MY_Controller {
             $data['gender'] = $this->get_label_from_id('Gender_Model', $request->getPost('gender_drop'));
             $data['civil_state'] = $this->get_label_from_id('Civil_state_Model', $request->getPost('civil_state_drop'));
             $data['dni_document'] = $request->getPost('dni_document') ?? '';
+            $data['path_photo'] = $path_photo;
 
             // Contacto
             $data['email'] = $request->getPost('email') ?? '';
@@ -625,7 +642,6 @@ class Censo extends MY_Controller {
             $data['interests_drop'] = $request->getPost('interests_drop') ?? [];
             $data['needs_drop'] = $request->getPost('needs_drop') ?? [];
             $data['lifestage_drop'] = $request->getPost('lifestage_drop');
-            $data['path_photo'] = $request->getPost('path_photo') ?? '';
             $data['celebracion'] = $request->getPost('celebracion') ?? '';
             $data['name_guia'] = $request->getPost('name_guia') ?? '';
             $data['name_group'] = $request->getPost('name_group') ?? '';
