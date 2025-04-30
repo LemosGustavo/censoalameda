@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="<?= base_url("/assets/frames/dist/css/adminlte.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/datatables-buttons/css/buttons.bootstrap4.min.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("/assets/frames/plugins/sweetalert2/sweetalert2.min.css") ?>">
 
     <link rel="stylesheet" href="<?= base_url("/assets/customize/css/censo.css") ?>">
 
@@ -34,8 +35,8 @@
 <body class="hold-transition layout-top-nav">
 
     <!-- Preloader -->
-    <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__shake" src="<?= base_url("/assets/img/logo.png") ?>" alt="AlamedaLogo" height="60" width="60">
+    <div class="preloader flex-column justify-content-center align-items-center" style="background: url('<?= base_url("/assets/img/fondo2.png") ?>') center center/cover;">
+        <img class="animation__shake" src="<?= base_url("/assets/img/logo_blanco2.png") ?>" alt="AlamedaLogo" height="160" width="160">
     </div>
 
     <!-- JavaScript Libraries -->
@@ -54,6 +55,7 @@
     <script src="<?= base_url("/assets/frames/dist/js/adminlte.min.js") ?>"></script>
     <script src="<?= base_url("/assets/customize/js/censo.js") ?>"></script>
     <script src="<?= base_url("/assets/frames/plugins/dropzone/min/dropzone.min.js") ?>"></script>
+    <script src="<?= base_url("/assets/frames/plugins/sweetalert2/sweetalert2.min.js") ?>"></script>
 </body>
 
 </html>

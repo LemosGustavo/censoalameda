@@ -21,10 +21,10 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                     <div class="col-md-6">
                                         <?php if (!empty($data['path_photo'])): ?>
                                             <div class="text-center mb-3">
-                                                <img src="<?= site_url('image/serve/' . $data['path_photo']) ?>" 
-                                                     alt="Foto de perfil" 
-                                                     class="img-thumbnail rounded"
-                                                     style="max-width: 200px; max-height: 200px;">
+                                                <img src="data:image/jpeg;base64,<?= base64_encode(file_get_contents($_FILES['profile_photo']['tmp_name'])) ?>"
+                                                    alt="Foto de perfil"
+                                                    class="img-thumbnail rounded"
+                                                    style="max-width: 200px; max-height: 200px;">
                                             </div>
                                         <?php endif; ?>
                                         <p><strong>Nombre:</strong> <?= $data['name'] ?></p>
@@ -122,6 +122,7 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                 <h5>Crecimiento Cristiano</h5>
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <p><strong>Forma de Celebración:</strong> <?= $data['celebracion'] === 'presencial' ? 'Presencial' : 'Virtual' ?></p>
                                         <p><strong>Experiencias:</strong></p>
                                         <ul>
                                             <?php foreach ($data['experiences'] as $exp): ?>
@@ -134,6 +135,13 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                                 <li><?= $service ?></li>
                                             <?php endforeach; ?>
                                         </ul>
+                                        <p><strong>¿Asiste a Grupo Pequeño?:</strong> <?= $data['grupo'] === 'si' ? 'Sí' : 'No' ?></p>
+                                        <?php if ($data['grupo'] === 'si'): ?>
+                                            <p><strong>Nombre del Guía:</strong> <?= $data['name_guia'] ?></p>
+                                            <p><strong>Nombre del Grupo:</strong> <?= $data['name_group'] ?></p>
+                                        <?php else: ?>
+                                            <p><strong>¿Le interesaría participar?:</strong> <?= $data['participate_gp'] === 'si' ? 'Sí' : 'No' ?></p>
+                                        <?php endif; ?>
                                         <p><strong>Intereses:</strong></p>
                                         <ul>
                                             <?php foreach ($data['interests'] as $interest): ?>
@@ -162,8 +170,10 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                     <a href="<?= base_url('') ?>" class="btn btn-secondary btn-block">Volver a Editar</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <form action="<?= base_url('censo/confirm_save') ?>" method="post">
+                                    <form action="<?= base_url('censo/confirm_save') ?>" method="post" enctype="multipart/form-data">
                                         <?= csrf_field() ?>
+                                        <input type="hidden" name="profile_photo" value="<?= $data['path_photo'] ?>">
+                                        <input type="file" name="profile_photo" style="display: none;">
                                         <button type="submit" class="btn btn-primary btn-block">Confirmar y Guardar</button>
                                     </form>
                                 </div>

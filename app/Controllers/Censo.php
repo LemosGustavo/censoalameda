@@ -137,7 +137,7 @@ class Censo extends MY_Controller {
             "locality" => "required|numeric",
             "name_profession" => "required|min_length[3]|max_length[100]",
             "artistic_skills" => "max_length[150]",
-            "quantity_sons" => "numeric",
+            "quantity_sons" => "permit_empty|numeric",
             "name_guia" => "permit_empty|min_length[3]|max_length[100]",
             "name_group" => "permit_empty|min_length[3]|max_length[100]"
         ], [
@@ -359,6 +359,17 @@ class Censo extends MY_Controller {
         $members_family_model = new Members_family_Model();
         $validation = \Config\Services::validation();
 
+        // Manejar la subida de la foto
+        $file = $this->request->getFile('profile_photo');
+        $path_photo = '';
+        
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(APPPATH . 'Uploads', $newName);
+            $path_photo = $newName;
+            log_message('info', 'Ruta de la imagen guardada: ' . $path_photo);
+        }
+
         // Convertir la fecha al formato correcto
         $birthdate = \DateTime::createFromFormat('d/m/Y', $data['birthdate']);
         if ($birthdate) {
@@ -386,7 +397,7 @@ class Censo extends MY_Controller {
             "dni_document" => "required|numeric|min_length[7]|max_length[8]",
             "name_profession" => "required|min_length[3]|max_length[100]",
             "artistic_skills" => "max_length[150]",
-            "quantity_sons" => "numeric",
+            "quantity_sons" => "permit_empty|numeric",
             "name_guia" => "permit_empty|min_length[3]|max_length[100]",
             "name_group" => "permit_empty|min_length[3]|max_length[100]"
         ]);
@@ -427,7 +438,7 @@ class Censo extends MY_Controller {
                 'phone' => $data['phone'],
                 'gender_id' => $data['gender_drop'],
                 'civil_state_id' => $data['civil_state_drop'],
-                'path_photo' => $data['path_photo'],
+                'path_photo' => $path_photo,
                 'localities_id' => $locality_record ? $locality_record->id : null,
                 'name_profession' => $data['name_profession'],
                 'artistic_skills' => $data['artistic_skills'],
@@ -551,16 +562,13 @@ class Censo extends MY_Controller {
         $data = [];
         lm($request->getPost());
         try {
-            // Manejar la subida de la foto
+            // Manejar la subida de la foto - solo guardar el nombre temporal
             $file = $request->getFile('profile_photo');
             $path_photo = '';
             
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                $newName = $file->getRandomName();
-                $file->move(APPPATH . 'Uploads', $newName);
-                $path_photo = $newName;
-                log_message('info', 'Ruta de la imagen: ' . $path_photo);
-                log_message('info', 'Ruta completa del archivo: ' . APPPATH . 'Uploads/' . $newName);
+                $path_photo = $file->getName();
+                log_message('info', 'Nombre temporal de la imagen: ' . $path_photo);
             }
 
             // Datos personales
@@ -643,8 +651,12 @@ class Censo extends MY_Controller {
             $data['needs_drop'] = $request->getPost('needs_drop') ?? [];
             $data['lifestage_drop'] = $request->getPost('lifestage_drop');
             $data['celebracion'] = $request->getPost('celebracion') ?? '';
+            $data['grupo'] = $request->getPost('grupo') ?? 'no';
             $data['name_guia'] = $request->getPost('name_guia') ?? '';
             $data['name_group'] = $request->getPost('name_group') ?? '';
+            $data['participate_gp'] = $request->getPost('participate_gp') ?? 'no';
+
+            lm($data);
 
             return $data;
         } catch (\Exception $e) {

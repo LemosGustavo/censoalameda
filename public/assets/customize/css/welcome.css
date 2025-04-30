@@ -1,0 +1,218 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+}
+
+.frame {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Fondo principal */
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image: url('../../img/fondo_welcome.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Botón central */
+.rectangle2 {
+    position: absolute;
+    width: 20.83vw; /* 400px en 1920px */
+    height: 5.21vw; /* 100px en 1920px */
+    min-width: 250px;
+    min-height: 62.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 68.24%; /* 737px en 1080px */
+    background: linear-gradient(0deg, #C32F27, #C32F27), url('../../img/vector.png');
+    background-blend-mode: multiply, normal;
+    background-size: 120% auto;
+    background-position: center center;
+    border-radius: 5.26vw; /* 101px en 1920px */
+}
+
+/* Títulos y textos */
+.title {
+    position: absolute;
+    width: 19.22vw; /* 369px en 1920px */
+    left: 50%;
+    transform: translateX(-50%);
+    top: 47.04%; /* 508px en 1080px */
+    font-weight: 500;
+    font-size: 2.5vw; /* 48px en 1920px */
+    line-height: 1.23;
+    text-align: center;
+    color: #C32F27;
+    margin: 0;
+    margin-bottom: 2vw;
+}
+
+.subtitle {
+    position: absolute;
+    width: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 53.52%; /* 578px en 1080px */
+    font-weight: 500;
+    font-size: 1.67vw; /* 32px en 1920px */
+    line-height: 1.22;
+    text-align: center;
+    color: #000000;
+    margin: 0;
+    margin-bottom: 1.5vw;
+    padding: 0 1vw;
+}
+
+.message {
+    position: absolute;
+    width: auto;
+    max-width: 19.84vw; /* 381px en 1920px */
+    left: 50%;
+    transform: translateX(-50%);
+    top: 58.8%; /* 635px en 1080px */
+    font-weight: 500;
+    font-size: 1.25vw; /* 24px en 1920px */
+    line-height: 1.5;
+    text-align: center;
+    color: #000000;
+    margin: 0;
+    margin-bottom: 2vw;
+    padding: 0 1vw;
+}
+
+.start {
+    position: absolute;
+    width: 9.64vw; /* 185px en 1920px */
+    height: 2.29vw; /* 44px en 1920px */
+    min-width: 120px;
+    min-height: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 70.83%; /* 765px en 1080px */
+    font-weight: 500;
+    font-size: 1.88vw; /* 36px en 1920px */
+    line-height: 1.22;
+    text-align: center;
+    color: #F1F1F1;
+    margin: 0;
+    cursor: pointer;
+    padding: 0.5vw 0;
+}
+
+/* Vector blanco */
+.vector-shape {
+    position: absolute;
+    width: 32.4vw; /* 622px en 1920px */
+    height: 7.4vw; /* 142px en 1080px */
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30%;
+    background-image: url('../../img/soyalameda.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 3vw;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 1200px) {
+    .title {
+        font-size: 3vw;
+        margin-bottom: 2.5vw;
+    }
+    
+    .subtitle {
+        font-size: 2vw;
+        margin-bottom: 2vw;
+    }
+    
+    .message {
+        font-size: 1.5vw;
+        margin-bottom: 2.5vw;
+        line-height: 1.6;
+    }
+    
+    .start {
+        font-size: 2.25vw;
+        padding: 0.6vw 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .rectangle2 {
+        width: 39vw;
+        height: 9.75vw;
+    }
+    
+    .title {
+        font-size: 4vw;
+        margin-bottom: 3vw;
+    }
+    
+    .subtitle {
+        font-size: 2.67vw;
+        margin-bottom: 2.5vw;
+    }
+    
+    .message {
+        font-size: 2vw;
+        margin-bottom: 3vw;
+        line-height: 1.7;
+    }
+    
+    .start {
+        font-size: 3vw;
+        padding: 0.7vw 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .rectangle2 {
+        width: 52vw;
+        height: 13vw;
+    }
+    
+    .title {
+        font-size: 5vw;
+        margin-bottom: 4vw;
+    }
+    
+    .subtitle {
+        font-size: 3.33vw;
+        margin-bottom: 3vw;
+    }
+    
+    .message {
+        font-size: 2.5vw;
+        margin-bottom: 4vw;
+        line-height: 1.8;
+    }
+    
+    .start {
+        font-size: 4vw;
+        padding: 0.8vw 0;
+    }
+    
+    .vector-shape {
+        height: 10vw;
+        margin-bottom: 4vw;
+    }
+}

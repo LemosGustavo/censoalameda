@@ -1,6 +1,6 @@
 <style>
     .content-wrapper {
-        background-image: url('/assets/img/fondo.png');
+        background-image: url('/assets/img/fondo2.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -35,6 +35,33 @@
         /* Asegura que siempre se abra hacia abajo */
         bottom: auto !important;
         /* Evita que se abra hacia arriba */
+    }
+
+    /* Estilos para campos requeridos */
+    .required-field label:after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    .required-field input:required,
+    .required-field select:required {
+        border-left: 3px solid #dc3545;
+    }
+
+    .required-field input:required:valid,
+    .required-field select:required:valid {
+        border-left: 3px solid #28a745;
+    }
+
+    /* Estilos para toastr */
+    #toast-container > div {
+        opacity: 1;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    #toast-container > div:hover {
+        box-shadow: 0 0 12px rgba(0,0,0,0.2);
+        opacity: 1;
     }
 </style>
 
@@ -97,31 +124,31 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['name']['label']; ?>
                                         <?php echo $fields['name']['form']; ?>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['lastname']['label']; ?>
                                         <?php echo $fields['lastname']['form']; ?>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['birthdate']['label']; ?>
                                         <?php echo $fields['birthdate']['form']; ?>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['gender_drop']['label']; ?>
                                         <?php echo $fields['gender_drop']['form']; ?>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['civil_state_drop']['label']; ?>
                                         <?php echo $fields['civil_state_drop']['form']; ?>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['dni_document']['label']; ?>
                                         <?php echo $fields['dni_document']['form']; ?>
                                     </div>
@@ -154,9 +181,9 @@
                                 <h5>Residencia</h5>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6">
-                                        <div class="form-group">
+                                        <div class="form-group required-field">
                                             <label for="country">País</label>
-                                            <select id="country" name="country" class="form-control">
+                                            <select id="country" name="country" class="form-control" required>
                                                 <option value="">Seleccione un país</option>
                                                 <?php foreach ($countries as $country): ?>
                                                     <option value="<?= $country->id; ?>"><?= $country->name; ?></option>
@@ -193,7 +220,7 @@
                             <div class="callout callout-vocation">
                                 <h5>Vocación</h5>
                                 <div class="row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 required-field">
                                         <?php echo $fields_vocation['name_profession']['label']; ?>
                                         <?php echo $fields_vocation['name_profession']['form']; ?>
                                     </div>
@@ -363,70 +390,131 @@
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 
 <script {csp-script-nonce}>
-    $(function() {
-        // Establecer el mensaje personalizado al campo requerido que no es válido
-        $('[required]').on('invalid', function() {
-            this.setCustomValidity('Por favor, completa este campo');
+    $(document).ready(function() {
+        console.log('Documento listo');
+        
+        // Agregar clase required-field a los campos requeridos
+        $('input[required], select[required], textarea[required]').each(function() {
+            $(this).closest('.form-group').addClass('required-field');
         });
 
-        // Limpiar el mensaje de error personalizado cuando el usuario empieza a escribir
-        $('[required]').on('input', function() {
-            this.setCustomValidity('');
-        });
+        // Mapeo de nombres de campos a etiquetas en español
+        const fieldLabels = {
+            'name': 'Nombre',
+            'lastname': 'Apellido',
+            'birthdate': 'Fecha de Nacimiento',
+            'gender_drop': 'Género',
+            'civil_state_drop': 'Estado Civil',
+            'dni_document': 'DNI',
+            'email': 'Email',
+            'phone': 'Teléfono',
+            'address': 'Dirección',
+            'country': 'País',
+            'state': 'Provincia',
+            'district': 'Departamento',
+            'locality': 'Localidad',
+            'name_profession': 'Profesión/Oficio',
+            'social_media_drop': 'Redes Sociales',
+            'voluntary_yes_drop': 'Áreas de Servicio',
+            'voluntary_no_drop': 'Áreas de Interés',
+            'family_drop': 'Composición Familiar',
+            'experiences_drop': 'Experiencias',
+            'services_drop': 'Servicios',
+            'interests_drop': 'Intereses',
+            'needs_drop': 'Necesidades',
+            'lifestage_drop': 'Etapa de Vida',
+            'celebracion': 'Forma de Celebración',
+            'grupo': 'Grupo Pequeño',
+            'name_guia': 'Nombre del Guía',
+            'name_group': 'Nombre del Grupo'
+        };
 
-        // Manejar el evento submit del formulario
-        $('#form_censo').on('submit', function(event) {
+        // Evento click en el botón de envío
+        $('input[type="submit"]').on('click', function(event) {
+            console.log('Validando formulario');
+            event.preventDefault();
+            
             let isValid = true;
-
-            // Comprobar si hay campos requeridos no completados
+            let invalidFields = [];
+            
+            // Validación de campos requeridos
             $('[required]').each(function() {
-                if (!this.checkValidity()) {
+                if (!$(this).val().trim()) {
                     isValid = false;
-                    this.setCustomValidity('Completa el campo'); // Mensaje personalizado
-                    $(this).addClass('is-invalid'); // Añadir clase de error (opcional)
+                    let fieldName = $(this).attr('name') || $(this).attr('id');
+                    invalidFields.push(fieldLabels[fieldName] || fieldName);
+                    $(this).addClass('is-invalid');
                 } else {
-                    $(this).removeClass('is-invalid'); // Remover clase de error
+                    $(this).removeClass('is-invalid').addClass('is-valid');
                 }
             });
 
-            // Si el formulario no es válido, prevenir el envío
+            // Validación específica para DNI
+            const dni = $('#dni_document').val();
+            if (dni && (dni.length < 7 || dni.length > 8)) {
+                isValid = false;
+                invalidFields.push('DNI (debe tener entre 7 y 8 dígitos)');
+                $('#dni_document').addClass('is-invalid');
+            }
+
+            // Validación de email si está presente
+            const email = $('#email').val();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                isValid = false;
+                invalidFields.push('Email (formato inválido)');
+                $('#email').addClass('is-invalid');
+            }
+
+            // Validación de teléfono si está presente
+            const phone = $('#phone').val();
+            if (phone && (phone.length < 8 || phone.length > 20)) {
+                isValid = false;
+                invalidFields.push('Teléfono (debe tener entre 8 y 20 caracteres)');
+                $('#phone').addClass('is-invalid');
+            }
+
+            // Validación de dirección si está presente
+            const address = $('#address').val();
+            if (address && (address.length < 5 || address.length > 100)) {
+                isValid = false;
+                invalidFields.push('Dirección (debe tener entre 5 y 100 caracteres)');
+                $('#address').addClass('is-invalid');
+            }
+            
             if (!isValid) {
-                event.preventDefault(); // Prevenir el envío del formulario
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos requeridos o inválidos',
+                    html: 'Por favor, corrige los siguientes campos:<br><br>' + 
+                          invalidFields.map(field => `• ${field}`).join('<br>'),
+                    confirmButtonText: 'Entendido'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Formulario válido!',
+                    text: 'Todos los campos están correctamente completados',
+                    confirmButtonText: 'Enviar',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#form_censo').submit();
+                    }
+                });
             }
         });
-    });
 
-
-
-    $(document).ready(function() {
-
-        // $('#form_censo').on('submit', function(e) {
-        //     e.preventDefault(); // Previene el envío por defecto
-        //     // Aquí se puede agregar la lógica de validación si es necesario
-        //     if ($(this).data('bs.validator').isValid()) {
-        //         // Si es válido, se envía el formulario
-        //         this.submit();
-        //     } else {
-        //         // Manejar errores de validación
-        //         alert('Por favor, completa los campos requeridos.');
-        //     }
-        // });
-
-        $('#birthdate').datetimepicker({
-            maxDate: new Date(),
-            format: 'L',
-            icons: {
-                time: 'far fa-clock',
-                date: 'far fa-calendar-alt',
-                up: 'fas fa-arrow-up',
-                down: 'fas fa-arrow-down',
-                previous: 'fas fa-chevron-left',
-                next: 'fas fa-chevron-right',
-                today: 'fas fa-calendar-check',
-                clear: 'far fa-trash-alt',
-                close: 'far fa-times-circle'
+        // Limpiar mensajes de error cuando el usuario empieza a escribir
+        $('[required]').on('input', function() {
+            $(this).removeClass('is-invalid');
+            if ($(this).val().trim()) {
+                $(this).addClass('is-valid');
+            } else {
+                $(this).removeClass('is-valid');
             }
         });
+
         // Inicialización de Select2 en todos los dropdowns
         function initializeSelect2(selector, placeholder) {
             $(selector).select2({
@@ -539,40 +627,6 @@
         $('#quantity_sons').on('input', function() {
             generateChildInputs();
         });
-
-        // Evento para manejar el cambio en family_drop
-        // $('#family_drop').on('change', function() {
-        //     var selectedValues = $(this).find('option:selected').text();
-        //     console.log(selectedValues);
-        //     // Verifica si "Hijo/s" está seleccionado
-        //     if (selectedValues && selectedValues.includes('Hijo/s')) {
-        //         $('#hijo_si').prop('checked', true); // Marca el radio de "Sí"
-        //         toggle_sons(); // Llama a la función para mostrar los campos de hijos
-        //     } else {
-        //         $('#hijo_no').prop('checked', true); // Marca el radio de "No"
-        //         toggle_sons(); // Llama a la función para ocultar los campos de hijos
-        //     }
-        // });
-
-        // // Añadir el tooltip a cada campo `required`
-        // $('input[required], select[required], textarea[required]').each(function() {
-        //     const $input = $(this);
-
-        //     // Añadir tooltip con icono de información dentro
-        //     $input.attr('data-toggle', 'tooltip')
-        //         .attr('data-placement', 'top')
-        //         .attr('title', '<i class="fas fa-info-circle"></i> Completa este campo')
-        //         .tooltip({
-        //             html: true, // Permitir HTML dentro del tooltip
-        //             trigger: 'focus' // Mostrar tooltip al enfocar el campo
-        //         })
-        //         .on('focus', function() {
-        //             $(this).tooltip('show'); // Mostrar tooltip al enfocar
-        //         })
-        //         .on('blur', function() {
-        //             $(this).tooltip('hide'); // Ocultar tooltip al perder el foco
-        //         });
-        // });
 
         // Detectar si es un dispositivo móvil
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -694,7 +748,7 @@
                             <label for="surname_${i}">Apellido</label>
                             <input type="text" class="form-control" id="surname_${i}" name="surname_${i}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 date">
                             <label for="birthdate_${i}">Fecha de Nacimiento</label>
                             <input type="date" class="form-control" id="birthdate_${i}" name="birthdate_${i}">
                         </div>
@@ -736,6 +790,19 @@
             const fileReader = new FileReader();
             const preview = $("#photo_preview");
 
+            // Validar tamaño (máximo 3MB)
+            const maxSize = 3 * 1024 * 1024; // 3MB en bytes
+            if (file && file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Archivo muy grande',
+                    text: 'La imagen debe ser menor a 3MB',
+                });
+                this.value = ''; // Limpiar el input
+                preview.hide();
+                return;
+            }
+
             // Validar el tipo de archivo
             const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
             if (file && validImageTypes.includes(file.type)) {
@@ -750,18 +817,6 @@
                     icon: 'error',
                     title: 'Archivo no válido',
                     text: 'Por favor, selecciona una imagen (JPG, PNG o GIF)',
-                });
-                this.value = ''; // Limpiar el input
-                preview.hide();
-            }
-
-            // Validar tamaño (máximo 5MB)
-            const maxSize = 5 * 1024 * 1024; // 5MB en bytes
-            if (file && file.size > maxSize) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Archivo muy grande',
-                    text: 'La imagen debe ser menor a 5MB',
                 });
                 this.value = ''; // Limpiar el input
                 preview.hide();
@@ -796,12 +851,12 @@
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (file && validImageTypes.includes(file.type)) {
             // Validar tamaño
-            const maxSize = 5 * 1024 * 1024; // 5MB
+            const maxSize = 3 * 1024 * 1024; // 3MB
             if (file.size > maxSize) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Archivo muy grande',
-                    text: 'La imagen debe ser menor a 5MB',
+                    text: 'La imagen debe ser menor a 3MB',
                     confirmButtonText: 'Entendido'
                 });
                 return;
@@ -812,8 +867,12 @@
                 preview.attr('src', e.target.result);
                 preview.show();
 
-                // Actualizar el input file original
-                $("#profile_photo").prop('files', new FileList([file]));
+                // Crear un nuevo DataTransfer y asignar el archivo
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                
+                // Asignar los archivos al input
+                $("#profile_photo")[0].files = dataTransfer.files;
                 $(".custom-file-label").text(file.name);
             };
             fileReader.readAsDataURL(file);

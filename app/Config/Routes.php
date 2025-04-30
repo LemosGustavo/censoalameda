@@ -1,11 +1,24 @@
 <?php
 
+namespace Config;
+
 use CodeIgniter\Router\RouteCollection;
 
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Censo::dashboard');
+$routes->setDefaultNamespace('App\Controllers');
+$routes->setDefaultController('Home');
+$routes->setDefaultMethod('index');
+$routes->setTranslateURIDashes(false);
+$routes->set404Override();
+
+// Ruta principal que muestra la página de bienvenida
+$routes->get('/', 'Home::index');
+
+// Ruta para el censo
+$routes->get('censo_home', 'Censo::dashboard/home');
+
 $routes->group('censo', function ($routes) {
     $routes->post('ajax_save', 'Censo::ajax_save');
     $routes->post('preview', 'Censo::preview');
