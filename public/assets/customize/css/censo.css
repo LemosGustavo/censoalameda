@@ -375,49 +375,6 @@ input[type="text"]::placeholder {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Personalización del tooltip
-.tooltip-inner {
-  background-color: #fff; /* Fondo blanco */
-/* color: #333; Texto oscuro para mejor contraste */
-/* font-size: 0.875rem; */
-/* padding: 10px 15px; Mayor padding para un mejor espaciado */
-/* border-radius: 6px; Bordes más redondeados */
-/* border: 1px solid #343a40; Contorno negro */
-/* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); Sombra suave para profundidad */
-/* transition: opacity 0.2s ease-in-out; Transición suave */
-/* display: flex; */
-/* align-items: center; */
-/* } */
-
-/* .tooltip-inner i { */
-/* margin-right: 8px; Espacio entre el ícono y el texto */
-/* background-color: #ffc107; Fondo amarillo para el ícono */
-/* color: #fff; Color del ícono blanco */
-/* padding: 5px; Padding para el ícono */
-/* border-radius: 4px; Bordes redondeados para el ícono */
-/* font-size: 1.1rem; Tamaño del ícono */
-/* width: 24px; Ancho fijo para el ícono */
-/* height: 24px; Alto fijo para el ícono */
-/* display: flex; Flex para centrar el ícono */
-/* align-items: center; Centrar verticalmente */
-/* justify-content: center; Centrar horizontalmente */
-/* } */
-
-/* .tooltip.bs-tooltip-top .arrow::before { */
-/* border-top-color: #fff; Color de la flecha blanca */
-/* border-width: 5px; Grosor de la flecha */
-/* } */
-
-/* .tooltip { */
-/* opacity: 0; Comenzar oculto para la transición */
-/* pointer-events: none; Desactivar eventos mientras está oculto */
-/* } */
-
-/* .tooltip.show { */
-/* opacity: 1; Mostrar tooltip con opacidad */
-/* pointer-events: auto; Activar eventos cuando está visible */
-/* } */
-
 /* Estilos para el componente de foto */
 .custom-file-input {
     cursor: pointer;

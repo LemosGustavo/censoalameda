@@ -54,13 +54,13 @@
     }
 
     /* Estilos para toastr */
-    #toast-container > div {
+    #toast-container>div {
         opacity: 1;
-        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
     }
 
-    #toast-container > div:hover {
-        box-shadow: 0 0 12px rgba(0,0,0,0.2);
+    #toast-container>div:hover {
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
         opacity: 1;
     }
 </style>
@@ -75,7 +75,7 @@
                 <div class="col-md-12">
                     <div class="card card-default">
                         <div class="card-header text-center">
-                            <div style="width: 100%; height: 300px; background-image: url('/assets/img/logo_b.jpg'); background-size: cover; background-position: center;">
+                            <div style="width: 100%; height: 400px; background-image: url('/assets/img/cabecera.png'); background-size: cover; background-position: center; border-radius: 8px;">
                             </div>
                         </div>
                         <div class="card-body p-0">
@@ -100,10 +100,7 @@
                                                         class="btn"
                                                         id="camera_button"
                                                         onclick="openCamera()"
-                                                        style="border-radius: 0 30px 30px 0;
-                                                                   background-color: #a5d6a7;
-                                                                   color: #fff;
-                                                                   border: none;">
+                                                        style="border-radius: 0 30px 30px 0; background-color: #a5d6a7; color: #fff; border: none;">
                                                         <i class="fas fa-camera"></i>
                                                     </button>
                                                 </div>
@@ -392,7 +389,7 @@
 <script {csp-script-nonce}>
     $(document).ready(function() {
         console.log('Documento listo');
-        
+
         // Agregar clase required-field a los campos requeridos
         $('input[required], select[required], textarea[required]').each(function() {
             $(this).closest('.form-group').addClass('required-field');
@@ -433,10 +430,10 @@
         $('input[type="submit"]').on('click', function(event) {
             console.log('Validando formulario');
             event.preventDefault();
-            
+
             let isValid = true;
             let invalidFields = [];
-            
+
             // Validación de campos requeridos
             $('[required]').each(function() {
                 if (!$(this).val().trim()) {
@@ -480,13 +477,13 @@
                 invalidFields.push('Dirección (debe tener entre 5 y 100 caracteres)');
                 $('#address').addClass('is-invalid');
             }
-            
+
             if (!isValid) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Campos requeridos o inválidos',
-                    html: 'Por favor, corrige los siguientes campos:<br><br>' + 
-                          invalidFields.map(field => `• ${field}`).join('<br>'),
+                    html: 'Por favor, corrige los siguientes campos:<br><br>' +
+                        invalidFields.map(field => `• ${field}`).join('<br>'),
                     confirmButtonText: 'Entendido'
                 });
             } else {
@@ -870,7 +867,7 @@
                 // Crear un nuevo DataTransfer y asignar el archivo
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
-                
+
                 // Asignar los archivos al input
                 $("#profile_photo")[0].files = dataTransfer.files;
                 $(".custom-file-label").text(file.name);
