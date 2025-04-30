@@ -27,6 +27,16 @@ class MakeTableMembersFamily extends Migration {
                 'unsigned' => true,
                 'null' => false,
             ],
+            'asist_church' => [
+                'type' => 'ENUM',
+                'constraint' => ['si', 'no'],
+                'null' => true,
+            ],
+            'coexists' => [
+                'type' => 'ENUM',
+                'constraint' => ['si', 'no'],
+                'null' => true,
+            ],
             'audi_user' => [
                 'type' => 'INT',
                 'constraint' => 11,

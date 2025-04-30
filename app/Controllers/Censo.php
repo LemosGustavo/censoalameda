@@ -137,7 +137,7 @@ class Censo extends MY_Controller {
             "locality" => "required|numeric",
             "name_profession" => "required|min_length[3]|max_length[100]",
             "artistic_skills" => "max_length[150]",
-            "quantity_sons" => "numeric",
+            "quantity_sons" => "permit_empty|numeric",
             "name_guia" => "permit_empty|min_length[3]|max_length[100]",
             "name_group" => "permit_empty|min_length[3]|max_length[100]"
         ], [
@@ -347,7 +347,7 @@ class Censo extends MY_Controller {
     public function confirm_save() {
         log_message('info', 'Iniciando confirm_save');
         $data = session()->get('censo_preview_data');
-        
+
         if (!$data) {
             log_message('error', 'No hay datos en la sesión para guardar');
             return redirect()->to(base_url(''))->with('error', 'No hay datos para guardar');
@@ -358,6 +358,17 @@ class Censo extends MY_Controller {
         $members_model = new Members_Model();
         $members_family_model = new Members_family_Model();
         $validation = \Config\Services::validation();
+
+        // Manejar la subida de la foto
+        $path_photo = '';
+
+        if (!empty($data['photo_base64'])) {
+            $newName = uniqid() . '.jpg';
+            $filePath = APPPATH . 'Uploads/' . $newName;
+            file_put_contents($filePath, base64_decode($data['photo_base64']));
+            $path_photo = $newName;
+            log_message('info', 'Ruta de la imagen guardada: ' . $path_photo);
+        }
 
         // Convertir la fecha al formato correcto
         $birthdate = \DateTime::createFromFormat('d/m/Y', $data['birthdate']);
@@ -386,7 +397,7 @@ class Censo extends MY_Controller {
             "dni_document" => "required|numeric|min_length[7]|max_length[8]",
             "name_profession" => "required|min_length[3]|max_length[100]",
             "artistic_skills" => "max_length[150]",
-            "quantity_sons" => "numeric",
+            "quantity_sons" => "permit_empty|numeric",
             "name_guia" => "permit_empty|min_length[3]|max_length[100]",
             "name_group" => "permit_empty|min_length[3]|max_length[100]"
         ]);
@@ -427,13 +438,18 @@ class Censo extends MY_Controller {
                 'phone' => $data['phone'],
                 'gender_id' => $data['gender_drop'],
                 'civil_state_id' => $data['civil_state_drop'],
-                'path_photo' => $data['path_photo'],
+                'path_photo' => $path_photo,
+                'country_id' => $country_record ? $country_record->id : null,
+                'state_id' => $state_record ? $state_record->id : null,
+                'district_id' => $district_record ? $district_record->id : null,
                 'localities_id' => $locality_record ? $locality_record->id : null,
                 'name_profession' => $data['name_profession'],
                 'artistic_skills' => $data['artistic_skills'],
                 'boss_family' => ($data['jefe'] === 'si') ? 1 : 0,
                 'quantity_sons' => $data['quantity_sons'],
                 'celebracion' => $data['celebracion'],
+                'grupo' => $data['grupo'],
+                'participate_gp' => $data['participate_gp'],
                 'name_guia' => $data['name_guia'],
                 'name_group' => $data['name_group'],
                 'audi_user' => session()->get('id'),
@@ -447,7 +463,7 @@ class Censo extends MY_Controller {
 
             // Guardar hijos como miembros relacionados
             if (isset($data['children']) && !empty($data['children'])) {
-                foreach ($data['children'] as $child) {
+                foreach ($data['children'] as $index => $child) {
                     // Crear miembro para el hijo
                     $child_data = [
                         'name' => $child['name'],
@@ -466,6 +482,8 @@ class Censo extends MY_Controller {
                         'members_id' => $member_id,
                         'related_member_id' => $child_id,
                         'family_id' => 7, // ID de "Hijo/s" en la tabla family
+                        'asist_church' => $child['church'] ? 'si' : 'no',
+                        'coexists' => $child['coexists'] ? 'si' : 'no'
                     ];
                     $members_family_model->insert($family_relation);
                 }
@@ -531,10 +549,9 @@ class Censo extends MY_Controller {
 
             log_message('info', 'Transacción completada exitosamente');
             session()->remove('censo_preview_data');
-            
+
             // Redirigir a la vista de éxito
             return $this->load_template('censo/censo_success', ['title' => 'Datos Guardados']);
-
         } catch (\Exception $e) {
             log_message('error', 'Error en confirm_save: ' . $e->getMessage());
             $this->db->transRollback();
@@ -547,6 +564,17 @@ class Censo extends MY_Controller {
         $data = [];
         // lm($request->getPost());
         try {
+            // Manejar la subida de la foto - guardar el contenido en base64
+            $file = $request->getFile('profile_photo');
+            $path_photo = '';
+            $photo_base64 = '';
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $path_photo = $file->getName();
+                $photo_base64 = base64_encode(file_get_contents($file->getTempName()));
+                log_message('info', 'Nombre temporal de la imagen: ' . $path_photo);
+            }
+
             // Datos personales
             $data['name'] = $request->getPost('name') ?? '';
             $data['lastname'] = $request->getPost('lastname') ?? '';
@@ -554,6 +582,8 @@ class Censo extends MY_Controller {
             $data['gender'] = $this->get_label_from_id('Gender_Model', $request->getPost('gender_drop'));
             $data['civil_state'] = $this->get_label_from_id('Civil_state_Model', $request->getPost('civil_state_drop'));
             $data['dni_document'] = $request->getPost('dni_document') ?? '';
+            $data['path_photo'] = $path_photo;
+            $data['photo_base64'] = $photo_base64;
 
             // Contacto
             $data['email'] = $request->getPost('email') ?? '';
@@ -574,7 +604,7 @@ class Censo extends MY_Controller {
             $data['name_profession'] = $request->getPost('name_profession') ?? '';
             $data['artistic_skills'] = $request->getPost('artistic_skills') ?? '';
             $data['voluntario'] = $request->getPost('voluntario') ?? 'no';
-            
+
             // Manejar áreas de voluntariado según si es voluntario o no
             if ($data['voluntario'] === 'si') {
                 $data['voluntary_areas'] = $this->get_labels_from_ids('Voluntary_Model', $request->getPost('voluntary_yes_drop') ?? []);
@@ -590,7 +620,7 @@ class Censo extends MY_Controller {
             $data['family'] = $this->get_labels_from_ids('Family_Model', $request->getPost('family_drop') ?? []);
             $data['jefe'] = $request->getPost('jefe') ?? 'no';
             $data['quantity_sons'] = $request->getPost('quantity_sons') ?? 0;
-            
+
             // Hijos
             $data['children'] = [];
             if ($request->getPost('quantity_sons') > 0) {
@@ -601,7 +631,8 @@ class Censo extends MY_Controller {
                             'lastname' => $request->getPost("surname_$i") ?? '',
                             'birthdate' => $request->getPost("birthdate_$i") ?? '',
                             'dni' => $request->getPost("dni_$i") ?? '',
-                            'church' => $request->getPost("church_$i") === 'si'
+                            'church' => $request->getPost("church_$i") === 'si',
+                            'coexists' => $request->getPost("coexists_$i") === 'si'
                         ];
                     }
                 }
@@ -625,10 +656,13 @@ class Censo extends MY_Controller {
             $data['interests_drop'] = $request->getPost('interests_drop') ?? [];
             $data['needs_drop'] = $request->getPost('needs_drop') ?? [];
             $data['lifestage_drop'] = $request->getPost('lifestage_drop');
-            $data['path_photo'] = $request->getPost('path_photo') ?? '';
-            $data['celebracion'] = $request->getPost('celebracion') ?? '';
-            $data['name_guia'] = $request->getPost('name_guia') ?? '';
-            $data['name_group'] = $request->getPost('name_group') ?? '';
+            $data['celebracion'] = $request->getPost('celebracion') ?? NULL;
+            $data['grupo'] = $request->getPost('grupo') ?? 'no';
+            $data['name_guia'] = $request->getPost('name_guia') ?? NULL;
+            $data['name_group'] = $request->getPost('name_group') ?? NULL;
+            $data['participate_gp'] = $request->getPost('participate_gp') ?? 'no';
+
+            // lm($data);
 
             return $data;
         } catch (\Exception $e) {
@@ -640,7 +674,7 @@ class Censo extends MY_Controller {
     private function get_label_from_id($model_name, $id) {
         if (empty($id)) return '';
         $model = model($model_name);
-        
+
         // Determinar el campo de búsqueda según el modelo
         $search_field = 'id';
         if ($model_name === 'States_Model') {
@@ -650,9 +684,9 @@ class Censo extends MY_Controller {
         } elseif ($model_name === 'Localities_Model') {
             $search_field = 'api_localities_id';
         }
-        
+
         $record = $model->where($search_field, $id)->first();
-        
+
         if (is_array($record)) {
             return $record['name'] ?? '';
         }

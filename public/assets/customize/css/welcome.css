@@ -1,0 +1,233 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+}
+
+.frame {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Fondo principal */
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image: url('../../img/fondo_welcome.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+/* Contenedor principal para mejor control del layout */
+.content-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    padding: 0 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Vector logo */
+.vector-shape {
+    width: 60%;
+    max-width: 622px;
+    height: auto;
+    margin-bottom: 5vh;
+    background-image: url('../../img/soyalameda.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    aspect-ratio: 622/142;
+}
+
+/* Títulos y textos */
+.title {
+    color: #C32F27;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin: 0 0 2vh 0;
+}
+
+.subtitle {
+    color: #000000;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin: 0 0 2vh 0;
+}
+
+.message {
+    color: #000000;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 0 0 4vh 0;
+}
+
+/* Botón central */
+.button-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2vh;
+}
+
+.rectangle2 {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(0deg, #C32F27, #C32F27), url('../../img/vector.png');
+    background-blend-mode: multiply, normal;
+    background-size: 120% auto;
+    background-position: center;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.rectangle2:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.start {
+    color: #F1F1F1;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    margin: 0;
+    user-select: none;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1.3rem;
+    }
+
+    .message {
+        font-size: 1rem;
+    }
+
+    .start {
+        font-size: 1.3rem;
+    }
+
+    .vector-shape {
+        width: 80%;
+    }
+
+    .rectangle2 {
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+    }
+
+    .message {
+        font-size: 0.9rem;
+    }
+
+    .start {
+        font-size: 1.2rem;
+    }
+
+    .vector-shape {
+        width: 90%;
+        margin-bottom: 3vh;
+    }
+
+    .content-container {
+        padding: 0 15px;
+    }
+
+    .rectangle2 {
+        max-width: 250px;
+        padding: 12px 0;
+    }
+}
+
+@media (max-height: 600px) {
+    .vector-shape {
+        margin-bottom: 2vh;
+    }
+
+    .title,
+    .subtitle,
+    .message {
+        margin-bottom: 1vh;
+    }
+
+    .message {
+        margin-bottom: 2vh;
+    }
+}
+
+/* Orientación específica para móviles */
+@media (max-height: 450px) and (orientation: landscape) {
+    .frame {
+        height: auto;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    .vector-shape {
+        width: 50%;
+        margin-bottom: 1vh;
+    }
+
+    .title {
+        font-size: 1.5rem;
+        margin-bottom: 0.5vh;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 0.5vh;
+    }
+
+    .message {
+        font-size: 0.8rem;
+        margin-bottom: 1vh;
+    }
+
+    .rectangle2 {
+        padding: 8px 0;
+    }
+
+    .start {
+        font-size: 1rem;
+    }
+}

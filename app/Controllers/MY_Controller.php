@@ -314,10 +314,15 @@ class MY_Controller extends BaseController {
             $form = form_textarea($field);
         }
 
-        if (isset($field_opts['type']) && $field_opts['type'] === 'date' && isset($field_opts['datetimepicker'])) {
-            $form = '<div class="form-group"><div class="input-group date" id="' . $field_opts['name'] . '" data-target-input="nearest">' . $form . '<div class="input-group-append" data-target="#' . $field_opts['name'] . '" data-toggle="datetimepicker">
-            <div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></div>';
+        if (isset($field_opts['type']) && $field_opts['type'] === 'datecustom') {
+            $field['type'] = 'date'; 
+            $form = form_input($field);
+            $form = '<div class="form-group"><div class="input-group date">' . $form . '</div></div>';
         }
+        // if (isset($field_opts['type']) && $field_opts['type'] === 'date' && isset($field_opts['datetimepicker'])) {
+        //     $form = '<div class="form-group"><div class="input-group date" id="' . $field_opts['name'] . '" data-target-input="nearest">' . $form . '<div class="input-group-append" data-target="#' . $field_opts['name'] . '" data-toggle="datetimepicker">
+        //     <div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></div>';
+        // }
         if (isset($field_opts['type']) && $field_opts['type'] === 'date' && isset($field_opts['datemask'])) {
             $form = '<div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="far fa-calendar-alt"></i></span></div>' . $form . '</div>';
         }

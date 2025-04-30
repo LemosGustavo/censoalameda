@@ -1,5 +1,6 @@
 <?php
 $data = session()->get('censo_preview_data');
+log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?? 'no definido'));
 ?>
 
 <div class="content-wrapper d-flex align-items-center justify-content-center">
@@ -18,6 +19,13 @@ $data = session()->get('censo_preview_data');
                                 <h5>Datos Personales</h5>
                                 <div class="row">
                                     <div class="col-md-6">
+                                        <?php if (!empty($data['photo_base64'])): ?>
+                                            <div class="text-center mb-3">
+                                                <img src="data:image/jpeg;base64,<?= $data['photo_base64'] ?>"
+                                                    alt="Foto de perfil"
+                                                    class="img-thumbnail rounded photo-preview">
+                                            </div>
+                                        <?php endif; ?>
                                         <p><strong>Nombre:</strong> <?= $data['name'] ?></p>
                                         <p><strong>Apellido:</strong> <?= $data['lastname'] ?></p>
                                         <p><strong>Fecha de Nacimiento:</strong> <?= $data['birthdate'] ?></p>
@@ -113,6 +121,7 @@ $data = session()->get('censo_preview_data');
                                 <h5>Crecimiento Cristiano</h5>
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <p><strong>Forma de Celebración:</strong> <?= $data['celebracion'] === 'presencial' ? 'Presencial' : 'Virtual' ?></p>
                                         <p><strong>Experiencias:</strong></p>
                                         <ul>
                                             <?php foreach ($data['experiences'] as $exp): ?>
@@ -125,6 +134,13 @@ $data = session()->get('censo_preview_data');
                                                 <li><?= $service ?></li>
                                             <?php endforeach; ?>
                                         </ul>
+                                        <p><strong>¿Asiste a Grupo Pequeño?:</strong> <?= $data['grupo'] === 'si' ? 'Sí' : 'No' ?></p>
+                                        <?php if ($data['grupo'] === 'si'): ?>
+                                            <p><strong>Nombre del Guía:</strong> <?= $data['name_guia'] ?></p>
+                                            <p><strong>Nombre del Grupo:</strong> <?= $data['name_group'] ?></p>
+                                        <?php else: ?>
+                                            <p><strong>¿Le interesaría participar?:</strong> <?= $data['participate_gp'] === 'si' ? 'Sí' : 'No' ?></p>
+                                        <?php endif; ?>
                                         <p><strong>Intereses:</strong></p>
                                         <ul>
                                             <?php foreach ($data['interests'] as $interest): ?>
@@ -153,8 +169,10 @@ $data = session()->get('censo_preview_data');
                                     <a href="<?= base_url('') ?>" class="btn btn-secondary btn-block">Volver a Editar</a>
                                 </div>
                                 <div class="col-md-6">
-                                    <form action="<?= base_url('censo/confirm_save') ?>" method="post">
+                                    <form action="<?= base_url('censo/confirm_save') ?>" method="post" enctype="multipart/form-data">
                                         <?= csrf_field() ?>
+                                        <input type="hidden" name="profile_photo" value="<?= $data['path_photo'] ?>">
+                                        <input type="file" name="profile_photo" class="hidden-input">
                                         <button type="submit" class="btn btn-primary btn-block">Confirmar y Guardar</button>
                                     </form>
                                 </div>

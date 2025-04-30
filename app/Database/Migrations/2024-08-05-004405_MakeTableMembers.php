@@ -30,7 +30,6 @@ class MakeTableMembers extends Migration {
                 'type' => 'VARCHAR',
                 'constraint' => 20,
                 'null' => false,
-                'unique' => true,
             ],
             'address' => [
                 'type' => 'VARCHAR',
@@ -72,6 +71,21 @@ class MakeTableMembers extends Migration {
                 'constraint' => 255,
                 'null' => true,
             ],
+            'country_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
+            'state_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
+            'district_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
             'localities_id' => [
                 'type' => 'INT',
                 'unsigned' => true,
@@ -84,6 +98,31 @@ class MakeTableMembers extends Migration {
             'quantity_sons' => [
                 'type' => 'INT',
                 'constraint' => 2,
+                'null' => true,
+            ],
+            'celebracion' => [
+                'type' => 'ENUM',
+                'constraint' => ['presencial', 'virtual'],
+                'null' => true,
+            ],
+            'name_guia' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'name_group' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'grupo' => [
+                'type' => 'ENUM',
+                'constraint' => ['si', 'no'],
+                'null' => true,
+            ],
+            'participate_gp' => [
+                'type' => 'ENUM',
+                'constraint' => ['si', 'no'],
                 'null' => true,
             ],
             'audi_user' => [

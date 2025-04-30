@@ -9,12 +9,12 @@ $success_message = session()->getFlashdata('success');
                 <div class="col-md-12">
                     <div class="card card-default">
                         <div class="card-header text-center">
-                            <div style="width: 100%; height: 300px; background-image: url('/assets/img/logo_b.jpg'); background-size: cover; background-position: center;">
+                            <div class="cabecera-imagen-success">
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="text-center">
-                                <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                                <i class="fas fa-check-circle text-success success-icon"></i>
                                 <h3 class="mt-4">¡Datos guardados exitosamente!</h3>
                                 <p class="lead">Los datos del censo han sido guardados correctamente en el sistema.</p>
                                 
