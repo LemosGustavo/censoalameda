@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('startButton');
     if (startButton) {
         startButton.addEventListener('click', function() {
-            window.location.href = '/censo_home';
+            window.location.href = '/home';
         });
     }
 }); 

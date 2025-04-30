@@ -23,8 +23,7 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                             <div class="text-center mb-3">
                                                 <img src="data:image/jpeg;base64,<?= base64_encode(file_get_contents($_FILES['profile_photo']['tmp_name'])) ?>"
                                                     alt="Foto de perfil"
-                                                    class="img-thumbnail rounded"
-                                                    style="max-width: 200px; max-height: 200px;">
+                                                    class="img-thumbnail rounded photo-preview">
                                             </div>
                                         <?php endif; ?>
                                         <p><strong>Nombre:</strong> <?= $data['name'] ?></p>
@@ -173,7 +172,7 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                     <form action="<?= base_url('censo/confirm_save') ?>" method="post" enctype="multipart/form-data">
                                         <?= csrf_field() ?>
                                         <input type="hidden" name="profile_photo" value="<?= $data['path_photo'] ?>">
-                                        <input type="file" name="profile_photo" style="display: none;">
+                                        <input type="file" name="profile_photo" class="hidden-input">
                                         <button type="submit" class="btn btn-primary btn-block">Confirmar y Guardar</button>
                                     </form>
                                 </div>

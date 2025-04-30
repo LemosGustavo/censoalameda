@@ -434,3 +434,154 @@ input[type="text"]::placeholder {
     border-radius: 30px !important;
     padding: 12px 24px !important;
 }
+
+/* Estilos para la cabecera */
+.cabecera-imagen {
+    width: 100%;
+    height: 400px;
+    background-image: url('../../img/cabecera.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+}
+
+.cabecera-imagen-success {
+    width: 100%;
+    height: 300px;
+    background-image: url('../../img/cabecera.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Estilos para el input de archivo */
+.custom-file {
+    border-radius: 30px 0 0 30px;
+    overflow: hidden;
+}
+
+/* Estilos para el botón de cámara */
+.camera-button {
+    border-radius: 0 30px 30px 0;
+    background-color: #a5d6a7;
+    color: #fff;
+    border: none;
+}
+
+/* Estilos para la previsualización de imagen */
+.photo-preview {
+    max-width: 200px;
+    max-height: 200px;
+    display: none;
+}
+
+/* Estilos para contenedores ocultos */
+.hidden-container {
+    display: none;
+}
+
+/* Estilos para el ícono de éxito */
+.success-icon {
+    font-size: 5rem;
+}
+
+/* Estilos para inputs ocultos */
+.hidden-input {
+    display: none;
+}
+
+/* Estilos para el wrapper del contenido */
+.content-wrapper {
+    background-image: url('../../img/fondo2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilos para la tarjeta principal */
+.card {
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Estilos para el cuerpo de la tarjeta */
+.card-body {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Estilos para campos requeridos */
+.required-field label:after {
+    content: " *";
+    color: #dc3545;
+}
+
+.required-field input:required,
+.required-field select:required {
+    border-left: 3px solid #dc3545;
+}
+
+.required-field input:required:valid,
+.required-field select:required:valid {
+    border-left: 3px solid #28a745;
+}
+
+/* Estilos para toastr */
+#toast-container>div {
+    opacity: 1;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+#toast-container>div:hover {
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+}
+
+/* Estilos para select2 */
+.select2-container .select2-dropdown {
+    top: 100% !important;
+    /* Asegura que siempre se abra hacia abajo */
+    bottom: auto !important;
+    /* Evita que se abra hacia arriba */
+}
+
+/* Estilos para select2 múltiple */
+.select2-container--default .select2-selection--multiple {
+    border-radius: 30px !important;
+    border: 1px solid #ced4da;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    border-radius: 15px !important;
+    background-color: #0000ff;
+    color: #f0f0f0;
+}
+
+/* Estilos para el dropdown de select2 */
+.select2-container--default .select2-dropdown {
+    border-radius: 15px !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border-radius: 30px !important;
+    border: 1px solid #ced4da;
+}
+
+.select2-container--default .select2-selection--single {
+    border-radius: 30px !important;
+    border: 1px solid #ced4da;
+}

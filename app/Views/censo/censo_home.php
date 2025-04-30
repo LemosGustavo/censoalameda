@@ -1,70 +1,3 @@
-<style>
-    .content-wrapper {
-        background-image: url('/assets/img/fondo2.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .card {
-        background-color: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        width: 100%;
-        max-width: 1200px;
-        margin: 20px auto;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    .card-body {
-        flex-grow: 1;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .select2-container .select2-dropdown {
-        top: 100% !important;
-        /* Asegura que siempre se abra hacia abajo */
-        bottom: auto !important;
-        /* Evita que se abra hacia arriba */
-    }
-
-    /* Estilos para campos requeridos */
-    .required-field label:after {
-        content: " *";
-        color: #dc3545;
-    }
-
-    .required-field input:required,
-    .required-field select:required {
-        border-left: 3px solid #dc3545;
-    }
-
-    .required-field input:required:valid,
-    .required-field select:required:valid {
-        border-left: 3px solid #28a745;
-    }
-
-    /* Estilos para toastr */
-    #toast-container>div {
-        opacity: 1;
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-    }
-
-    #toast-container>div:hover {
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-        opacity: 1;
-    }
-</style>
-
 <?= form_open_multipart(base_url('censo/preview'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off', 'enctype' => 'multipart/form-data')); ?>
 <? // php= csrf_field(); 
 ?>
@@ -75,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="card card-default">
                         <div class="card-header text-center">
-                            <div style="width: 100%; height: 400px; background-image: url('/assets/img/cabecera.png'); background-size: cover; background-position: center; border-radius: 8px;">
+                            <div class="cabecera-imagen">
                             </div>
                         </div>
                         <div class="card-body p-0">
@@ -86,7 +19,7 @@
                                         <div class="form-group">
                                             <label for="profile_photo">Foto de Perfil</label>
                                             <div class="input-group">
-                                                <div class="custom-file" style="border-radius: 30px 0 0 30px; overflow: hidden;">
+                                                <div class="custom-file">
                                                     <input type="file"
                                                         class="custom-file-input"
                                                         id="profile_photo"
@@ -97,10 +30,9 @@
                                                 </div>
                                                 <div class="input-group-append">
                                                     <button type="button"
-                                                        class="btn"
+                                                        class="btn camera-button"
                                                         id="camera_button"
-                                                        onclick="openCamera()"
-                                                        style="border-radius: 0 30px 30px 0; background-color: #a5d6a7; color: #fff; border: none;">
+                                                        onclick="openCamera()">
                                                         <i class="fas fa-camera"></i>
                                                     </button>
                                                 </div>
@@ -112,10 +44,7 @@
                                                 <img id="photo_preview"
                                                     src="#"
                                                     alt="Vista previa"
-                                                    style="max-width: 200px; 
-                                                            max-height: 200px; 
-                                                            display: none;"
-                                                    class="img-thumbnail rounded">
+                                                    class="img-thumbnail rounded photo-preview">
                                             </div>
                                         </div>
                                     </div>
@@ -188,19 +117,19 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div id="state-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
+                                    <div id="state-container" class="col-md-6 col-lg-6 form-group hidden-container">
                                         <label for="state">Provincia</label>
                                         <select id="state" name="state" class="form-control" disabled>
                                             <option value="">Seleccione una provincia</option>
                                         </select>
                                     </div>
-                                    <div id="district-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
+                                    <div id="district-container" class="col-md-6 col-lg-6 form-group hidden-container">
                                         <label for="district">Departamento</label>
                                         <select id="district" name="district" class="form-control" disabled>
                                             <option value="">Seleccione un departamento</option>
                                         </select>
                                     </div>
-                                    <div id="locality-container" class="col-md-6 col-lg-6 form-group" style="display: none;">
+                                    <div id="locality-container" class="col-md-6 col-lg-6 form-group hidden-container">
                                         <label for="locality">Localidad</label>
                                         <select id="locality" name="locality" class="form-control" disabled>
                                             <option value="">Seleccione una localidad</option>
@@ -238,13 +167,13 @@
                                     </div>
                                 </div>
                                 <!-- Dropdown for "SI" -->
-                                <div id="dropdown_si" class="form-group" style="display: none;">
+                                <div id="dropdown_si" class="form-group hidden-container">
                                     <?php echo $fields_vocation['voluntary_yes_drop']['label']; ?>
                                     <?php echo $fields_vocation['voluntary_yes_drop']['form']; ?>
                                 </div>
 
                                 <!-- Question and Dropdown for "NO" -->
-                                <div id="dropdown_no" class="form-group" style="display: none;">
+                                <div id="dropdown_no" class="form-group hidden-container">
                                     <?php echo $fields_vocation['voluntary_no_drop']['label']; ?>
                                     <?php echo $fields_vocation['voluntary_no_drop']['form']; ?>
                                 </div>
@@ -275,7 +204,7 @@
                                 </div>
 
                                 <!-- HIJOS (se muestra solo si jefe de hogar es SI) -->
-                                <div id="hijos_section" class="row" style="display: none;">
+                                <div id="hijos_section" class="row hidden-container">
                                     <div class="form-group col-md-3">
                                         <label>¿Tienes hijos?</label>
                                         <div class="icheck-success d-inline">
@@ -289,7 +218,7 @@
                                     </div>
 
                                     <!-- SI tiene hijos -->
-                                    <div id="hijo_drop_si" class="form-group col-md-12" style="display: none;">
+                                    <div id="hijo_drop_si" class="form-group col-md-12 hidden-container">
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <?php echo $fields_family['quantity_sons']['label']; ?>
@@ -341,11 +270,11 @@
                                     </div>
 
                                     <!-- Dropdown for "SI" -->
-                                    <div id="grupo_peque_si_div" class="form-group col-md-6" style="display: none;">
+                                    <div id="grupo_peque_si_div" class="form-group col-md-6 hidden-container">
                                         <div id="little_group_input"></div>
                                     </div>
                                     <!-- Dropdown for "NO" -->
-                                    <div id="grupo_peque_no_div" class="form-group col-md-6" style="display: none;">
+                                    <div id="grupo_peque_no_div" class="form-group col-md-6 hidden-container">
                                         <label>¿Te gustaría participar?</label>
                                         <div class="icheck-success d-inline">
                                             <input type="radio" id="grupo_peque_no_si" name="participate_gp" value="si">
