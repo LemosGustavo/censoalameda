@@ -19,9 +19,9 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                 <h5>Datos Personales</h5>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <?php if (!empty($data['path_photo'])): ?>
+                                        <?php if (!empty($data['photo_base64'])): ?>
                                             <div class="text-center mb-3">
-                                                <img src="data:image/jpeg;base64,<?= base64_encode(file_get_contents($_FILES['profile_photo']['tmp_name'])) ?>"
+                                                <img src="data:image/jpeg;base64,<?= $data['photo_base64'] ?>"
                                                     alt="Foto de perfil"
                                                     class="img-thumbnail rounded photo-preview">
                                             </div>

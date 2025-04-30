@@ -30,7 +30,6 @@ class MakeTableMembers extends Migration {
                 'type' => 'VARCHAR',
                 'constraint' => 20,
                 'null' => false,
-                'unique' => true,
             ],
             'address' => [
                 'type' => 'VARCHAR',
@@ -70,6 +69,21 @@ class MakeTableMembers extends Migration {
             'artistic_skills' => [
                 'type' => 'VARCHAR',
                 'constraint' => 255,
+                'null' => true,
+            ],
+            'country_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
+            'state_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
+            'district_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
                 'null' => true,
             ],
             'localities_id' => [

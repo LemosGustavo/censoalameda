@@ -11,7 +11,7 @@ class Members_Model extends MY_Model {
         $this->class_name = 'Members_Model';
         $this->msg_name = 'Miembro';
         $this->id_name = 'id';
-        $this->columnas = array('id', 'name', 'lastname','dni_document','address','email', 'phone', 'birthdate', 'gender_id', 'civil_state_id', 'path_photo', 'name_profession', 'artistic_skills', 'localities_id', 'boss_family', 'quantity_sons', 'celebracion', 'name_guia', 'name_group', 'grupo');
+        $this->columnas = array('id', 'name', 'lastname', 'dni_document', 'address', 'email', 'phone', 'birthdate', 'gender_id', 'civil_state_id', 'path_photo', 'name_profession', 'artistic_skills', 'country_id', 'state_id', 'district_id', 'localities_id', 'boss_family', 'quantity_sons', 'celebracion', 'name_guia', 'name_group', 'grupo', 'participate_gp');
         $this->fields = array(
             'name' => array('label' => 'Nombre', 'placeholder' => 'Nombre', 'maxlength' => '50', 'required' => TRUE),
             'lastname' => array('label' => 'Apellido', 'placeholder' => 'Apellido', 'maxlength' => '50', 'required' => TRUE),
@@ -36,5 +36,5 @@ class Members_Model extends MY_Model {
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'lastname','dni_document','address','email', 'phone', 'birthdate', 'gender_id', 'civil_state_id', 'path_photo', 'name_profession', 'artistic_skills', 'localities_id', 'boss_family', 'quantity_sons', 'celebracion', 'name_guia', 'name_group', 'grupo'];
+    protected $allowedFields    = ['name', 'lastname', 'dni_document', 'address', 'email', 'phone', 'birthdate', 'gender_id', 'civil_state_id', 'path_photo', 'name_profession', 'artistic_skills', 'country_id', 'state_id', 'district_id', 'localities_id', 'boss_family', 'quantity_sons', 'celebracion', 'name_guia', 'name_group', 'grupo', 'participate_gp'];
 }
