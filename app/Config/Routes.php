@@ -17,11 +17,19 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 
 // Ruta para el censo
-$routes->get('home', 'Censo::dashboard/home');
 
 $routes->group('censo', function ($routes) {
+    $routes->get('search', 'Censo::search');
+    $routes->post('search_by_dni', 'Censo::search_by_dni');
+    $routes->post('search_by_personal_data', 'Censo::search_by_personal_data');
+    $routes->get('home', 'Censo::dashboard/home');
     $routes->post('preview', 'Censo::preview');
     $routes->post('confirm_save', 'Censo::confirm_save');
+    $routes->get('edit/(:num)', 'Censo::edit/$1');
+    $routes->post('prepare_edit', 'Censo::prepare_edit');
+    $routes->get('edit_form', 'Censo::edit_form');
+    $routes->post('update', 'Censo::update');
+    $routes->post('search_conviviente', 'Censo::search_conviviente');
 });
 
 $routes->group('location', function ($routes) {

@@ -509,8 +509,6 @@ class Censo extends MY_Controller {
             $data['name_group'] = $request->getPost('name_group') ?? NULL;
             $data['participate_gp'] = $request->getPost('participate_gp') ?? 'no';
 
-            // lm($data);
-
             return $data;
         } catch (\Exception $e) {
             log_message('error', 'Error en prepare_preview_data: ' . $e->getMessage());
@@ -555,5 +553,308 @@ class Censo extends MY_Controller {
             }
         }
         return $labels;
+    }
+
+    public function search() {
+        return $this->load_template('censo/censo_search', ['title' => 'Buscar Registro']);
+    }
+
+    public function search_by_dni() {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(400)->setJSON(['error' => 'Método no permitido']);
+        }
+
+        $dni = $this->request->getJSON()->dni;
+        lm($this->request->getJSON());
+        $members_model = new Members_Model();
+        $member = $members_model->where('dni_document', $dni)->first();
+
+        return $this->response->setJSON([
+            'found' => $member !== null,
+            'member' => [
+                'dni' => $member ? $member->dni_document : null,
+                'name' => $member ? $member->name : null,
+                'lastname' => $member ? $member->lastname : null,
+                'birthdate' => $member ? $member->birthdate : null
+            ],
+            'is_head_of_household' => $member ? ($member->boss_family == 1) : false
+        ]);
+    }
+
+    public function search_by_personal_data() {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(400)->setJSON(['error' => 'Método no permitido']);
+        }
+
+        $data = $this->request->getJSON();
+        $members_model = new Members_Model();
+        
+        $member = $members_model->where('name', $data->name)
+                               ->where('lastname', $data->lastname)
+                               ->where('birthdate', $data->birthdate)
+                               ->first();
+
+        return $this->response->setJSON([
+            'found' => $member !== null,
+            'member' => [
+                'dni' => $member ? $member->dni_document : null,
+                'name' => $member ? $member->name : null,
+                'lastname' => $member ? $member->lastname : null,
+                'birthdate' => $member ? $member->birthdate : null
+            ],
+            'is_head_of_household' => $member ? ($member->boss_family == 1) : false
+        ]);
+    }
+
+    public function edit($id) {
+        $members_model = new Members_Model();
+        $member = $members_model->find($id);
+
+        if (!$member) {
+            return redirect()->to('/censo/search')->with('error', 'Registro no encontrado');
+        }
+
+        $data = $this->censo_home();
+        $data['member'] = $member;
+        $data['title'] = 'Editar Registro';
+        $data['is_edit'] = true;
+
+        // Verificar si se debe gestionar convivientes
+        $manage_household = $this->request->getGet('manage_household');
+        $has_spouse = $this->request->getGet('spouse');
+        $has_children = $this->request->getGet('children');
+
+        if ($manage_household) {
+            $data['manage_household'] = true;
+            $data['has_spouse'] = $has_spouse === 'true';
+            $data['has_children'] = $has_children === 'true';
+        }
+
+        return $this->load_template('censo/censo_home', $data);
+    }
+
+    public function search_conviviente() {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(400)->setJSON(['error' => 'Método no permitido']);
+        }
+
+        $data = $this->request->getJSON();
+        $members_model = new Members_Model();
+        
+        $member = $members_model->where('name', $data->name)
+                               ->where('lastname', $data->lastname)
+                               ->where('birthdate', $data->birthdate)
+                               ->first();
+
+        return $this->response->setJSON([
+            'found' => $member !== null,
+            'member' => $member
+        ]);
+    }
+
+    private function prepare_edit_data($member) {
+        $data = [];
+        try {
+            // Datos personales básicos
+            $data['member'] = $member;
+            $data['is_edit'] = true;
+            
+            // Obtener datos relacionados
+            $members_family_model = new Members_family_Model();
+            $data['family_relations'] = $members_family_model->where('members_id', $member->id)->findAll();
+            
+            // Obtener datos de modelos relacionados
+            $data = array_merge($data, $this->censo_home());
+            
+            return $data;
+        } catch (\Exception $e) {
+            log_message('error', 'Error en prepare_edit_data: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function prepare_edit() {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(400)->setJSON(['error' => 'Método no permitido']);
+        }
+
+        $data = $this->request->getJSON();
+        $members_model = new Members_Model();
+        
+        if (isset($data->dni)) {
+            $member = $members_model->where('dni_document', $data->dni)->first();
+        } else {
+            $member = $members_model->where('name', $data->name)
+                                  ->where('lastname', $data->lastname)
+                                  ->where('birthdate', $data->birthdate)
+                                  ->first();
+        }
+
+        if (!$member) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Miembro no encontrado']);
+        }
+
+        try {
+            $edit_data = $this->prepare_edit_data($member);
+            session()->set('censo_edit_data', $edit_data);
+            return $this->response->setJSON(['success' => true]);
+        } catch (\Exception $e) {
+            log_message('error', 'Error preparando datos de edición: ' . $e->getMessage());
+            return $this->response->setJSON(['success' => false, 'message' => 'Error preparando datos de edición']);
+        }
+    }
+
+    public function edit_form() {
+        $edit_data = session()->get('censo_edit_data');
+        
+        if (!$edit_data) {
+            return redirect()->to('/censo/search')->with('error', 'No hay datos para editar');
+        }
+
+        return $this->load_template('censo/censo_edit', [
+            'title' => 'Editar Registro',
+            'data' => $edit_data
+        ]);
+    }
+
+    public function update() {
+        $validation = \Config\Services::validation();
+        $members_model = new Members_Model();
+        
+        // Validar los datos
+        $validation->setRules([
+            'name' => 'required|min_length[3]|max_length[50]',
+            'lastname' => 'required|min_length[3]|max_length[50]',
+            'birthdate' => 'required|valid_date',
+            'gender_drop' => 'required|numeric',
+            'civil_state_drop' => 'required|numeric',
+            'dni_document' => 'required|numeric|min_length[7]|max_length[8]',
+            'name_profession' => 'required|min_length[3]|max_length[100]',
+            'artistic_skills' => 'max_length[150]'
+        ]);
+
+        if (!$validation->run($this->request->getPost())) {
+            return redirect()->back()->withInput()->with('error', 'Error en la validación de datos');
+        }
+
+        $this->db->transStart();
+
+        try {
+            $member_id = $this->request->getPost('member_id');
+            
+            // Manejar la foto si se subió una nueva
+            $path_photo = '';
+            $file = $this->request->getFile('profile_photo');
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $newName = uniqid() . '.jpg';
+                $file->move(APPPATH . 'Uploads', $newName);
+                $path_photo = $newName;
+            }
+
+            // Preparar datos para actualización
+            $update_data = [
+                'name' => $this->request->getPost('name'),
+                'lastname' => $this->request->getPost('lastname'),
+                'birthdate' => $this->request->getPost('birthdate'),
+                'gender_id' => $this->request->getPost('gender_drop'),
+                'civil_state_id' => $this->request->getPost('civil_state_drop'),
+                'dni_document' => $this->request->getPost('dni_document'),
+                'address' => $this->request->getPost('address'),
+                'email' => $this->request->getPost('email'),
+                'phone' => $this->request->getPost('phone'),
+                'name_profession' => $this->request->getPost('name_profession'),
+                'artistic_skills' => $this->request->getPost('artistic_skills'),
+                'audi_user' => session()->get('id'),
+                'audi_date' => date('Y-m-d H:i:s'),
+                'audi_action' => 'U'
+            ];
+
+            // Agregar la foto solo si se subió una nueva
+            if ($path_photo) {
+                $update_data['path_photo'] = $path_photo;
+            }
+
+            // Actualizar el registro principal
+            $members_model->update($member_id, $update_data);
+
+            // Manejar actualizaciones de relaciones (social media, experiencias, etc.)
+            $this->updateRelations($member_id);
+
+            $this->db->transComplete();
+
+            if ($this->db->transStatus() === FALSE) {
+                throw new \Exception('Error al actualizar los datos');
+            }
+
+            return redirect()->to('/censo/search')
+                           ->with('success', 'Registro actualizado exitosamente');
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error en update: ' . $e->getMessage());
+            $this->db->transRollback();
+            return redirect()->back()
+                           ->withInput()
+                           ->with('error', 'Error al actualizar los datos: ' . $e->getMessage());
+        }
+    }
+
+    private function updateRelations($member_id) {
+        // Actualizar relaciones de redes sociales
+        $this->updateModelRelations('Members_social_media_Model', $member_id, 'social_media_drop');
+        
+        // Actualizar experiencias
+        $this->updateModelRelations('Members_experiences_Model', $member_id, 'experiences_drop');
+        
+        // Actualizar servicios
+        $this->updateModelRelations('Members_services_Model', $member_id, 'services_drop');
+        
+        // Actualizar intereses
+        $this->updateModelRelations('Members_interests_Model', $member_id, 'interests_drop');
+        
+        // Actualizar necesidades
+        $this->updateModelRelations('Members_needs_Model', $member_id, 'needs_drop');
+        
+        // Actualizar etapas de vida
+        $this->updateModelRelations('Members_life_stages_Model', $member_id, 'lifestage_drop');
+        
+        // Actualizar voluntariado
+        $this->updateVoluntaryRelations($member_id);
+    }
+
+    private function updateModelRelations($model_name, $member_id, $post_field) {
+        $model = new $model_name();
+        $foreign_key = $model->getForeignKey();
+        
+        // Eliminar relaciones existentes
+        $model->where('members_id', $member_id)->delete();
+        
+        // Insertar nuevas relaciones
+        $new_items = $this->request->getPost($post_field) ?? [];
+        foreach ($new_items as $item_id) {
+            $model->insert([
+                'members_id' => $member_id,
+                $foreign_key => $item_id
+            ]);
+        }
+    }
+
+    private function updateVoluntaryRelations($member_id) {
+        $voluntary_model = new \App\Models\Members_voluntary_Model();
+        
+        // Eliminar relaciones existentes
+        $voluntary_model->where('members_id', $member_id)->delete();
+        
+        $is_volunteer = $this->request->getPost('voluntario') === 'si';
+        $areas = $is_volunteer ? 
+                 $this->request->getPost('voluntary_yes_drop') ?? [] : 
+                 $this->request->getPost('voluntary_no_drop') ?? [];
+        
+        foreach ($areas as $voluntary_id) {
+            $voluntary_model->insert([
+                'members_id' => $member_id,
+                'voluntary_id' => $voluntary_id,
+                'service' => $is_volunteer ? 1 : 0
+            ]);
+        }
     }
 }

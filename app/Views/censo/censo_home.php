@@ -11,6 +11,16 @@
                             </div>
                         </div>
                         <div class="card-body p-0">
+                            <?php if (isset($is_edit) && $is_edit): ?>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> Está editando un registro existente.
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if (isset($member)): ?>
+                                <input type="hidden" name="member_id" value="<?= $member->id ?>">
+                            <?php endif; ?>
+
                             <div class="callout callout-personal">
                                 <h5>Datos Personales</h5>
                                 <div class="row mb-4">
@@ -324,7 +334,74 @@
                                 </div>
 
                             </div>
+                            <?php if (isset($manage_household) && $manage_household): ?>
+                                <div class="callout callout-household">
+                                    <h5>Gestión de Convivientes</h5>
+                                    
+                                    <?php if ($has_spouse): ?>
+                                        <div class="spouse-section mb-4">
+                                            <h6>Cónyuge</h6>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control" name="spouse_name" placeholder="Nombre" required>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control" name="spouse_lastname" placeholder="Apellido" required>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="date" class="form-control" name="spouse_birthdate" required>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control" name="spouse_dni" placeholder="DNI (opcional)">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-secondary" onclick="searchConviviente('spouse')">
+                                                        Buscar Registro
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($has_children): ?>
+                                        <div class="children-section">
+                                            <h6>Hijos</h6>
+                                            <div id="children-container">
+                                                <div class="child-entry mb-3">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <input type="text" class="form-control" name="children[0][name]" placeholder="Nombre" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" class="form-control" name="children[0][lastname]" placeholder="Apellido" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="date" class="form-control" name="children[0][birthdate]" required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" class="form-control" name="children[0][dni]" placeholder="DNI (opcional)">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-4">
+                                                            <button type="button" class="btn btn-secondary" onclick="searchConviviente('child', 0)">
+                                                                Buscar Registro
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-primary mt-2" onclick="addChild()">
+                                                Agregar Hijo
+                                            </button>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
                             <?php echo form_submit(array('class' => 'btn btn-primary', 'title' => 'Enviar', 'form' => 'form_censo'), 'Enviar') ?>
+                            <?= form_close(); ?>
                         </div>
                     </div>
                 </div>
@@ -332,7 +409,6 @@
         </div>
     </div>
 </div>
-<?= form_close(); ?>
 
 <!-- Agregar justo antes del script con {csp-script-nonce} -->
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
@@ -1021,5 +1097,163 @@
         window.openCamera = function() {
             photoInput.click();
         };
+    });
+</script>
+
+<script>
+    let childCount = 1;
+
+    function addChild() {
+        const container = document.getElementById('children-container');
+        const newChild = document.createElement('div');
+        newChild.className = 'child-entry mb-3';
+        newChild.innerHTML = `
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="children[${childCount}][name]" placeholder="Nombre" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="children[${childCount}][lastname]" placeholder="Apellido" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="date" class="form-control" name="children[${childCount}][birthdate]" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" name="children[${childCount}][dni]" placeholder="DNI (opcional)">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-secondary" onclick="searchConviviente('child', ${childCount})">
+                        Buscar Registro
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-danger" onclick="removeChild(this)">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(newChild);
+        childCount++;
+    }
+
+    function removeChild(button) {
+        button.closest('.child-entry').remove();
+    }
+
+    function searchConviviente(type, index = null) {
+        let name, lastname, birthdate;
+        
+        if (type === 'spouse') {
+            name = document.querySelector('input[name="spouse_name"]').value;
+            lastname = document.querySelector('input[name="spouse_lastname"]').value;
+            birthdate = document.querySelector('input[name="spouse_birthdate"]').value;
+        } else {
+            name = document.querySelector(`input[name="children[${index}][name]"]`).value;
+            lastname = document.querySelector(`input[name="children[${index}][lastname]"]`).value;
+            birthdate = document.querySelector(`input[name="children[${index}][birthdate]"]`).value;
+        }
+
+        if (!name || !lastname || !birthdate) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Por favor complete todos los campos requeridos'
+            });
+            return;
+        }
+
+        fetch('/censo/search_conviviente', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                name: name,
+                lastname: lastname,
+                birthdate: birthdate
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.found) {
+                Swal.fire({
+                    title: 'Registro encontrado',
+                    text: '¿Desea usar los datos del registro existente?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, usar datos existentes',
+                    cancelButtonText: 'No, crear nuevo'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (type === 'spouse') {
+                            document.querySelector('input[name="spouse_dni"]').value = data.member.dni_document || '';
+                        } else {
+                            document.querySelector(`input[name="children[${index}][dni]"]`).value = data.member.dni_document || '';
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Registro no encontrado',
+                    text: 'Se creará un nuevo registro'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error al realizar la búsqueda'
+            });
+        });
+    }
+
+    // Validación de formulario
+    document.getElementById('form_censo').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let isValid = true;
+        let errorMessage = '';
+
+        // Validar datos del cónyuge si existe
+        if (document.querySelector('.spouse-section')) {
+            const spouseName = document.querySelector('input[name="spouse_name"]').value;
+            const spouseLastname = document.querySelector('input[name="spouse_lastname"]').value;
+            const spouseBirthdate = document.querySelector('input[name="spouse_birthdate"]').value;
+
+            if (!spouseName || !spouseLastname || !spouseBirthdate) {
+                isValid = false;
+                errorMessage += 'Debe completar todos los datos del cónyuge\n';
+            }
+        }
+
+        // Validar datos de los hijos si existen
+        const childrenEntries = document.querySelectorAll('.child-entry');
+        childrenEntries.forEach((entry, index) => {
+            const name = entry.querySelector(`input[name="children[${index}][name]"]`).value;
+            const lastname = entry.querySelector(`input[name="children[${index}][lastname]"]`).value;
+            const birthdate = entry.querySelector(`input[name="children[${index}][birthdate]"]`).value;
+
+            if (!name || !lastname || !birthdate) {
+                isValid = false;
+                errorMessage += `Debe completar todos los datos del hijo ${index + 1}\n`;
+            }
+        });
+
+        if (!isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de validación',
+                text: errorMessage
+            });
+            return;
+        }
+
+        this.submit();
     });
 </script>

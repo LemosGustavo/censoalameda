@@ -13,8 +13,8 @@ class Contact_Model extends MY_Model {
         $this->id_name = 'id';
         $this->columnas = array('id', 'email','phone');
         $this->fields = array(
-            'email' => array('label' => 'Email', 'type' => 'email', 'placeholder' => 'Ingresar correo electrónico', 'maxlength' => '50', 'required' => TRUE),
-            'phone' => array('label' => 'Teléfono', 'type' => 'text', 'placeholder' => 'Ingresar teléfono', 'maxlength' => '50', 'required' => TRUE),
+            'email' => array('label' => 'Email', 'type' => 'email', 'placeholder' => 'contacto@alameda.ar', 'maxlength' => '50'),
+            'phone' => array('label' => 'Teléfono', 'type' => 'text', 'placeholder' => '[cod.área]+[nro]. Ej: (2613123123)', 'maxlength' => '50', 'required' => TRUE),
         );
         $this->requeridos = array();
         $this->default_join = array();

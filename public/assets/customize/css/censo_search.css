@@ -1,0 +1,201 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f6f9;
+}
+
+.content-wrapper {
+    margin-left: 0 !important;
+    background-color: #f4f6f9;
+    min-height: 100vh;
+    padding: 0 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.card-primary .card-header {
+    background-color: #C32F27;
+}
+
+.btn-custom-censo {
+    color: #fff;
+    /* background-color: #C32F27;
+    border-color: #C32F27; */
+    /* position: relative;
+    width: 100%;
+    max-width: 400px; */
+    background: linear-gradient(0deg, #C32F27, #C32F27), url('../../img/vector.png');
+    background-blend-mode: multiply, normal;
+    background-size: 120% auto;
+    background-position: center;
+    border-radius: 50px;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0; */
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.btn-custom-censo:hover,
+.btn-custom-censo:focus,
+.btn-custom-censo:active {
+    transform: scale(1.05);
+    opacity: 0.9;
+    background-color: #a52820 !important;
+    border-color: #a52820 !important;
+    color: #DB7C26;
+}
+
+.nav-tabs .nav-link.active {
+    color: #C32F27;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+}
+
+.page-header {
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-header h1 {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+}
+
+.search-card {
+    background-color: #D8572A;
+    color: #fff;
+}
+
+.form-control:focus {
+    border-color: #C32F27;
+    box-shadow: 0 0 0 0.2rem rgba(195, 47, 39, 0.25);
+}
+
+/* Logo y navegación */
+.site-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.site-logo {
+    height: 40px;
+    margin-right: 15px;
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+}
+
+.back-button {
+    margin-left: auto;
+    color: #C32F27;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+/* Mejoras en tabs */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 10px 20px;
+    margin-bottom: -2px;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+    border-bottom: 2px solid #C32F27;
+    background-color: transparent;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .content-header h1 {
+        font-size: 24px;
+    }
+
+    .card-title {
+        font-size: 18px;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .site-header {
+        padding: 8px 12px;
+    }
+
+    .site-logo {
+        height: 32px;
+    }
+
+    .site-title {
+        font-size: 16px;
+    }
+}
+
+/* Estilos para tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+    .col-lg-8 {
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+}
+
+/* Mejora accesibilidad para inputs */
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-control {
+    height: calc(2.25rem + 4px);
+}
+
+/* Animación para transiciones */
+.tab-pane.fade {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Efecto hover para botones */
+.btn {
+    transition: all 0.3s ease;
+}
