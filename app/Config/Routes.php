@@ -20,7 +20,6 @@ $routes->get('/', 'Home::index');
 $routes->get('home', 'Censo::dashboard/home');
 
 $routes->group('censo', function ($routes) {
-    $routes->post('ajax_save', 'Censo::ajax_save');
     $routes->post('preview', 'Censo::preview');
     $routes->post('confirm_save', 'Censo::confirm_save');
 });

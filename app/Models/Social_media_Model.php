@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Social_media_Model extends My_Model {
+class Social_media_Model extends MY_Model {
 
     public function __construct($db = null) {
         parent::__construct();

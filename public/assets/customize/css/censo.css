@@ -287,10 +287,23 @@ input[type="text"]::placeholder {
 
 /* Sobreescribe estilos de form-control cuando se usa con selectize */
 .selectize.form-control {
-  border-radius: 30px !important; /* Bordes redondeados */
-  background-color: #f9f9f9 !important; /* Fondo claro */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra suave */
-  border: 1px solid #ddd !important; /* Borde ligero */
+  border-radius: 30px !important;
+  background-color: #f9f9f9 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #ddd !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+}
+
+.selectize.form-control:hover {
+  background-color: #f1f1f1 !important;
+}
+
+.selectize.form-control:focus {
+  border-color: #a5d6a7 !important;
+  box-shadow: 0 6px 12px rgba(0, 175, 0, 0.25) !important;
+  background-color: #fff !important;
+  outline: none !important;
 }
 
 /* Input de selectize dentro de form-control */
@@ -310,28 +323,28 @@ input[type="text"]::placeholder {
 
 /* Dropdown de selectize cuando form-control está presente */
 .selectize-dropdown.form-control {
-  border-radius: 15px !important; /* Bordes redondeados */
-  background-color: #ffffff !important; /* Fondo blanco */
-  border: 1px solid #ddd !important; /* Borde ligero */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important; /* Sombra suave */
+  border-radius: 15px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #ddd !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Opciones dentro del dropdown de form-control */
 .selectize-dropdown.form-control .option {
-  padding: 10px !important; /* Espaciado interno */
-  font-size: 16px !important; /* Tamaño de texto */
-  border-bottom: 1px solid #f1f1f1 !important; /* Separador */
+  padding: 10px !important;
+  font-size: 16px !important;
+  border-bottom: 1px solid #f1f1f1 !important;
 }
 
 /* Opción seleccionada dentro de form-control */
 .selectize-dropdown.form-control .option.selected {
-  background-color: #a5d6a7 !important; /* Fondo verde claro */
-  color: white !important; /* Texto blanco */
+  background-color: #a5d6a7 !important;
+  color: white !important;
 }
 
 /* Hover sobre las opciones en form-control */
 .selectize-dropdown.form-control .option:hover {
-  background-color: #f1f1f1 !important; /* Fondo al pasar el mouse */
+  background-color: #f1f1f1 !important;
 }
 
 /* .form-control {
@@ -539,6 +552,60 @@ input[type="text"]::placeholder {
     border-left: 3px solid #28a745;
 }
 
+/* Estilos para campos inválidos */
+input.is-invalid,
+select.is-invalid,
+input[type="date"].is-invalid,
+.selectize-input.is-invalid,
+.select2-container .select2-selection--single.is-invalid,
+.select2-container .select2-selection--multiple.is-invalid {
+    border-color: #dc3545 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+input.is-valid,
+select.is-valid,
+input[type="date"].is-valid,
+.selectize-input.is-valid,
+.select2-container .select2-selection--single.is-valid,
+.select2-container .select2-selection--multiple.is-valid {
+    border-color: #28a745 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
+/* Estilos específicos para selectize inválido */
+.selectize-control.is-invalid .selectize-input {
+    border-color: #dc3545 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Estilos específicos para select2 inválido */
+.select2-container--default .select2-selection--single.is-invalid,
+.select2-container--default .select2-selection--multiple.is-invalid {
+    border-color: #dc3545 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    border-width: 2px !important;
+}
+
+/* Estilos específicos para selectize válido */
+.selectize-control.is-valid .selectize-input {
+    border-color: #28a745 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
+/* Estilos específicos para select2 válido */
+.select2-container--default .select2-selection--single.is-valid,
+.select2-container--default .select2-selection--multiple.is-valid {
+    border-color: #28a745 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
 /* Estilos para toastr */
 #toast-container>div {
     opacity: 1;
@@ -584,4 +651,30 @@ input[type="text"]::placeholder {
 .select2-container--default .select2-selection--single {
     border-radius: 30px !important;
     border: 1px solid #ced4da;
+}
+
+/* Estilos para campos de fecha y select en secciones de hijos y cónyuge */
+input[type="date"],
+select.form-control {
+  border-radius: 30px; /* Bordes redondeados */
+  background-color: #f9f9f9; /* Fondo claro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  border: 1px solid #ddd; /* Borde ligero */
+  font-size: 16px; /* Tamaño de fuente legible */
+  transition: all 0.3s ease; /* Efectos de transición suave */
+}
+
+/* Efecto al pasar el mouse */
+input[type="date"]:hover,
+select.form-control:hover {
+  background-color: #f1f1f1; /* Fondo ligeramente más oscuro */
+}
+
+/* Estilizado cuando el campo está enfocado */
+input[type="date"]:focus,
+select.form-control:focus {
+  border-color: #a5d6a7; /* Borde verde suave */
+  box-shadow: 0 6px 12px rgba(0, 175, 0, 0.25); /* Sombra suave */
+  background-color: #fff; /* Fondo blanco al enfocar */
+  outline: none; /* Eliminar el borde por defecto */
 }

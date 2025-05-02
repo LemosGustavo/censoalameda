@@ -15,17 +15,15 @@ class Members_Model extends MY_Model {
         $this->fields = array(
             'name' => array('label' => 'Nombre', 'placeholder' => 'Nombre', 'maxlength' => '50', 'required' => TRUE),
             'lastname' => array('label' => 'Apellido', 'placeholder' => 'Apellido', 'maxlength' => '50', 'required' => TRUE),
-            'dni_document' => array('label' => 'DNI', 'placeholder' => 'DNI', 'type' => 'number', 'maxlength' => '9', 'required' => TRUE),
+            'dni_document' => array('label' => 'DNI', 'placeholder' => '12345678 sin puntos', 'type' => 'number', 'maxlength' => '9', 'required' => TRUE),
             'address' => array('label' => 'Dirección', 'placeholder' => 'Dirección', 'maxlength' => '500', 'required' => TRUE),
             'birthdate' => array('label' => 'Fecha de Nacimiento', 'type' => 'datecustom', 'placeholder' => 'Fecha de Nacimiento', 'required' => TRUE),
-            'gender_drop' => array('label' => 'Sexo', 'input_type' => 'combo', 'id_name' => 'gender_id', 'required' => TRUE,),
-            'civil_state_drop' => array('label' => 'Estado Civil', 'input_type' => 'combo', 'id_name' => 'civil_state_id', 'required' => TRUE,),
 
         );
         $this->requeridos = array();
         $this->default_join = array(
-            array('gender', 'gender.id = members.gender_id', '', array('gender.name as gender_drop')),
-            array('civil_state', 'civil_state.id = members.civil_state_id', '', array('civil_state.name as civil_state_drop')),
+            // array('gender', 'gender.id = members.gender_id', '', array('gender.name as gender_drop')),
+            // array('civil_state', 'civil_state.id = members.civil_state_id', '', array('civil_state.name as civil_state_drop')),
             // array('localities', 'localities.id = members.localities_id', '', array('localities.name as localities')),
         );
     }

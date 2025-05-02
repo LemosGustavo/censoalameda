@@ -1,6 +1,5 @@
 <?= form_open_multipart(base_url('censo/preview'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off', 'enctype' => 'multipart/form-data')); ?>
-<? // php= csrf_field(); 
-?>
+<?= csrf_field(); ?>
 <div class="content-wrapper d-flex align-items-center justify-content-center">
     <div class="card">
         <div class="card-body">
@@ -24,8 +23,9 @@
                                                         class="custom-file-input"
                                                         id="profile_photo"
                                                         name="profile_photo"
-                                                        accept="image/*"
-                                                        capture="user">
+                                                        accept="image/jpeg,image/png,image/gif"
+                                                        capture="user"
+                                                        required>
                                                     <label class="custom-file-label" for="profile_photo">Elegir foto</label>
                                                 </div>
                                                 <div class="input-group-append">
@@ -38,13 +38,14 @@
                                                 </div>
                                             </div>
                                             <small class="form-text text-muted mt-2">
-                                                <i class="fas fa-info-circle"></i> En dispositivos móviles, puedes usar la cámara o seleccionar una imagen
+                                                <i class="fas fa-info-circle"></i> Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 3MB
                                             </small>
                                             <div class="mt-3 text-center">
                                                 <img id="photo_preview"
                                                     src="#"
                                                     alt="Vista previa"
-                                                    class="img-thumbnail rounded photo-preview">
+                                                    class="img-thumbnail rounded photo-preview"
+                                                    style="max-width: 200px; max-height: 200px; object-fit: cover;">
                                             </div>
                                         </div>
                                     </div>
@@ -65,14 +66,28 @@
                                         <?php echo $fields['birthdate']['form']; ?>
                                     </div>
                                     <div class="form-group col-md-6 required-field">
-                                        <?php echo $fields['gender_drop']['label']; ?>
-                                        <?php echo $fields['gender_drop']['form']; ?>
+                                        <div class="form-group required-field">
+                                            <label for="gender_drop">Género</label>
+                                            <select id="gender_drop" name="gender_drop" class="form-control" required>
+                                                <option value="">Seleccione su género</option>
+                                                <?php foreach ($genders as $gender): ?>
+                                                    <option value="<?= $gender->id; ?>"><?= $gender->name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6 required-field">
-                                        <?php echo $fields['civil_state_drop']['label']; ?>
-                                        <?php echo $fields['civil_state_drop']['form']; ?>
+                                        <div class="form-group required-field">
+                                            <label for="civil_state_drop">Estado Civil</label>
+                                            <select id="civil_state_drop" name="civil_state_drop" class="form-control" required>
+                                                <option value="">Seleccione su estado civil</option>
+                                                <?php foreach ($civil_states as $civil_state): ?>
+                                                    <option value="<?= $civil_state->id; ?>"><?= $civil_state->name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['dni_document']['label']; ?>
@@ -106,7 +121,7 @@
                             <div class="callout callout-house">
                                 <h5>Residencia</h5>
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-6">
+                                    <div class="form-group col-md-6 col-lg-6 required-field">
                                         <div class="form-group required-field">
                                             <label for="country">País</label>
                                             <select id="country" name="country" class="form-control" required>
@@ -230,13 +245,20 @@
                                         <div id="children_inputs"></div>
                                     </div>
                                 </div>
+
+                                <!-- CONYUGE (se muestra solo si EXISTE CONYUGE en drop) -->
+                                <div id="conyuge_section" class="row hidden-container">
+                                    <div id="conyuge_drop" class="form-group col-md-12 hidden-container">
+                                        <div id="conyuge_inputs"></div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="callout callout-cristians">
                                 <h5>Crecimiento Cristiano</h5>
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>¿De qué manera vivís mayormente la celebración durante cada fin de semana?</label>
-                                        <div class="icheck-success d-inline">
+                                        <div class="icheck-success d-inline ">
                                             <input type="radio" id="presencial" name="celebracion" value="presencial">
                                             <label for="presencial">Presencial</label>
                                         </div>
@@ -317,15 +339,22 @@
 
 <script {csp-script-nonce}>
     $(document).ready(function() {
-        console.log('Documento listo');
 
         // Agregar clase required-field a los campos requeridos
         $('input[required], select[required], textarea[required]').each(function() {
             $(this).closest('.form-group').addClass('required-field');
         });
 
+        // Agregar clase required-field específicamente para los campos de Crecimiento cristiano
+        $('.callout-cristians .form-group').each(function() {
+            if ($(this).find('select').length > 0 && $(this).find('select').attr('id') !== 'experiences_drop') {
+                $(this).addClass('required-field');
+            }
+        });
+
         // Mapeo de nombres de campos a etiquetas en español
         const fieldLabels = {
+            'profile_photo': 'Foto de perfil',
             'name': 'Nombre',
             'lastname': 'Apellido',
             'birthdate': 'Fecha de Nacimiento',
@@ -344,11 +373,11 @@
             'voluntary_yes_drop': 'Áreas de Servicio',
             'voluntary_no_drop': 'Áreas de Interés',
             'family_drop': 'Composición Familiar',
-            'experiences_drop': 'Experiencias',
-            'services_drop': 'Servicios',
-            'interests_drop': 'Intereses',
-            'needs_drop': 'Necesidades',
-            'lifestage_drop': 'Etapa de Vida',
+            'experiences_drop[]': 'Experiencias',
+            'services_drop[]': 'Servicios',
+            'interests_drop[]': 'Intereses',
+            'needs_drop[]': 'Necesidades',
+            'lifestage_drop[]': 'Etapa de Vida',
             'celebracion': 'Forma de Celebración',
             'grupo': 'Grupo Pequeño',
             'name_guia': 'Nombre del Guía',
@@ -370,8 +399,64 @@
                     let fieldName = $(this).attr('name') || $(this).attr('id');
                     invalidFields.push(fieldLabels[fieldName] || fieldName);
                     $(this).addClass('is-invalid');
+                    // Asegurar que el contenedor selectize o select2 también reciba la clase
+                    if ($(this).hasClass('selectized')) {
+                        $(this).closest('.selectize-control').addClass('is-invalid');
+                    } else if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).next('.select2-container').find('.select2-selection').addClass('is-invalid');
+                    }
                 } else {
                     $(this).removeClass('is-invalid').addClass('is-valid');
+                    // Asegurar que el contenedor selectize o select2 también reciba la clase
+                    if ($(this).hasClass('selectized')) {
+                        $(this).closest('.selectize-control').removeClass('is-invalid').addClass('is-valid');
+                    } else if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid').addClass('is-valid');
+                    }
+                }
+            });
+
+            // Validación específica para el campo de profesión
+            const nameProfession = $('#name_profession').val();
+            if (!nameProfession || nameProfession.trim() === '') {
+                isValid = false;
+                $('#name_profession').addClass('is-invalid');
+            } else {
+                $('#name_profession').removeClass('is-invalid').addClass('is-valid');
+            }
+
+            // Validación específica para campos de Crecimiento cristiano
+            $('.callout-cristians select').each(function() {
+                // Excluir el campo de experiencias de la validación
+                if ($(this).attr('id') !== 'experiences_drop') {
+                    if (!$(this).val() || $(this).val().length === 0) {
+                        isValid = false;
+                        let fieldName = $(this).attr('name') || $(this).attr('id');
+                        invalidFields.push(fieldLabels[fieldName] || fieldName);
+                        $(this).addClass('is-invalid');
+                        // Asegurar que el contenedor selectize o select2 también reciba la clase
+                        if ($(this).hasClass('selectized')) {
+                            $(this).closest('.selectize-control').addClass('is-invalid');
+                        } else if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).next('.select2-container').find('.select2-selection').addClass('is-invalid');
+                        }
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                        // Asegurar que el contenedor selectize o select2 también reciba la clase
+                        if ($(this).hasClass('selectized')) {
+                            $(this).closest('.selectize-control').removeClass('is-invalid').addClass('is-valid');
+                        } else if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    }
+                } else {
+                    // Para el campo de experiencias, solo remover la clase is-invalid si existe
+                    $(this).removeClass('is-invalid');
+                    if ($(this).hasClass('selectized')) {
+                        $(this).closest('.selectize-control').removeClass('is-invalid');
+                    } else if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid');
+                    }
                 }
             });
 
@@ -591,18 +676,48 @@
 
     function toggle_hijos() {
         var jefe = $('input[name="jefe"]:checked').val();
+        // var family_drop = $('#family_drop').val();
 
         if (jefe === "si") {
             $('#hijos_section').show();
+            // // Verificar si hay cónyuge seleccionado
+            // if (family_drop && family_drop.includes('5')) { // 5 es el ID de Cónyuge en la tabla family
+            //     $('#conyuge_section').show();
+            //     $('#conyuge_drop').show();
+            //     generateConyugeInputs();
+            // } else {
+            //     $('#conyuge_section').hide();
+            //     $('#conyuge_drop').hide();
+            //     $('#conyuge_inputs').empty();
+            // }
         } else {
             // Ocultar todo y resetear valores si pone NO
             $('#hijos_section').hide();
+            // $('#conyuge_section').hide();
             $('input[name="hijo"]').prop('checked', false);
             $('#hijo_drop_si').hide();
             $('#quantity_sons').val('');
             $('#children_inputs').empty();
+            // $('#conyuge_inputs').empty();
         }
     }
+
+    // Agregar evento change para family_drop
+    $('#family_drop').on('change', function() {
+        var jefe = $('input[name="jefe"]:checked').val();
+        var family_drop = $(this).val();
+
+        // if (jefe === "si" && family_drop && family_drop.includes('5')) {
+        if (family_drop && family_drop.includes('5')) {
+            $('#conyuge_section').show();
+            $('#conyuge_drop').show();
+            generateConyugeInputs();
+        } else {
+            $('#conyuge_section').hide();
+            $('#conyuge_drop').hide();
+            $('#conyuge_inputs').empty();
+        }
+    });
 
     function toggle_sons() {
         var hijo = $('input[name="hijo"]:checked').val();
@@ -674,15 +789,15 @@
                             <label for="surname_${i}">Apellido</label>
                             <input type="text" class="form-control" id="surname_${i}" name="surname_${i}">
                         </div>
-                        <div class="col-md-2 date">
+                        <div class="col-md-3 date">
                             <label for="birthdate_${i}">Fecha de Nacimiento</label>
                             <input type="date" class="form-control" id="birthdate_${i}" name="birthdate_${i}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="dni_${i}">DNI</label>
-                            <input type="text" class="form-control" id="dni_${i}" name="dni_${i}" maxlength="15">
+                            <input type="text" placeholder="12345678 sin puntos" class="form-control" id="dni_${i}" name="dni_${i}" maxlength="15">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="church_${i}">Asiste iglesia</label>
                             <select class="form-control" id="church_${i}" name="church_${i}">
                                 <option value="">Seleccione</option>
@@ -690,7 +805,7 @@
                                 <option value="no">No</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="coexists_${i}">Convive</label>
                             <select class="form-control" id="coexists_${i}" name="coexists_${i}">
                                 <option value="">Seleccione</option>
@@ -704,6 +819,44 @@
                 container.append(childDiv);
             }
         }
+    }
+
+    function generateConyugeInputs() {
+        const container = $('#conyuge_inputs');
+        container.empty(); // Limpiar inputs anteriores
+
+        const conyugeDiv = $(`
+            <div class="border p-2 mb-3 rounded bg-light">
+                <h6 class="mb-2">Cónyuge</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name_conyuge">Nombre</label>
+                        <input type="text" class="form-control" id="name_conyuge" name="name_conyuge">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="surname_conyuge">Apellido</label>
+                        <input type="text" class="form-control" id="surname_conyuge" name="surname_conyuge">
+                    </div>
+                    <div class="col-md-3 date">
+                        <label for="birthdate_conyuge">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="birthdate_conyuge" name="birthdate_conyuge">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dni_conyuge">DNI</label>
+                        <input type="text" placeholder="12345678 sin puntos" class="form-control" id="dni_conyuge" name="dni_conyuge" maxlength="15">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="church_conyuge">Asiste iglesia</label>
+                        <select class="form-control" id="church_conyuge" name="church_conyuge">
+                            <option value="">Seleccione</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `);
+        container.append(conyugeDiv);
     }
 
     // Inicializar el plugin bs-custom-file-input
@@ -818,5 +971,55 @@
         if (file) {
             handleImageFile(file);
         }
+    });
+</script>
+
+<script {csp-script-nonce}>
+    document.addEventListener('DOMContentLoaded', function() {
+        const photoInput = document.getElementById('profile_photo');
+        const photoPreview = document.getElementById('photo_preview');
+        const fileLabel = document.querySelector('.custom-file-label');
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validar el tamaño del archivo (3MB máximo)
+                if (file.size > 3 * 1024 * 1024) {
+                    alert('El archivo es demasiado grande. El tamaño máximo permitido es 3MB.');
+                    photoInput.value = '';
+                    photoPreview.src = '#';
+                    fileLabel.textContent = 'Elegir foto';
+                    return;
+                }
+
+                // Validar el tipo de archivo
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Formato de archivo no válido. Por favor, selecciona una imagen JPG, PNG o GIF.');
+                    photoInput.value = '';
+                    photoPreview.src = '#';
+                    fileLabel.textContent = 'Elegir foto';
+                    return;
+                }
+
+                // Mostrar el nombre del archivo
+                fileLabel.textContent = file.name;
+
+                // Crear una vista previa de la imagen
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                photoPreview.src = '#';
+                fileLabel.textContent = 'Elegir foto';
+            }
+        });
+
+        // Función para abrir la cámara
+        window.openCamera = function() {
+            photoInput.click();
+        };
     });
 </script>

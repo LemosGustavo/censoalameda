@@ -361,16 +361,16 @@ class MY_Controller extends BaseController {
             $extras['data-error'] = $field_opts['error_text'];
         }
 
+        // Asegurar que la clase selectize se aplique correctamente
+        $extraClass = 'selectize form-control';
         if (!empty($field_opts['class'])) {
-            $extraClass = 'selectize ' . $field_opts['class'];
-        } else {
-            $extraClass = 'selectize';
+            $extraClass .= ' ' . $field_opts['class'];
         }
 
         if (isset($field_opts['type']) && $field_opts['type'] === 'multiple') {
-            $form = form_dropdown($field_opts['name'] . '[]', $values, $field['value'], 'class="form-control ' . $extraClass . '" id="' . $field_opts['name'] . '" multiple tabindex="-1" aria-hidden="true"', $extras);
+            $form = form_dropdown($field_opts['name'] . '[]', $values, $field['value'], 'class="' . $extraClass . '" id="' . $field_opts['name'] . '" multiple tabindex="-1" aria-hidden="true"', $extras);
         } else {
-            $form = form_dropdown($field_opts['name'], $values, $field['value'], 'class="form-control ' . $extraClass . '" id="' . $field_opts['name'] . '"', $extras);
+            $form = form_dropdown($field_opts['name'], $values, $field['value'], 'class="' . $extraClass . '" id="' . $field_opts['name'] . '"', $extras);
         }
 
         $field_array[$field_opts['name']]['label'] = $label;
