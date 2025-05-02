@@ -339,9 +339,17 @@ class Censo extends MY_Controller {
     }
 
     public function preview() {
+        // Agregar nonce para CSP
+        $nonce = bin2hex(random_bytes(16));
+        session()->set('csp_nonce', $nonce);
+        
         $data = $this->prepare_preview_data();
         session()->set('censo_preview_data', $data);
-        return $this->load_template('censo/censo_preview', ['title' => 'Revisión de Datos']);
+        
+        return $this->load_template('censo/censo_preview', [
+            'title' => 'Revisión de Datos',
+            'csp_nonce' => $nonce
+        ]);
     }
 
     public function confirm_save() {
@@ -562,17 +570,37 @@ class Censo extends MY_Controller {
     private function prepare_preview_data() {
         $request = service('request');
         $data = [];
-        // lm($request->getPost());
         try {
             // Manejar la subida de la foto - guardar el contenido en base64
             $file = $request->getFile('profile_photo');
             $path_photo = '';
             $photo_base64 = '';
 
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                $path_photo = $file->getName();
-                $photo_base64 = base64_encode(file_get_contents($file->getTempName()));
-                log_message('info', 'Nombre temporal de la imagen: ' . $path_photo);
+            log_message('info', 'Iniciando procesamiento de imagen');
+            log_message('info', 'File recibido: ' . ($file ? 'sí' : 'no'));
+            
+            if ($file) {
+                log_message('info', 'Nombre del archivo: ' . $file->getName());
+                log_message('info', 'Tamaño del archivo: ' . $file->getSize() . ' bytes');
+                log_message('info', 'Tipo MIME: ' . $file->getMimeType());
+                log_message('info', 'Es válido: ' . ($file->isValid() ? 'sí' : 'no'));
+                log_message('info', 'Se ha movido: ' . ($file->hasMoved() ? 'sí' : 'no'));
+                log_message('info', 'Ruta temporal: ' . $file->getTempName());
+                
+                // Verificar si el archivo temporal existe
+                if (file_exists($file->getTempName())) {
+                    log_message('info', 'El archivo temporal existe y es legible');
+                    $fileContent = file_get_contents($file->getTempName());
+                    if ($fileContent !== false) {
+                        log_message('info', 'Contenido del archivo leído correctamente');
+                        $photo_base64 = base64_encode($fileContent);
+                        log_message('info', 'Imagen codificada en base64 - Tamaño: ' . strlen($photo_base64) . ' bytes');
+                    } else {
+                        log_message('error', 'No se pudo leer el contenido del archivo temporal');
+                    }
+                } else {
+                    log_message('error', 'El archivo temporal no existe');
+                }
             }
 
             // Datos personales
@@ -582,8 +610,12 @@ class Censo extends MY_Controller {
             $data['gender'] = $this->get_label_from_id('Gender_Model', $request->getPost('gender_drop'));
             $data['civil_state'] = $this->get_label_from_id('Civil_state_Model', $request->getPost('civil_state_drop'));
             $data['dni_document'] = $request->getPost('dni_document') ?? '';
-            $data['path_photo'] = $path_photo;
+            $data['path_photo'] = $file ? $file->getName() : '';
             $data['photo_base64'] = $photo_base64;
+
+            log_message('info', 'Datos preparados - path_photo: ' . $data['path_photo']);
+            log_message('info', 'Datos preparados - photo_base64: ' . (empty($data['photo_base64']) ? 'vacío' : 'contenido presente'));
+            log_message('info', 'Datos preparados - Tamaño de photo_base64: ' . strlen($data['photo_base64']) . ' bytes');
 
             // Contacto
             $data['email'] = $request->getPost('email') ?? '';

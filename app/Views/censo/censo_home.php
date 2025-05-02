@@ -1,6 +1,5 @@
 <?= form_open_multipart(base_url('censo/preview'), array('data-toggle' => 'validator', 'id' => 'form_censo', 'autocomplete' => 'off', 'enctype' => 'multipart/form-data')); ?>
-<? // php= csrf_field(); 
-?>
+<?= csrf_field(); ?>
 <div class="content-wrapper d-flex align-items-center justify-content-center">
     <div class="card">
         <div class="card-body">
@@ -24,8 +23,9 @@
                                                         class="custom-file-input"
                                                         id="profile_photo"
                                                         name="profile_photo"
-                                                        accept="image/*"
-                                                        capture="user">
+                                                        accept="image/jpeg,image/png,image/gif"
+                                                        capture="user"
+                                                        required>
                                                     <label class="custom-file-label" for="profile_photo">Elegir foto</label>
                                                 </div>
                                                 <div class="input-group-append">
@@ -38,13 +38,14 @@
                                                 </div>
                                             </div>
                                             <small class="form-text text-muted mt-2">
-                                                <i class="fas fa-info-circle"></i> En dispositivos móviles, puedes usar la cámara o seleccionar una imagen
+                                                <i class="fas fa-info-circle"></i> Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 3MB
                                             </small>
                                             <div class="mt-3 text-center">
                                                 <img id="photo_preview"
                                                     src="#"
                                                     alt="Vista previa"
-                                                    class="img-thumbnail rounded photo-preview">
+                                                    class="img-thumbnail rounded photo-preview"
+                                                    style="max-width: 200px; max-height: 200px; object-fit: cover;">
                                             </div>
                                         </div>
                                     </div>
@@ -818,5 +819,55 @@
         if (file) {
             handleImageFile(file);
         }
+    });
+</script>
+
+<script {csp-script-nonce}>
+    document.addEventListener('DOMContentLoaded', function() {
+        const photoInput = document.getElementById('profile_photo');
+        const photoPreview = document.getElementById('photo_preview');
+        const fileLabel = document.querySelector('.custom-file-label');
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validar el tamaño del archivo (3MB máximo)
+                if (file.size > 3 * 1024 * 1024) {
+                    alert('El archivo es demasiado grande. El tamaño máximo permitido es 3MB.');
+                    photoInput.value = '';
+                    photoPreview.src = '#';
+                    fileLabel.textContent = 'Elegir foto';
+                    return;
+                }
+
+                // Validar el tipo de archivo
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Formato de archivo no válido. Por favor, selecciona una imagen JPG, PNG o GIF.');
+                    photoInput.value = '';
+                    photoPreview.src = '#';
+                    fileLabel.textContent = 'Elegir foto';
+                    return;
+                }
+
+                // Mostrar el nombre del archivo
+                fileLabel.textContent = file.name;
+
+                // Crear una vista previa de la imagen
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                photoPreview.src = '#';
+                fileLabel.textContent = 'Elegir foto';
+            }
+        });
+
+        // Función para abrir la cámara
+        window.openCamera = function() {
+            photoInput.click();
+        };
     });
 </script>

@@ -19,19 +19,30 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                 <h5>Datos Personales</h5>
                                 <div class="row">
                                     <div class="col-md-6">
+
                                         <?php if (!empty($data['photo_base64'])): ?>
-                                            <div class="text-center mb-3">
+                                            <div class="image-preview-container" style="max-width: 300px; margin: 0 auto;">
                                                 <img src="data:image/jpeg;base64,<?= $data['photo_base64'] ?>"
                                                     alt="Foto de perfil"
-                                                    class="img-thumbnail rounded photo-preview">
+                                                    class="img-thumbnail rounded"
+                                                    style="max-width: 100%; height: auto;">
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="alert alert-warning">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                <?php if (!empty($data['path_photo'])): ?>
+                                                    <br>
+                                                    <small>Se detectó un nombre de archivo pero no su contenido: <?= $data['path_photo'] ?></small>
+                                                <?php endif; ?>
                                             </div>
                                         <?php endif; ?>
+                                        <br>
                                         <p><strong>Nombre:</strong> <?= $data['name'] ?></p>
                                         <p><strong>Apellido:</strong> <?= $data['lastname'] ?></p>
-                                        <p><strong>Fecha de Nacimiento:</strong> <?= $data['birthdate'] ?></p>
-                                        <p><strong>Género:</strong> <?= $data['gender'] ?></p>
                                     </div>
                                     <div class="col-md-6">
+                                        <p><strong>Fecha de Nacimiento:</strong> <?= date('d/m/Y', strtotime($data['birthdate'])) ?></p>
+                                        <p><strong>Género:</strong> <?= $data['gender'] ?></p>
                                         <p><strong>Estado Civil:</strong> <?= $data['civil_state'] ?></p>
                                         <p><strong>DNI:</strong> <?= $data['dni_document'] ?></p>
                                     </div>

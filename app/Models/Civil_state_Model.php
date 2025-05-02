@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Civil_state_Model extends My_Model {
+class Civil_state_Model extends MY_Model {
 
     public function __construct($db = null) {
         parent::__construct();
