@@ -231,6 +231,13 @@
                                         <div id="children_inputs"></div>
                                     </div>
                                 </div>
+
+                                <!-- CONYUGE (se muestra solo si EXISTE CONYUGE en drop) -->
+                                <div id="conyuge_section" class="row hidden-container">
+                                    <div id="conyuge_drop" class="form-group col-md-12 hidden-container">
+                                        <div id="conyuge_inputs"></div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="callout callout-cristians">
                                 <h5>Crecimiento Cristiano</h5>
@@ -327,6 +334,7 @@
 
         // Mapeo de nombres de campos a etiquetas en español
         const fieldLabels = {
+            'profile_photo': 'Foto de perfil',
             'name': 'Nombre',
             'lastname': 'Apellido',
             'birthdate': 'Fecha de Nacimiento',
@@ -592,18 +600,48 @@
 
     function toggle_hijos() {
         var jefe = $('input[name="jefe"]:checked').val();
+        // var family_drop = $('#family_drop').val();
 
         if (jefe === "si") {
             $('#hijos_section').show();
+            // // Verificar si hay cónyuge seleccionado
+            // if (family_drop && family_drop.includes('5')) { // 5 es el ID de Cónyuge en la tabla family
+            //     $('#conyuge_section').show();
+            //     $('#conyuge_drop').show();
+            //     generateConyugeInputs();
+            // } else {
+            //     $('#conyuge_section').hide();
+            //     $('#conyuge_drop').hide();
+            //     $('#conyuge_inputs').empty();
+            // }
         } else {
             // Ocultar todo y resetear valores si pone NO
             $('#hijos_section').hide();
+            // $('#conyuge_section').hide();
             $('input[name="hijo"]').prop('checked', false);
             $('#hijo_drop_si').hide();
             $('#quantity_sons').val('');
             $('#children_inputs').empty();
+            // $('#conyuge_inputs').empty();
         }
     }
+
+    // Agregar evento change para family_drop
+    $('#family_drop').on('change', function() {
+        var jefe = $('input[name="jefe"]:checked').val();
+        var family_drop = $(this).val();
+
+        // if (jefe === "si" && family_drop && family_drop.includes('5')) {
+        if (family_drop && family_drop.includes('5')) {
+            $('#conyuge_section').show();
+            $('#conyuge_drop').show();
+            generateConyugeInputs();
+        } else {
+            $('#conyuge_section').hide();
+            $('#conyuge_drop').hide();
+            $('#conyuge_inputs').empty();
+        }
+    });
 
     function toggle_sons() {
         var hijo = $('input[name="hijo"]:checked').val();
@@ -675,15 +713,15 @@
                             <label for="surname_${i}">Apellido</label>
                             <input type="text" class="form-control" id="surname_${i}" name="surname_${i}">
                         </div>
-                        <div class="col-md-2 date">
+                        <div class="col-md-3 date">
                             <label for="birthdate_${i}">Fecha de Nacimiento</label>
                             <input type="date" class="form-control" id="birthdate_${i}" name="birthdate_${i}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="dni_${i}">DNI</label>
-                            <input type="text" class="form-control" id="dni_${i}" name="dni_${i}" maxlength="15">
+                            <input type="text" placeholder="12345678 sin puntos" class="form-control" id="dni_${i}" name="dni_${i}" maxlength="15">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="church_${i}">Asiste iglesia</label>
                             <select class="form-control" id="church_${i}" name="church_${i}">
                                 <option value="">Seleccione</option>
@@ -691,7 +729,7 @@
                                 <option value="no">No</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="coexists_${i}">Convive</label>
                             <select class="form-control" id="coexists_${i}" name="coexists_${i}">
                                 <option value="">Seleccione</option>
@@ -705,6 +743,44 @@
                 container.append(childDiv);
             }
         }
+    }
+
+    function generateConyugeInputs() {
+        const container = $('#conyuge_inputs');
+        container.empty(); // Limpiar inputs anteriores
+
+        const conyugeDiv = $(`
+            <div class="border p-2 mb-3 rounded bg-light">
+                <h6 class="mb-2">Cónyuge</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="name_conyuge">Nombre</label>
+                        <input type="text" class="form-control" id="name_conyuge" name="name_conyuge">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="surname_conyuge">Apellido</label>
+                        <input type="text" class="form-control" id="surname_conyuge" name="surname_conyuge">
+                    </div>
+                    <div class="col-md-3 date">
+                        <label for="birthdate_conyuge">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="birthdate_conyuge" name="birthdate_conyuge">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dni_conyuge">DNI</label>
+                        <input type="text" placeholder="12345678 sin puntos" class="form-control" id="dni_conyuge" name="dni_conyuge" maxlength="15">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="church_conyuge">Asiste iglesia</label>
+                        <select class="form-control" id="church_conyuge" name="church_conyuge">
+                            <option value="">Seleccione</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `);
+        container.append(conyugeDiv);
     }
 
     // Inicializar el plugin bs-custom-file-input

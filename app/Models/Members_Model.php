@@ -15,7 +15,7 @@ class Members_Model extends MY_Model {
         $this->fields = array(
             'name' => array('label' => 'Nombre', 'placeholder' => 'Nombre', 'maxlength' => '50', 'required' => TRUE),
             'lastname' => array('label' => 'Apellido', 'placeholder' => 'Apellido', 'maxlength' => '50', 'required' => TRUE),
-            'dni_document' => array('label' => 'DNI', 'placeholder' => 'DNI', 'type' => 'number', 'maxlength' => '9', 'required' => TRUE),
+            'dni_document' => array('label' => 'DNI', 'placeholder' => '12345678 sin puntos', 'type' => 'number', 'maxlength' => '9', 'required' => TRUE),
             'address' => array('label' => 'Dirección', 'placeholder' => 'Dirección', 'maxlength' => '500', 'required' => TRUE),
             'birthdate' => array('label' => 'Fecha de Nacimiento', 'type' => 'datecustom', 'placeholder' => 'Fecha de Nacimiento', 'required' => TRUE),
             'gender_drop' => array('label' => 'Sexo', 'input_type' => 'combo', 'id_name' => 'gender_id', 'required' => TRUE,),

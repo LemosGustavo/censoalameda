@@ -42,7 +42,7 @@ class Censo extends MY_Controller {
 
         $contact_class->fields = array(
             'email' => array('label' => 'Email', 'type' => 'email', 'placeholder' => 'contacto@alameda.ar', 'maxlength' => '50', 'required' => TRUE),
-            'phone' => array('label' => 'Teléfono', 'type' => 'text', 'placeholder' => 'Ingresar teléfono', 'maxlength' => '50', 'required' => TRUE),
+            'phone' => array('label' => 'Teléfono', 'type' => 'text', 'placeholder' => '[cod.área]+[nro]. Ej: (2613123123)', 'maxlength' => '50', 'required' => TRUE),
             'social_media_drop' => array('label' => '¿En qué redes Sociales estás?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'social_media_id'),
             'other_socialmedia' => array('label' => 'Otra Red Social', 'placeholder' => 'Otra Red Social', 'maxlength' => '100'),
         );
@@ -67,10 +67,10 @@ class Censo extends MY_Controller {
             'lifestage_drop' => array('label' => '¿Con cuál etapa de vida te identificas?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'life_stage_id'),
         );
 
-        $array_civil_state = $this->get_array('Civil_state_Model', 'name', 'id', ['orderBy' => 'id'], array('' => '-- Seleccionar Estado Civil --'));
+        $array_civil_state = $this->get_array('Civil_state_Model', 'name', 'id', ['orderBy' => 'id'], array('' => 'Seleccione Estado Civil'));
         $members_model->set_field_array('civil_state_drop', $array_civil_state);
 
-        $array_gender = $this->get_array('Gender_Model', 'name', 'id', ['orderBy' => 'id'], array('' => '-- Seleccionar Sexo --'));
+        $array_gender = $this->get_array('Gender_Model', 'name', 'id', ['orderBy' => 'id'], array('' => 'Seleccione Sexo'));
         $members_model->set_field_array('gender_drop', $array_gender);
 
         $array_social_media = $this->get_array('Social_media_Model', 'name', 'id', ['orderBy' => 'name']);
@@ -111,231 +111,6 @@ class Censo extends MY_Controller {
         $data['title'] = "Ingresar Usuario";
 
         return $data;
-    }
-
-    public function ajax_save() {
-
-        // lm($_POST);
-        // exit();
-        $members_model = new Members_Model();
-        $members_family_model = new Members_family_Model();
-        $validation = \Config\Services::validation();
-
-        $validation->setRules([
-            "name" => "required|min_length[3]|max_length[50]",
-            "lastname" => "required|min_length[3]|max_length[50]",
-            "birthdate" => "required|valid_date",
-            "gender_drop" => "required|numeric",
-            "civil_state_drop" => "required|numeric",
-            "dni_document" => "required|numeric|min_length[7]|max_length[8]",
-            // "phone" => "required|min_length[8]|max_length[20]",
-            // "address" => "required|min_length[5]|max_length[100]",
-            // "email" => "required|valid_email|max_length[100]",
-            "country" => "required|numeric",
-            "state" => "required|numeric",
-            "district" => "required|numeric",
-            "locality" => "required|numeric",
-            "name_profession" => "required|min_length[3]|max_length[100]",
-            "artistic_skills" => "max_length[150]",
-            "quantity_sons" => "permit_empty|numeric",
-            "name_guia" => "permit_empty|min_length[3]|max_length[100]",
-            "name_group" => "permit_empty|min_length[3]|max_length[100]"
-        ], [
-            "name" => [
-                "required" => "El nombre es requerido",
-                "min_length" => "El nombre debe tener al menos 3 caracteres",
-                "max_length" => "El nombre no puede exceder los 50 caracteres"
-            ],
-            "lastname" => [
-                "required" => "El apellido es requerido",
-                "min_length" => "El apellido debe tener al menos 3 caracteres",
-                "max_length" => "El apellido no puede exceder los 50 caracteres"
-            ],
-            "birthdate" => [
-                "required" => "La fecha de nacimiento es requerida",
-                "valid_date" => "La fecha de nacimiento no es válida"
-            ],
-            "gender_drop" => [
-                "required" => "El género es requerido",
-                "numeric" => "El género seleccionado no es válido"
-            ],
-            "civil_state_drop" => [
-                "required" => "El estado civil es requerido",
-                "numeric" => "El estado civil seleccionado no es válido"
-            ],
-            "dni_document" => [
-                "required" => "El DNI es requerido",
-                "numeric" => "El DNI debe contener solo números",
-                "min_length" => "El DNI debe tener al menos 7 dígitos",
-                "max_length" => "El DNI no puede exceder los 8 dígitos"
-            ],
-            "phone" => [
-                "required" => "El teléfono es requerido",
-                "min_length" => "El teléfono debe tener al menos 8 dígitos",
-                "max_length" => "El teléfono no puede exceder los 20 caracteres"
-            ],
-            "address" => [
-                "required" => "La dirección es requerida",
-                "min_length" => "La dirección debe tener al menos 5 caracteres",
-                "max_length" => "La dirección no puede exceder los 100 caracteres"
-            ],
-            // "email" => [
-            //     "required" => "El email es requerido",
-            //     "valid_email" => "El email no es válido",
-            //     "max_length" => "El email no puede exceder los 100 caracteres"
-            // ],
-            "country" => [
-                "required" => "El país es requerido",
-                "numeric" => "El país seleccionado no es válido"
-            ],
-            "state" => [
-                "required" => "La provincia es requerida",
-                "numeric" => "La provincia seleccionada no es válida"
-            ],
-            "district" => [
-                "required" => "El departamento es requerido",
-                "numeric" => "El departamento seleccionado no es válido"
-            ],
-            "locality" => [
-                "required" => "La localidad es requerida",
-                "numeric" => "La localidad seleccionada no es válida"
-            ],
-            "name_profession" => [
-                "required" => "La profesión es requerida",
-                "min_length" => "La profesión debe tener al menos 3 caracteres",
-                "max_length" => "La profesión no puede exceder los 100 caracteres"
-            ]
-        ]);
-
-        if (!$validation->withRequest($this->request)->run()) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'errors' => $validation->getErrors()
-            ]);
-        }
-
-        $this->db->transStart();
-
-        try {
-            // Convertir fecha de nacimiento y calcular edad
-            $birthdate = $this->get_date_sql($this->request->getPost('birthdate'));
-            $localities = $this->request->getPost('locality');
-            $address = $this->request->getPost('address');
-
-            // Guardar miembro
-            $member_data = [
-                'name' => $this->request->getPost('name'),
-                'lastname' => $this->request->getPost('lastname'),
-                'birthdate' => $birthdate,
-                'dni_document' => $this->request->getPost('dni_document'),
-                'address' => $address,
-                'email' => $this->request->getPost('email'),
-                'phone' => $this->request->getPost('phone'),
-                'gender_id' => $this->request->getPost('gender_drop'),
-                'civil_state_id' => $this->request->getPost('civil_state_drop'),
-                'path_photo' => $this->request->getPost('path_photo'),
-                'localities_id' => $localities,
-                'name_profession' => $this->request->getPost('name_profession'),
-                'artistic_skills' => $this->request->getPost('artistic_skills'),
-                'boss_family' => ($this->request->getPost('jefe') === 'si') ? 1 : 0,
-                'quantity_sons' => $this->request->getPost('quantity_sons'),
-                'celebracion' => $this->request->getPost('celebracion'),
-                'name_guia' => $this->request->getPost('name_guia'),
-                'name_group' => $this->request->getPost('name_group'),
-                'audi_user' => session()->get('id'),
-                'audi_date' => date('Y-m-d H:i:s'),
-                'audi_action' => 'I'
-            ];
-            $member_id = $members_model->insert($member_data);
-
-            // Guardar hijos como miembros relacionados
-            $quantity_sons = $this->request->getPost('quantity_sons');
-            if ($quantity_sons > 0) {
-                for ($i = 1; $i <= $quantity_sons; $i++) {
-                    $child_name = $this->request->getPost("name_$i");
-                    $child_lastname = $this->request->getPost("surname_$i");
-                    $child_birthdate = $this->request->getPost("birthdate_$i");
-                    $child_dni = $this->request->getPost("dni_$i");
-                    $child_church = $this->request->getPost("church_$i");
-
-                    if (!empty($child_name) && !empty($child_lastname)) {
-                        // Crear miembro para el hijo
-                        $child_data = [
-                            'name' => $child_name,
-                            'lastname' => $child_lastname,
-                            'birthdate' => $child_birthdate,
-                            'dni_document' => $child_dni,
-                            'address' => $address,
-                            'localities_id' => $localities,
-                            'gender_id' => 1, // Por defecto, se puede modificar según necesidad
-                            'civil_state_id' => 1, // Por defecto, se puede modificar según necesidad
-                        ];
-                        $child_id = $members_model->insert($child_data);
-
-                        // Crear relación familiar
-                        $family_relation = [
-                            'members_id' => $member_id,
-                            'related_member_id' => $child_id,
-                            'family_id' => 7, // ID de "Hijo/s" en la tabla family
-                        ];
-                        $members_family_model->insert($family_relation);
-                    }
-                }
-            }
-
-            $relations = [
-                'App\Models\Members_social_media_Model' => 'social_media_drop',
-                'App\Models\Members_experiences_Model' => 'experiences_drop',
-                'App\Models\Members_services_Model' => 'services_drop',
-                'App\Models\Members_interests_Model' => 'interests_drop',
-                'App\Models\Members_needs_Model' => 'needs_drop',
-                'App\Models\Members_life_stages_Model' => 'lifestage_drop',
-                'App\Models\Members_voluntary_Model' => 'voluntary_no_drop',
-                'App\Models\Members_family_Model' => 'family_drop',
-            ];
-
-            foreach ($relations as $model_name => $post_field) {
-                if ($items = $this->request->getPost($post_field)) {
-                    $model = new $model_name();
-                    $foreign_key = $model->getForeignKey();
-
-                    // Si es la tabla de redes sociales y hay un valor en other_socialmedia
-                    if ($model_name === 'App\Models\Members_social_media_Model' && $this->request->getPost('other_socialmedia')) {
-                        // Primero insertamos la red social personalizada
-                        $model->insert([
-                            'members_id' => $member_id,
-                            'other_socialmedia' => $this->request->getPost('other_socialmedia')
-                        ]);
-                    }
-
-                    // Luego insertamos las redes sociales seleccionadas
-                    foreach ($items as $item_id) {
-                        $model->insert([
-                            'members_id' => $member_id,
-                            $foreign_key => $item_id
-                        ]);
-                    }
-                }
-            }
-
-            $this->db->transComplete();
-
-            if ($this->db->transStatus() === FALSE) {
-                throw new \Exception('Error al guardar los datos');
-            }
-
-            return $this->response->setJSON([
-                'status' => 'success',
-                'message' => 'Datos guardados correctamente',
-                'member_id' => $member_id
-            ]);
-        } catch (\Exception $e) {
-            $this->db->transRollback();
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Error al guardar los datos: ' . $e->getMessage()
-            ]);
-        }
     }
 
     public function preview() {
@@ -497,6 +272,32 @@ class Censo extends MY_Controller {
                 }
             }
 
+            // Guardar cónyuge como miembro relacionado
+            if (isset($data['conyuge']) && !empty($data['conyuge'])) {
+                // Crear miembro para el cónyuge
+                $conyuge_data = [
+                    'name' => $data['conyuge']['name'],
+                    'lastname' => $data['conyuge']['lastname'],
+                    'birthdate' => $data['conyuge']['birthdate'],
+                    'dni_document' => $data['conyuge']['dni'],
+                    'address' => $data['address'],
+                    'localities_id' => $locality_record ? $locality_record->id : null,
+                    'gender_id' => 1, // Por defecto, se puede modificar según necesidad
+                    'civil_state_id' => 1, // Por defecto, se puede modificar según necesidad
+                ];
+                $conyuge_id = $members_model->insert($conyuge_data);
+
+                // Crear relación familiar
+                $family_relation = [
+                    'members_id' => $member_id,
+                    'related_member_id' => $conyuge_id,
+                    'family_id' => 5, // ID de "Cónyuge" en la tabla family
+                    'asist_church' => $data['conyuge']['church'] ? 'si' : 'no',
+                    'coexists' => 'si' // Por defecto, el cónyuge convive
+                ];
+                $members_family_model->insert($family_relation);
+            }
+
             // Guardar relaciones
             $relations = [
                 'App\Models\Members_social_media_Model' => 'social_media_drop',
@@ -652,6 +453,17 @@ class Censo extends MY_Controller {
             $data['family'] = $this->get_labels_from_ids('Family_Model', $request->getPost('family_drop') ?? []);
             $data['jefe'] = $request->getPost('jefe') ?? 'no';
             $data['quantity_sons'] = $request->getPost('quantity_sons') ?? 0;
+
+            // Cónyuge
+            if ($request->getPost('name_conyuge')) {
+                $data['conyuge'] = [
+                    'name' => $request->getPost('name_conyuge') ?? '',
+                    'lastname' => $request->getPost('surname_conyuge') ?? '',
+                    'birthdate' => $request->getPost('birthdate_conyuge') ?? '',
+                    'dni' => $request->getPost('dni_conyuge') ?? '',
+                    'church' => $request->getPost('church_conyuge') === 'si'
+                ];
+            }
 
             // Hijos
             $data['children'] = [];

@@ -123,6 +123,18 @@ log_message('info', 'Valor de path_photo en la vista: ' . ($data['path_photo'] ?
                                                 <?php endforeach; ?>
                                             </ul>
                                         <?php endif; ?>
+
+                                        <?php if (!empty($data['conyuge'])): ?>
+                                            <p><strong>Cónyuge:</strong></p>
+                                            <ul>
+                                                <li>
+                                                    <?= $data['conyuge']['name'] ?> <?= $data['conyuge']['lastname'] ?>
+                                                    (DNI: <?= $data['conyuge']['dni'] ?>,
+                                                    Fecha Nacimiento: <?= $data['conyuge']['birthdate'] ?>,
+                                                    Asiste a la iglesia: <?= $data['conyuge']['church'] ? 'Sí' : 'No' ?>)
+                                                </li>
+                                            </ul>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
