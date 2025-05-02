@@ -552,6 +552,60 @@ input[type="text"]::placeholder {
     border-left: 3px solid #28a745;
 }
 
+/* Estilos para campos inválidos */
+input.is-invalid,
+select.is-invalid,
+input[type="date"].is-invalid,
+.selectize-input.is-invalid,
+.select2-container .select2-selection--single.is-invalid,
+.select2-container .select2-selection--multiple.is-invalid {
+    border-color: #dc3545 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+input.is-valid,
+select.is-valid,
+input[type="date"].is-valid,
+.selectize-input.is-valid,
+.select2-container .select2-selection--single.is-valid,
+.select2-container .select2-selection--multiple.is-valid {
+    border-color: #28a745 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
+/* Estilos específicos para selectize inválido */
+.selectize-control.is-invalid .selectize-input {
+    border-color: #dc3545 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Estilos específicos para select2 inválido */
+.select2-container--default .select2-selection--single.is-invalid,
+.select2-container--default .select2-selection--multiple.is-invalid {
+    border-color: #dc3545 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    border-width: 2px !important;
+}
+
+/* Estilos específicos para selectize válido */
+.selectize-control.is-valid .selectize-input {
+    border-color: #28a745 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
+/* Estilos específicos para select2 válido */
+.select2-container--default .select2-selection--single.is-valid,
+.select2-container--default .select2-selection--multiple.is-valid {
+    border-color: #28a745 !important;
+    background-color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
 /* Estilos para toastr */
 #toast-container>div {
     opacity: 1;

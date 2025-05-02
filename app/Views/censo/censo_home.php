@@ -66,14 +66,28 @@
                                         <?php echo $fields['birthdate']['form']; ?>
                                     </div>
                                     <div class="form-group col-md-6 required-field">
-                                        <?php echo $fields['gender_drop']['label']; ?>
-                                        <?php echo $fields['gender_drop']['form']; ?>
+                                        <div class="form-group required-field">
+                                            <label for="gender_drop">Género</label>
+                                            <select id="gender_drop" name="gender_drop" class="form-control" required>
+                                                <option value="">Seleccione su género</option>
+                                                <?php foreach ($genders as $gender): ?>
+                                                    <option value="<?= $gender->id; ?>"><?= $gender->name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6 required-field">
-                                        <?php echo $fields['civil_state_drop']['label']; ?>
-                                        <?php echo $fields['civil_state_drop']['form']; ?>
+                                        <div class="form-group required-field">
+                                            <label for="civil_state_drop">Estado Civil</label>
+                                            <select id="civil_state_drop" name="civil_state_drop" class="form-control" required>
+                                                <option value="">Seleccione su estado civil</option>
+                                                <?php foreach ($civil_states as $civil_state): ?>
+                                                    <option value="<?= $civil_state->id; ?>"><?= $civil_state->name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="form-group col-md-6 required-field">
                                         <?php echo $fields['dni_document']['label']; ?>
@@ -107,7 +121,7 @@
                             <div class="callout callout-house">
                                 <h5>Residencia</h5>
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-6">
+                                    <div class="form-group col-md-6 col-lg-6 required-field">
                                         <div class="form-group required-field">
                                             <label for="country">País</label>
                                             <select id="country" name="country" class="form-control" required>
@@ -244,7 +258,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <label>¿De qué manera vivís mayormente la celebración durante cada fin de semana?</label>
-                                        <div class="icheck-success d-inline">
+                                        <div class="icheck-success d-inline ">
                                             <input type="radio" id="presencial" name="celebracion" value="presencial">
                                             <label for="presencial">Presencial</label>
                                         </div>
@@ -325,11 +339,17 @@
 
 <script {csp-script-nonce}>
     $(document).ready(function() {
-        console.log('Documento listo');
 
         // Agregar clase required-field a los campos requeridos
         $('input[required], select[required], textarea[required]').each(function() {
             $(this).closest('.form-group').addClass('required-field');
+        });
+
+        // Agregar clase required-field específicamente para los campos de Crecimiento cristiano
+        $('.callout-cristians .form-group').each(function() {
+            if ($(this).find('select').length > 0 && $(this).find('select').attr('id') !== 'experiences_drop') {
+                $(this).addClass('required-field');
+            }
         });
 
         // Mapeo de nombres de campos a etiquetas en español
@@ -353,11 +373,11 @@
             'voluntary_yes_drop': 'Áreas de Servicio',
             'voluntary_no_drop': 'Áreas de Interés',
             'family_drop': 'Composición Familiar',
-            'experiences_drop': 'Experiencias',
-            'services_drop': 'Servicios',
-            'interests_drop': 'Intereses',
-            'needs_drop': 'Necesidades',
-            'lifestage_drop': 'Etapa de Vida',
+            'experiences_drop[]': 'Experiencias',
+            'services_drop[]': 'Servicios',
+            'interests_drop[]': 'Intereses',
+            'needs_drop[]': 'Necesidades',
+            'lifestage_drop[]': 'Etapa de Vida',
             'celebracion': 'Forma de Celebración',
             'grupo': 'Grupo Pequeño',
             'name_guia': 'Nombre del Guía',
@@ -379,8 +399,64 @@
                     let fieldName = $(this).attr('name') || $(this).attr('id');
                     invalidFields.push(fieldLabels[fieldName] || fieldName);
                     $(this).addClass('is-invalid');
+                    // Asegurar que el contenedor selectize o select2 también reciba la clase
+                    if ($(this).hasClass('selectized')) {
+                        $(this).closest('.selectize-control').addClass('is-invalid');
+                    } else if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).next('.select2-container').find('.select2-selection').addClass('is-invalid');
+                    }
                 } else {
                     $(this).removeClass('is-invalid').addClass('is-valid');
+                    // Asegurar que el contenedor selectize o select2 también reciba la clase
+                    if ($(this).hasClass('selectized')) {
+                        $(this).closest('.selectize-control').removeClass('is-invalid').addClass('is-valid');
+                    } else if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid').addClass('is-valid');
+                    }
+                }
+            });
+
+            // Validación específica para el campo de profesión
+            const nameProfession = $('#name_profession').val();
+            if (!nameProfession || nameProfession.trim() === '') {
+                isValid = false;
+                $('#name_profession').addClass('is-invalid');
+            } else {
+                $('#name_profession').removeClass('is-invalid').addClass('is-valid');
+            }
+
+            // Validación específica para campos de Crecimiento cristiano
+            $('.callout-cristians select').each(function() {
+                // Excluir el campo de experiencias de la validación
+                if ($(this).attr('id') !== 'experiences_drop') {
+                    if (!$(this).val() || $(this).val().length === 0) {
+                        isValid = false;
+                        let fieldName = $(this).attr('name') || $(this).attr('id');
+                        invalidFields.push(fieldLabels[fieldName] || fieldName);
+                        $(this).addClass('is-invalid');
+                        // Asegurar que el contenedor selectize o select2 también reciba la clase
+                        if ($(this).hasClass('selectized')) {
+                            $(this).closest('.selectize-control').addClass('is-invalid');
+                        } else if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).next('.select2-container').find('.select2-selection').addClass('is-invalid');
+                        }
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                        // Asegurar que el contenedor selectize o select2 también reciba la clase
+                        if ($(this).hasClass('selectized')) {
+                            $(this).closest('.selectize-control').removeClass('is-invalid').addClass('is-valid');
+                        } else if ($(this).hasClass('select2-hidden-accessible')) {
+                            $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid').addClass('is-valid');
+                        }
+                    }
+                } else {
+                    // Para el campo de experiencias, solo remover la clase is-invalid si existe
+                    $(this).removeClass('is-invalid');
+                    if ($(this).hasClass('selectized')) {
+                        $(this).closest('.selectize-control').removeClass('is-invalid');
+                    } else if ($(this).hasClass('select2-hidden-accessible')) {
+                        $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid');
+                    }
                 }
             });
 

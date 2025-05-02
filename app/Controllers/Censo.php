@@ -6,6 +6,8 @@ use stdClass;
 use App\Models\Members_Model;
 use App\Models\Countries_Model;
 use App\Models\Members_family_Model;
+use App\Models\Civil_state_Model;
+use App\Models\Gender_Model;
 
 class Censo extends MY_Controller {
     private $db;
@@ -41,14 +43,14 @@ class Censo extends MY_Controller {
         $cristians_class = new stdClass();
 
         $contact_class->fields = array(
-            'email' => array('label' => 'Email', 'type' => 'email', 'placeholder' => 'contacto@alameda.ar', 'maxlength' => '50', 'required' => TRUE),
+            'email' => array('label' => 'Email', 'type' => 'email', 'placeholder' => 'contacto@alameda.ar', 'maxlength' => '50', 'required' => FALSE),
             'phone' => array('label' => 'Teléfono', 'type' => 'text', 'placeholder' => '[cod.área]+[nro]. Ej: (2613123123)', 'maxlength' => '50', 'required' => TRUE),
             'social_media_drop' => array('label' => '¿En qué redes Sociales estás?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'social_media_id'),
             'other_socialmedia' => array('label' => 'Otra Red Social', 'placeholder' => 'Otra Red Social', 'maxlength' => '100'),
         );
 
         $vocation_class->fields = array(
-            'name_profession' => array('label' => '¿A qué te dedicas?', 'placeholder' => 'Profesión/Oficio/Labor'),
+            'name_profession' => array('label' => '¿A qué te dedicas?', 'placeholder' => 'Profesión/Oficio/Labor', 'required' => TRUE),
             'artistic_skills' => array('label' => 'Habilidades con las cuales podes servir a tus hermanos', 'type' => 'text', 'placeholder' => 'Habilidades', 'maxlength' => '150'),
             'voluntary_yes_drop' => array('label' => 'Selecciona el área en la que sirves:', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'voluntary_yes_id'),
             'voluntary_no_drop' => array('label' => '¿Te interesaría servir en estas áreas?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'voluntary_no_id',),
@@ -61,17 +63,11 @@ class Censo extends MY_Controller {
 
         $cristians_class->fields = array(
             'experiences_drop' => array('label' => 'Elige las experiencias completadas', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'experiences_id'),
-            'services_drop' => array('label' => '¿Has utilizado alguno de estos servicios', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'services_id'),
-            'interests_drop' => array('label' => '¿Cuáles son tus áreas de interés?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'interests_id'),
-            'needs_drop' => array('label' => '¿Cuáles son tus necesidades?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'needs_id'),
-            'lifestage_drop' => array('label' => '¿Con cuál etapa de vida te identificas?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'life_stage_id'),
+            'services_drop' => array('label' => '¿Has utilizado alguno de estos servicios', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'services_id', 'required' => TRUE),
+            'interests_drop' => array('label' => '¿Cuáles son tus áreas de interés?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'interests_id', 'required' => TRUE),
+            'needs_drop' => array('label' => '¿Cuáles son tus necesidades?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'needs_id', 'required' => TRUE),
+            'lifestage_drop' => array('label' => '¿Con cuál etapa de vida te identificas?', 'type' => 'multiple', 'input_type' => 'combo', 'id_name' => 'life_stage_id', 'required' => TRUE),
         );
-
-        $array_civil_state = $this->get_array('Civil_state_Model', 'name', 'id', ['orderBy' => 'id'], array('' => 'Seleccione Estado Civil'));
-        $members_model->set_field_array('civil_state_drop', $array_civil_state);
-
-        $array_gender = $this->get_array('Gender_Model', 'name', 'id', ['orderBy' => 'id'], array('' => 'Seleccione Sexo'));
-        $members_model->set_field_array('gender_drop', $array_gender);
 
         $array_social_media = $this->get_array('Social_media_Model', 'name', 'id', ['orderBy' => 'name']);
         $contact_class->fields['social_media_drop']['array'] = $array_social_media;
@@ -102,7 +98,14 @@ class Censo extends MY_Controller {
 
 
         $country_model = new Countries_Model();
+        
+        $gender_model = new Gender_Model();
+        
+        $civil_state_model = new Civil_state_Model();
+        
         $data['countries'] = $country_model->findAll();
+        $data['genders'] = $gender_model->findAll();
+        $data['civil_states'] = $civil_state_model->findAll();
         $data['fields'] = $this->build_fields($members_model->fields);
         $data['fields_contact'] = $this->build_fields($contact_class->fields);
         $data['fields_vocation'] = $this->build_fields($vocation_class->fields);
