@@ -352,9 +352,36 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = `/censo/edit/${member.id}?manage_household=1&spouse=${result.value.hasSpouse}&children=${result.value.hasChildren}`;
+                        window.location.href = `/censo/edit_form?manage_household=1&spouse=${result.value.hasSpouse}&children=${result.value.hasChildren}`;
                     } else {
-                        window.location.href = `/censo/edit/${member.id}`;
+                        // Preparar datos para edición
+                        $.ajax({
+                            url: '<?= base_url("censo/prepare_edit") ?>',
+                            method: 'POST',
+                            data: JSON.stringify(member),
+                            contentType: 'application/json',
+                            dataType: 'json'
+                        })
+                        .done(function(response) {
+                            if (response.success) {
+                                window.location.href = '/censo/edit_form';
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message || 'Error preparando los datos para edición',
+                                    confirmButtonColor: '#C32F27'
+                                });
+                            }
+                        })
+                        .fail(function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error de conexión al preparar los datos',
+                                confirmButtonColor: '#C32F27'
+                            });
+                        });
                     }
                 });
             }
