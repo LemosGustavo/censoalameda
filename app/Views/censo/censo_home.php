@@ -38,7 +38,7 @@
                                                 </div>
                                             </div>
                                             <small class="form-text text-muted mt-2">
-                                                <i class="fas fa-info-circle"></i> Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 3MB
+                                                <i class="fas fa-info-circle"></i> Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 12MB
                                             </small>
                                             <div class="mt-3 text-center">
                                                 <img id="photo_preview"
@@ -386,7 +386,6 @@
 
         // Evento click en el botón de envío
         $('input[type="submit"]').on('click', function(event) {
-            console.log('Validando formulario');
             event.preventDefault();
 
             let isValid = true;
@@ -565,7 +564,6 @@
         $('#country').change(function() {
             let countryId = $(this).val();
             let countryName = $(this).find('option:selected').text();
-            console.log(countryName);
             if (countryName === 'Argentina') { // Suponiendo que el id de Argentina es 'AR'
                 $('#state-container').fadeIn(); // Mostrar el contenedor de provincias
                 $.ajax({
@@ -734,7 +732,6 @@
     function toggle_group() {
         // Obtener el valor del radio seleccionado
         var grupo_peque = $('input[name="grupo"]:checked').val();
-        console.log(grupo_peque);
 
         // Mostrar dropdown correspondiente si se selecciona "SI"
         if (grupo_peque === "si") {
@@ -869,13 +866,13 @@
             const fileReader = new FileReader();
             const preview = $("#photo_preview");
 
-            // Validar tamaño (máximo 3MB)
-            const maxSize = 3 * 1024 * 1024; // 3MB en bytes
+            // Validar tamaño (máximo 12MB)
+            const maxSize = 12 * 1024 * 1024; // 12MB en bytes
             if (file && file.size > maxSize) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Archivo muy grande',
-                    text: 'La imagen debe ser menor a 3MB',
+                    text: 'La imagen debe ser menor a 12MB',
                 });
                 this.value = ''; // Limpiar el input
                 preview.hide();
@@ -930,12 +927,12 @@
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (file && validImageTypes.includes(file.type)) {
             // Validar tamaño
-            const maxSize = 3 * 1024 * 1024; // 3MB
+            const maxSize = 12 * 1024 * 1024; // 12MB
             if (file.size > maxSize) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Archivo muy grande',
-                    text: 'La imagen debe ser menor a 3MB',
+                    text: 'La imagen debe ser menor a 12MB',
                     confirmButtonText: 'Entendido'
                 });
                 return;
@@ -983,9 +980,9 @@
         photoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                // Validar el tamaño del archivo (3MB máximo)
-                if (file.size > 3 * 1024 * 1024) {
-                    alert('El archivo es demasiado grande. El tamaño máximo permitido es 3MB.');
+                // Validar el tamaño del archivo (12MB máximo)
+                if (file.size > 12 * 1024 * 1024) {
+                    alert('El archivo es demasiado grande. El tamaño máximo permitido es 12MB.');
                     photoInput.value = '';
                     photoPreview.src = '#';
                     fileLabel.textContent = 'Elegir foto';

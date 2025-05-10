@@ -133,13 +133,13 @@ class Censo extends MY_Controller {
     public function confirm_save() {
         log_message('info', 'Iniciando confirm_save');
         $data = session()->get('censo_preview_data');
-
+        // lm($data);
         if (!$data) {
             log_message('error', 'No hay datos en la sesión para guardar');
             return redirect()->to(base_url(''))->with('error', 'No hay datos para guardar');
         }
 
-        log_message('info', 'Datos obtenidos de la sesión: ' . json_encode($data));
+        // log_message('info', 'Datos obtenidos de la sesión: ' . json_encode($data));
 
         $members_model = new Members_Model();
         $members_family_model = new Members_family_Model();
@@ -149,9 +149,28 @@ class Censo extends MY_Controller {
         $path_photo = '';
 
         if (!empty($data['photo_base64'])) {
+            // Validar el tamaño de la imagen decodificada
+            $decodedImage = base64_decode($data['photo_base64']);
+            $maxSize = 12 * 1024 * 1024; // 12MB en bytes
+            if (strlen($decodedImage) > $maxSize) {
+                throw new \RuntimeException('El archivo es demasiado grande. El tamaño máximo permitido es 12MB.');
+            }
+
+            // Validar que sea una imagen válida
+            $imageInfo = getimagesizefromstring($decodedImage);
+            if ($imageInfo === false) {
+                throw new \RuntimeException('El archivo no es una imagen válida.');
+            }
+
+            // Validar el tipo de imagen
+            $validTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF];
+            if (!in_array($imageInfo[2], $validTypes)) {
+                throw new \RuntimeException('Formato de archivo no válido. Por favor, selecciona una imagen JPG, PNG o GIF.');
+            }
+
             $newName = uniqid() . '.jpg';
             $filePath = APPPATH . 'Uploads/' . $newName;
-            file_put_contents($filePath, base64_decode($data['photo_base64']));
+            file_put_contents($filePath, $decodedImage);
             $path_photo = $newName;
             log_message('info', 'Ruta de la imagen guardada: ' . $path_photo);
         }
@@ -309,7 +328,7 @@ class Censo extends MY_Controller {
                 'App\Models\Members_interests_Model' => 'interests_drop',
                 'App\Models\Members_needs_Model' => 'needs_drop',
                 'App\Models\Members_life_stages_Model' => 'lifestage_drop',
-                'App\Models\Members_family_Model' => 'family_drop',
+                'App\Models\Members_family_Model' => 'family_drop'
             ];
 
             foreach ($relations as $model_name => $post_field) {
@@ -325,6 +344,11 @@ class Censo extends MY_Controller {
                     }
 
                     foreach ($data[$post_field] as $item_id) {
+                        // Si es una relación familiar, excluir el ID del cónyuge (5)
+                        if ($model_name === 'App\Models\Members_family_Model' && $item_id == 5) {
+                            continue;
+                        }
+                        
                         $model->insert([
                             'members_id' => $member_id,
                             $foreign_key => $item_id
@@ -373,6 +397,7 @@ class Censo extends MY_Controller {
 
     private function prepare_preview_data() {
         $request = service('request');
+        // lm($request->getPost());
         $data = [];
         try {
             // Manejar la subida de la foto - guardar el contenido en base64
