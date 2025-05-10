@@ -6,6 +6,7 @@ use stdClass;
 use App\Models\Members_Model;
 use App\Models\Countries_Model;
 use App\Models\Members_family_Model;
+use App\Models\Members_social_media_Model;
 use App\Models\Civil_state_Model;
 use App\Models\Gender_Model;
 
@@ -133,13 +134,13 @@ class Censo extends MY_Controller {
     public function confirm_save() {
         log_message('info', 'Iniciando confirm_save');
         $data = session()->get('censo_preview_data');
-
+        // lm($data);
         if (!$data) {
             log_message('error', 'No hay datos en la sesión para guardar');
             return redirect()->to(base_url(''))->with('error', 'No hay datos para guardar');
         }
 
-        log_message('info', 'Datos obtenidos de la sesión: ' . json_encode($data));
+        // log_message('info', 'Datos obtenidos de la sesión: ' . json_encode($data));
 
         $members_model = new Members_Model();
         $members_family_model = new Members_family_Model();
@@ -149,9 +150,28 @@ class Censo extends MY_Controller {
         $path_photo = '';
 
         if (!empty($data['photo_base64'])) {
+            // Validar el tamaño de la imagen decodificada
+            $decodedImage = base64_decode($data['photo_base64']);
+            $maxSize = 12 * 1024 * 1024; // 12MB en bytes
+            if (strlen($decodedImage) > $maxSize) {
+                throw new \RuntimeException('El archivo es demasiado grande. El tamaño máximo permitido es 12MB.');
+            }
+
+            // Validar que sea una imagen válida
+            $imageInfo = getimagesizefromstring($decodedImage);
+            if ($imageInfo === false) {
+                throw new \RuntimeException('El archivo no es una imagen válida.');
+            }
+
+            // Validar el tipo de imagen
+            $validTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF];
+            if (!in_array($imageInfo[2], $validTypes)) {
+                throw new \RuntimeException('Formato de archivo no válido. Por favor, selecciona una imagen JPG, PNG o GIF.');
+            }
+
             $newName = uniqid() . '.jpg';
             $filePath = APPPATH . 'Uploads/' . $newName;
-            file_put_contents($filePath, base64_decode($data['photo_base64']));
+            file_put_contents($filePath, $decodedImage);
             $path_photo = $newName;
             log_message('info', 'Ruta de la imagen guardada: ' . $path_photo);
         }
@@ -303,28 +323,45 @@ class Censo extends MY_Controller {
 
             // Guardar relaciones
             $relations = [
-                'App\Models\Members_social_media_Model' => 'social_media_drop',
                 'App\Models\Members_experiences_Model' => 'experiences_drop',
                 'App\Models\Members_services_Model' => 'services_drop',
                 'App\Models\Members_interests_Model' => 'interests_drop',
                 'App\Models\Members_needs_Model' => 'needs_drop',
                 'App\Models\Members_life_stages_Model' => 'lifestage_drop',
-                'App\Models\Members_family_Model' => 'family_drop',
+                'App\Models\Members_family_Model' => 'family_drop'
             ];
+
+            // Manejar redes sociales por separado
+            if (isset($data['social_media_drop']) && !empty($data['social_media_drop'])) {
+                $social_media_model = new Members_social_media_Model();
+                foreach ($data['social_media_drop'] as $social_media_id) {
+                    $social_media_model->insert([
+                        'members_id' => $member_id,
+                        'social_media_id' => $social_media_id
+                    ]);
+                }
+            }
+
+            // Manejar other_socialmedia por separado
+            if (!empty($data['other_socialmedia'])) {
+                $social_media_model = new Members_social_media_Model();
+                $social_media_model->insert([
+                    'members_id' => $member_id,
+                    'other_socialmedia' => $data['other_socialmedia']
+                ]);
+            }
 
             foreach ($relations as $model_name => $post_field) {
                 if (isset($data[$post_field]) && !empty($data[$post_field])) {
                     $model = new $model_name();
                     $foreign_key = $model->getForeignKey();
 
-                    if ($model_name === 'App\Models\Members_social_media_Model' && !empty($data['other_socialmedia'])) {
-                        $model->insert([
-                            'members_id' => $member_id,
-                            'other_socialmedia' => $data['other_socialmedia']
-                        ]);
-                    }
-
                     foreach ($data[$post_field] as $item_id) {
+                        // Si es una relación familiar, excluir el ID del cónyuge (5)
+                        if ($model_name === 'App\Models\Members_family_Model' && $item_id == 5) {
+                            continue;
+                        }
+                        
                         $model->insert([
                             'members_id' => $member_id,
                             $foreign_key => $item_id
@@ -373,6 +410,7 @@ class Censo extends MY_Controller {
 
     private function prepare_preview_data() {
         $request = service('request');
+        // lm($request->getPost());
         $data = [];
         try {
             // Manejar la subida de la foto - guardar el contenido en base64
@@ -425,6 +463,7 @@ class Censo extends MY_Controller {
             $data['email'] = $request->getPost('email') ?? '';
             $data['phone'] = $request->getPost('phone') ?? '';
             $data['social_media'] = $this->get_labels_from_ids('Social_media_Model', $request->getPost('social_media_drop') ?? []);
+            $data['other_socialmedia'] = $request->getPost('other_socialmedia') ?? '';
             if ($request->getPost('other_socialmedia')) {
                 $data['social_media'][] = $request->getPost('other_socialmedia');
             }

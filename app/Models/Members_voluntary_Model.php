@@ -10,7 +10,7 @@ class Members_voluntary_Model extends MY_Model {
         $this->class_name = 'Members_voluntary_Model';
         $this->msg_name = 'Asignación Voluntariado';
         $this->id_name = 'id';
-        $this->columnas = array('id', 'members_id', 'voluntary_id');
+        $this->columnas = array('id', 'members_id', 'voluntary_id','service');
         $this->fields = array();
         $this->requeridos = array();
         $this->default_join = array();
@@ -21,7 +21,7 @@ class Members_voluntary_Model extends MY_Model {
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $allowedFields = ['members_id', 'voluntary_id'];
+    protected $allowedFields = ['members_id', 'voluntary_id','service'];
 
     public function getForeignKey() {
         return 'voluntary_id';
