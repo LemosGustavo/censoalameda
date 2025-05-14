@@ -31,3 +31,4 @@ $routes->group('location', function ($routes) {
 });
 
 $routes->get('image/serve/(:segment)', 'Image::serve/$1');
+$routes->get('api/foto/(:any)', 'FotoController::obtener/$1');
